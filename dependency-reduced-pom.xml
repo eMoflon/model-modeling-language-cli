@@ -45,7 +45,6 @@
                     <exclude>META-INF/*.SF</exclude>
                     <exclude>META-INF/*.DSA</exclude>
                     <exclude>META-INF/*.RSA</exclude>
-                    <exclude>META-INF/**</exclude>
                     <exclude>about.html</exclude>
                     <exclude>about.ini</exclude>
                     <exclude>about.mappings</exclude>
@@ -53,6 +52,24 @@
                     <exclude>modeling32.png</exclude>
                     <exclude>plugin.properties</exclude>
                     <exclude>plugin.xml</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>com.google.code.gson:gson</artifact>
+                  <excludes>
+                    <exclude>META-INF/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>org.eclipse.emf:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>info.picocli:picocli</artifact>
+                  <excludes>
+                    <exclude>META-INF/**</exclude>
                   </excludes>
                 </filter>
               </filters>
