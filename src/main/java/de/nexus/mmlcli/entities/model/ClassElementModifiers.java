@@ -6,63 +6,63 @@ import com.google.gson.annotations.SerializedName;
  * Dataclass for class modifiers
  */
 public class ClassElementModifiers {
-	private boolean readonly;
-	@SerializedName("volatile")
-	private boolean _volatile;
-	@SerializedName("transient")
-	private boolean _transient;
-	private boolean unsettable;
-	private boolean derived;
-	private boolean unique;
-	private boolean ordered;
-	private boolean resolve;
-	private boolean id;
+    private boolean readonly;
+    @SerializedName("volatile")
+    private boolean _volatile;
+    @SerializedName("transient")
+    private boolean _transient;
+    private boolean unsettable;
+    private boolean derived;
+    private boolean unique;
+    private boolean ordered;
+    private boolean resolve;
+    private boolean id;
 
-	public boolean isReadonly() {
-		return readonly;
-	}
+    public boolean isReadonly() {
+        return readonly;
+    }
 
-	public boolean isVolatile() {
-		return _volatile;
-	}
+    public boolean isVolatile() {
+        return _volatile;
+    }
 
-	public boolean isTransient() {
-		return _transient;
-	}
+    public boolean isTransient() {
+        return _transient;
+    }
 
-	public boolean isUnsettable() {
-		return unsettable;
-	}
+    public boolean isUnsettable() {
+        return unsettable;
+    }
 
-	public boolean isDerived() {
-		return derived;
-	}
+    public boolean isDerived() {
+        return derived;
+    }
 
-	public boolean isUnique() {
-		return unique;
-	}
+    public boolean isUnique() {
+        return unique;
+    }
 
-	public boolean isOrdered() {
-		return ordered;
-	}
+    public boolean isOrdered() {
+        return ordered;
+    }
 
-	public boolean isResolve() {
-		return resolve;
-	}
+    public boolean isResolve() {
+        return resolve;
+    }
 
-	public boolean isId() {
-		return id;
-	}
+    public boolean isId() {
+        return id;
+    }
 
-	public ClassElementModifiers(boolean readonly, boolean _volatile, boolean _transient, boolean unsettable, boolean derived, boolean unique, boolean ordered, boolean resolve, boolean id) {
-		this.readonly = readonly;
-		this._volatile = _volatile;
-		this._transient = _transient;
-		this.unsettable = unsettable;
-		this.derived = derived;
-		this.unique = unique;
-		this.ordered = ordered;
-		this.resolve = resolve;
-		this.id = id;
-	}
+    public ClassElementModifiers(boolean readonly, boolean _volatile, boolean _transient, boolean unsettable, boolean derived, boolean unique, boolean ordered, boolean resolve, boolean id) {
+        this.readonly = readonly;
+        this._volatile = _volatile;
+        this._transient = _transient;
+        this.unsettable = unsettable;
+        this.derived = derived;
+        this.unique = unique;
+        this.ordered = ordered;
+        this.resolve = resolve;
+        this.id = id;
+    }
 }

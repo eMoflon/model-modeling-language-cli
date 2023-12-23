@@ -31,7 +31,7 @@ public class DeserializedDocument {
         return gson.fromJson(json, DeserializedDocument.class);
     }
 
-    public static DeserializedDocument build(ModelEntity model){
+    public static DeserializedDocument build(ModelEntity model) {
         DeserializedDocument doc = new DeserializedDocument();
         doc.setTypegraph(model);
         doc.setInstancegraph(new GeneratorInstanceWrapper());

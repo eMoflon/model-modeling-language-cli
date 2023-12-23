@@ -13,46 +13,46 @@ import java.util.stream.Collectors;
  * Dataclass for a class-like (Abstract class, class or interface)
  */
 public class AbstractClassEntity {
-	private String referenceId;
-	private String name;
-	private boolean isAbstract;
-	private boolean isInterface;
-	private final ArrayList<AttributeEntity<?>> attributes = new ArrayList<>();
-	private final ArrayList<CReferenceEntity> references = new ArrayList<>();
-	private final ArrayList<String> extendsIds = new ArrayList<>();
-	private final ArrayList<String> implementsIds = new ArrayList<>();
+    private String referenceId;
+    private String name;
+    private boolean isAbstract;
+    private boolean isInterface;
+    private final ArrayList<AttributeEntity<?>> attributes = new ArrayList<>();
+    private final ArrayList<CReferenceEntity> references = new ArrayList<>();
+    private final ArrayList<String> extendsIds = new ArrayList<>();
+    private final ArrayList<String> implementsIds = new ArrayList<>();
 
-	public String getReferenceId() {
-		return referenceId;
-	}
+    public String getReferenceId() {
+        return referenceId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public boolean isAbstract() {
-		return isAbstract;
-	}
+    public boolean isAbstract() {
+        return isAbstract;
+    }
 
-	public boolean isInterface() {
-		return isInterface;
-	}
+    public boolean isInterface() {
+        return isInterface;
+    }
 
-	public ArrayList<AttributeEntity<?>> getAttributes() {
-		return attributes;
-	}
+    public ArrayList<AttributeEntity<?>> getAttributes() {
+        return attributes;
+    }
 
-	public ArrayList<CReferenceEntity> getReferences() {
-		return references;
-	}
+    public ArrayList<CReferenceEntity> getReferences() {
+        return references;
+    }
 
-	public ArrayList<String> getExtendsIds() {
-		return extendsIds;
-	}
+    public ArrayList<String> getExtendsIds() {
+        return extendsIds;
+    }
 
-	public ArrayList<String> getImplementsIds() {
-		return implementsIds;
-	}
+    public ArrayList<String> getImplementsIds() {
+        return implementsIds;
+    }
 
     private void setReferenceId(String referenceId) {
         this.referenceId = referenceId;
@@ -71,7 +71,6 @@ public class AbstractClassEntity {
     }
 
 
-
     @Override
     public String toString() {
         String attributeString = attributes.isEmpty() ? ""
@@ -81,8 +80,6 @@ public class AbstractClassEntity {
         return String.format("%s(isAbstract:%b|isInterface:%b||%s||%s)", name, isAbstract, isInterface, attributeString,
                 referenceString);
     }
-
-
 
 
     public static AbstractClassEntity fromEClass(EClass clazz, EcoreIdResolver idResolver) {

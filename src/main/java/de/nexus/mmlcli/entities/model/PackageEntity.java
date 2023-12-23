@@ -19,25 +19,25 @@ public class PackageEntity {
     private final ArrayList<EnumEntity<?>> enums = new ArrayList<>();
     private final ArrayList<PackageEntity> subPackages = new ArrayList<>();
 
-	public String getReferenceId() {
-		return referenceId;
-	}
+    public String getReferenceId() {
+        return referenceId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public ArrayList<AbstractClassEntity> getAbstractClasses() {
-		return abstractClasses;
-	}
+    public ArrayList<AbstractClassEntity> getAbstractClasses() {
+        return abstractClasses;
+    }
 
-	public ArrayList<EnumEntity<?>> getEnums() {
-		return enums;
-	}
+    public ArrayList<EnumEntity<?>> getEnums() {
+        return enums;
+    }
 
-	public ArrayList<PackageEntity> getSubPackages() {
-		return subPackages;
-	}
+    public ArrayList<PackageEntity> getSubPackages() {
+        return subPackages;
+    }
 
     private void setReferenceId(String referenceId) {
         this.referenceId = referenceId;

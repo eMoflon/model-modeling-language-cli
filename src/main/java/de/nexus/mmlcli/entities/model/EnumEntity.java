@@ -11,26 +11,26 @@ import java.util.stream.Collectors;
  * Dataclass for a enum
  */
 public class EnumEntity<T> {
-	private String referenceId;
-	private String name;
-	private String type;
-	private ArrayList<EnumEntryEntity<T>> entries;
+    private String referenceId;
+    private String name;
+    private String type;
+    private ArrayList<EnumEntryEntity<T>> entries;
 
-	public String getReferenceId() {
-		return referenceId;
-	}
+    public String getReferenceId() {
+        return referenceId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public ArrayList<EnumEntryEntity<T>> getEntries() {
-		return entries;
-	}
+    public ArrayList<EnumEntryEntity<T>> getEntries() {
+        return entries;
+    }
 
     private void setReferenceId(String referenceId) {
         this.referenceId = referenceId;
