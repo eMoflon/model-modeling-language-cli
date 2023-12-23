@@ -1,4 +1,4 @@
-package de.nexus.mmlcli.generator.entities.model;
+package de.nexus.mmlcli.entities.model;
 
 /**
  * Dataclass for reference multiplicities
@@ -40,4 +40,13 @@ public class MultiplicityEntity {
 		return upper;
 	}
 
+	public MultiplicityEntity(boolean hasUpperBound, boolean lowerIsN, boolean lowerIsN0, boolean upperIsN, boolean upperIsN0, int lower, int upper) {
+		this.hasUpperBound = hasUpperBound;
+		this.lowerIsN = lowerIsN;
+		this.lowerIsN0 = lowerIsN0;
+		this.upperIsN = upperIsN;
+		this.upperIsN0 = upperIsN0;
+		this.lower = lower;
+		this.upper = upper;
+	}
 }

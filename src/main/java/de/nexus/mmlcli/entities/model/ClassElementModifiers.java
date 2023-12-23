@@ -1,4 +1,4 @@
-package de.nexus.mmlcli.generator.entities.model;
+package de.nexus.mmlcli.entities.model;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -54,4 +54,15 @@ public class ClassElementModifiers {
 		return id;
 	}
 
+	public ClassElementModifiers(boolean readonly, boolean _volatile, boolean _transient, boolean unsettable, boolean derived, boolean unique, boolean ordered, boolean resolve, boolean id) {
+		this.readonly = readonly;
+		this._volatile = _volatile;
+		this._transient = _transient;
+		this.unsettable = unsettable;
+		this.derived = derived;
+		this.unique = unique;
+		this.ordered = ordered;
+		this.resolve = resolve;
+		this.id = id;
+	}
 }

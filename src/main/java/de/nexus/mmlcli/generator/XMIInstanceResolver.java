@@ -8,7 +8,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 
-import de.nexus.mmlcli.generator.entities.instance.ReferenceEntry;
+import de.nexus.mmlcli.entities.instance.ReferenceEntry;
 
 /**
  * XMIInstanceResolver helps to resolve and link references in instance graphs. MML replaces 

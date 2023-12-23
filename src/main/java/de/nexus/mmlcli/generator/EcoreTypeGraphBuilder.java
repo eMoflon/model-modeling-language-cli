@@ -20,12 +20,12 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
-import de.nexus.mmlcli.generator.entities.model.AbstractClassEntity;
-import de.nexus.mmlcli.generator.entities.model.AttributeEntity;
-import de.nexus.mmlcli.generator.entities.model.CReferenceEntity;
-import de.nexus.mmlcli.generator.entities.model.EnumEntity;
-import de.nexus.mmlcli.generator.entities.model.EnumEntryEntity;
-import de.nexus.mmlcli.generator.entities.model.PackageEntity;
+import de.nexus.mmlcli.entities.model.AbstractClassEntity;
+import de.nexus.mmlcli.entities.model.AttributeEntity;
+import de.nexus.mmlcli.entities.model.CReferenceEntity;
+import de.nexus.mmlcli.entities.model.EnumEntity;
+import de.nexus.mmlcli.entities.model.EnumEntryEntity;
+import de.nexus.mmlcli.entities.model.PackageEntity;
 
 /**
  * The EcoreTypeGraphBuilder contains all functions to generate a metamodel from a PackageEntity as an Ecore file.

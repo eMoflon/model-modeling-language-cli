@@ -14,6 +14,16 @@ public class EmfGraphBuilderUtils {
 			default -> EcorePackage.Literals.ESTRING;
 		};
 	}
+
+	public static String mapETypes(EDataType dataType) {
+		return switch (dataType.getClassifierID()) {
+            case EcorePackage.EFLOAT -> "float";
+			case EcorePackage.EDOUBLE -> "double";
+			case EcorePackage.EINT -> "int";
+			case EcorePackage.EBOOLEAN -> "boolean";
+			default -> "string";
+		};
+	}
 	
 	public static <T,R> R mapVals(String mmlType, T value) {
 		return mapVals(mapETypes(mmlType), value);

@@ -1,4 +1,4 @@
-package de.nexus.mmlcli.generator.entities.instance;
+package de.nexus.mmlcli.entities.instance;
 
 import java.util.ArrayList;
 

@@ -14,8 +14,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
-import de.nexus.mmlcli.generator.entities.instance.AttributeEntry;
-import de.nexus.mmlcli.generator.entities.instance.ObjectInstance;
+import de.nexus.mmlcli.entities.instance.AttributeEntry;
+import de.nexus.mmlcli.entities.instance.ObjectInstance;
 
 /**
  * The XMIInstanceGraphBuilder contains all functions to generate a model instance from a ObjectInstance as an XMI file.

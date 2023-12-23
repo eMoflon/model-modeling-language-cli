@@ -1,8 +1,8 @@
 package de.nexus.mmlcli.generator;
 
-import de.nexus.mmlcli.generator.entities.instance.GeneratorInstance;
-import de.nexus.mmlcli.generator.entities.model.ModelEntity;
-import de.nexus.mmlcli.generator.entities.model.PackageEntity;
+import de.nexus.mmlcli.entities.instance.GeneratorInstance;
+import de.nexus.mmlcli.entities.model.ModelEntity;
+import de.nexus.mmlcli.entities.model.PackageEntity;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 

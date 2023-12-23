@@ -14,11 +14,11 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
-import de.nexus.mmlcli.generator.entities.instance.AttributeEntry;
-import de.nexus.mmlcli.generator.entities.instance.ObjectInstance;
-import de.nexus.mmlcli.generator.entities.instance.ReferenceEntry;
-import de.nexus.mmlcli.generator.entities.model.AttributeEntity;
-import de.nexus.mmlcli.generator.entities.model.CReferenceEntity;
+import de.nexus.mmlcli.entities.instance.AttributeEntry;
+import de.nexus.mmlcli.entities.instance.ObjectInstance;
+import de.nexus.mmlcli.entities.instance.ReferenceEntry;
+import de.nexus.mmlcli.entities.model.AttributeEntity;
+import de.nexus.mmlcli.entities.model.CReferenceEntity;
 
 /**
  * The EcoreTypeResolver helps to resolve and link references in metamodels. MML replaces 
