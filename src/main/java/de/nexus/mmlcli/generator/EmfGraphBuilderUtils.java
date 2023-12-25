@@ -25,6 +25,10 @@ public class EmfGraphBuilderUtils {
         };
     }
 
+    public static <T> boolean isETypeDefaultValue(EDataType type, T value) {
+        return type.getDefaultValue().equals(value);
+    }
+
     public static <T, R> R mapVals(String mmlType, T value) {
         return mapVals(mapETypes(mmlType), value);
     }

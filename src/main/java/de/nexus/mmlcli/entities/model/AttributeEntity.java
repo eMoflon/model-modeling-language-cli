@@ -5,6 +5,7 @@ import de.nexus.mmlcli.serializer.EcoreIdResolver;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EEnumLiteral;
 
 import java.util.UUID;
 
@@ -89,18 +90,25 @@ public class AttributeEntity<T> {
         if (eAttribute.getEType() instanceof EEnum) {
             attribute.setEnumType(true);
             attribute.setType(idResolver.resolveId(eAttribute.getEType()).toString());
+
+            if (eAttribute.getDefaultValue() != null && !EmfGraphBuilderUtils.isETypeDefaultValue((EDataType) eAttribute.getEType(), eAttribute.getDefaultValue())) {
+                attribute.setHasDefaultValue(true);
+                attribute.setDefaultValue(EmfGraphBuilderUtils.mapVals("-", idResolver.resolveId((EEnumLiteral) eAttribute.getDefaultValue())));
+            } else {
+                attribute.setHasDefaultValue(false);
+            }
         } else if (eAttribute.getEType() instanceof EDataType) {
             attribute.setEnumType(false);
             attribute.setType(EmfGraphBuilderUtils.mapETypes((EDataType) eAttribute.getEType()));
+
+            if (eAttribute.getDefaultValue() != null && !EmfGraphBuilderUtils.isETypeDefaultValue((EDataType) eAttribute.getEType(), eAttribute.getDefaultValue())) {
+                attribute.setHasDefaultValue(true);
+                attribute.setDefaultValue(EmfGraphBuilderUtils.mapVals(eAttribute.getEAttributeType(), eAttribute.getDefaultValue()));
+            } else {
+                attribute.setHasDefaultValue(false);
+            }
         } else {
             throw new IllegalArgumentException("Unexpected attribute type: " + eAttribute.getEType().toString());
-        }
-
-        if (eAttribute.getDefaultValue() != null) {
-            attribute.setHasDefaultValue(true);
-            attribute.setDefaultValue(EmfGraphBuilderUtils.mapVals(eAttribute.getEAttributeType(), eAttribute.getDefaultValue()));
-        } else {
-            attribute.setHasDefaultValue(false);
         }
 
         ClassElementModifiers modifiers = new ClassElementModifiers(!eAttribute.isChangeable(), eAttribute.isVolatile(), eAttribute.isTransient(), eAttribute.isUnsettable(), eAttribute.isDerived(), eAttribute.isUnique(), eAttribute.isOrdered(), false, eAttribute.isID());
