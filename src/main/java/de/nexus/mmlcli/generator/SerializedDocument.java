@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 public class SerializedDocument {
     URI uri;
@@ -21,7 +22,7 @@ public class SerializedDocument {
 
     public String serialize() {
         Gson gson = new Gson();
-        return gson.toJson(this);
+        return gson.toJson(List.of(this));
     }
 
     public static SerializedDocument[] deserialize(String json) {
