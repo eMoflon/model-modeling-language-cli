@@ -90,8 +90,13 @@ public class AbstractClassEntity {
         classEntity.setAbstract(clazz.isAbstract());
         classEntity.setInterface(clazz.isInterface());
 
-        classEntity.attributes.addAll(clazz.getEStructuralFeatures().stream().filter(sFeat -> sFeat instanceof EAttribute).map(sFeat -> AttributeEntity.fromEAttribute((EAttribute) sFeat, idResolver)).toList());
-        classEntity.references.addAll(clazz.getEStructuralFeatures().stream().filter(sFeat -> sFeat instanceof EReference).map(sFeat -> CReferenceEntity.fromEReference((EReference) sFeat, idResolver)).toList());
+        clazz.getEStructuralFeatures().forEach(sFeat -> {
+            if (sFeat instanceof EAttribute attr) {
+                classEntity.attributes.add(AttributeEntity.fromEAttribute(attr, idResolver));
+            } else if (sFeat instanceof EReference ref) {
+                classEntity.references.add(CReferenceEntity.fromEReference(ref, idResolver));
+            }
+        });
 
         classEntity.extendsIds.addAll(clazz.getESuperTypes().stream().map(sClazz -> idResolver.resolveId(sClazz).toString()).toList());
 
