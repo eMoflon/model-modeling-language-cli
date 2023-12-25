@@ -14,7 +14,7 @@ public class EnumEntity<T> {
     private String referenceId;
     private String name;
     private String type;
-    private ArrayList<EnumEntryEntity<T>> entries;
+    private final ArrayList<EnumEntryEntity<T>> entries = new ArrayList<>();
 
     public String getReferenceId() {
         return referenceId;
@@ -55,7 +55,7 @@ public class EnumEntity<T> {
         UUID uuid = idResolver.resolveId(eenum);
         enumEntity.setName(eenum.getName());
         enumEntity.setReferenceId(uuid.toString());
-        enumEntity.setType("unknown");
+        enumEntity.setType("int"); // we assume type int since EMF does not allow other enum types
         enumEntity.entries.addAll(eenum.getELiterals().stream().map(lit -> EnumEntryEntity.fromEEnumLiteral(lit, idResolver)).toList());
         return enumEntity;
     }
