@@ -85,16 +85,30 @@ public class CReferenceEntity {
         refEntity.setName(eRef.getName());
         refEntity.setType(idResolver.resolveId(eRef.getEType()).toString());
         MultiplicityEntity mult;
-        if (eRef.getUpperBound() == -1 && eRef.getLowerBound() == 0) {
-            mult = new MultiplicityEntity(false, false, true, false, false, 0, 0);
-        } else if (eRef.getUpperBound() == -1 && eRef.getLowerBound() == 1) {
-            mult = new MultiplicityEntity(false, true, false, false, false, 0, 0);
-        } else if (eRef.getUpperBound() == -1 && eRef.getLowerBound() > 0) {
-            mult = new MultiplicityEntity(true, false, false, true, false, eRef.getLowerBound(), 0);
-        } else if (eRef.getUpperBound() != -1) {
-            mult = new MultiplicityEntity(true, false, false, false, false, eRef.getLowerBound(), eRef.getUpperBound());
+        if (eRef.getLowerBound() != 0) {
+            if (eRef.getUpperBound() != 1) {
+                if (eRef.getLowerBound() == 1 && eRef.getUpperBound() == -1) {
+                    mult = new MultiplicityEntity(false, true, false, false, false, 0, 0);
+                } else {
+                    if (eRef.getUpperBound() == -1) {
+                        mult = new MultiplicityEntity(true, false, false, false, true, eRef.getLowerBound(), 0);
+                    } else {
+                        mult = new MultiplicityEntity(false, false, false, false, false, eRef.getLowerBound(), eRef.getUpperBound());
+                    }
+                }
+            } else {
+                mult = new MultiplicityEntity(false, false, false, false, false, eRef.getLowerBound(), 0);
+            }
         } else {
-            throw new IllegalStateException(String.format("Unknown multiplicity interpretation (%d|%d)", eRef.getLowerBound(), eRef.getUpperBound()));
+            if (eRef.getUpperBound() != 1) {
+                if (eRef.getUpperBound() == -1) {
+                    mult = new MultiplicityEntity(false, false, true, false, false, 0, 0);
+                } else {
+                    mult = new MultiplicityEntity(true, false, false, false, false, 0, eRef.getUpperBound());
+                }
+            } else {
+                mult = new MultiplicityEntity(false, false, false, false, false, 0, 0);
+            }
         }
         refEntity.setMultiplicity(mult);
 
