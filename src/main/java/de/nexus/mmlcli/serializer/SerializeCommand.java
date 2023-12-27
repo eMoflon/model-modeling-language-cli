@@ -32,6 +32,7 @@ public class SerializeCommand implements Callable<Integer> {
         String serialized = MmlSerializedGenerator.serializeEntities(packageEntity, ecoreFile.toURI());
 
         if (serializedTarget == null) {
+            System.out.println("=$MML-CONTENT-START$=");
             System.out.println(serialized);
         } else {
             try {

@@ -38,7 +38,7 @@ public class EmfResourceBuilder {
             }
             ModelEntity model = doc.getParsedGenerator().getTypegraph();
             for (PackageEntity pckgEntity : model.getPackages()) {
-                String fileName = Path.of(doc.uri).getFileName().toString().replace(".mml", "") + "_"
+                String fileName = Path.of(doc.uri).getFileName().toString().replace(".mml", "").replace(".ecore", "") + "_"
                         + pckgEntity.getName() + ".ecore";
                 Path filePath = Paths.get(modelsDir.toString(), fileName);
                 String packageUri = String.format("platform:/resource/%s/model/%s", projectName, fileName);
