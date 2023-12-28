@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="CarOwnership" nsURI="platform:/resource/CarOwnership/model/CarOwnership_CarOwnership.ecore"
+    nsPrefix="CarOwnership">
+  <eClassifiers xsi:type="ecore:EClass" name="Person">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="alter" ordered="false"
+        unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="kinder" ordered="false"
+        unique="false" upperBound="-1" eType="#//Person" resolveProxies="false" eOpposite="#//Person/eltern"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eltern" ordered="false"
+        unique="false" lowerBound="2" eType="#//Person" resolveProxies="false" eOpposite="#//Person/kinder"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="autos" ordered="false"
+        unique="false" upperBound="-1" eType="#//Auto" resolveProxies="false" eOpposite="#//Auto/besitzer"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Auto">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kennzeichen" ordered="false"
+        unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="marke" ordered="false"
+        unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="erstzulassung" ordered="false"
+        unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="baujahr" ordered="false"
+        unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="besitzer" ordered="false"
+        unique="false" lowerBound="1" eType="#//Person" resolveProxies="false" eOpposite="#//Person/autos"/>
+  </eClassifiers>
+</ecore:EPackage>
