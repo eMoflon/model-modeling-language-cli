@@ -38,7 +38,9 @@ public class XMIInstanceResolver {
                     EList<EObject> oldVals = (EList<EObject>) base.eGet(eref);
                     for (String refId : ref.getReferencedIds()) {
                         EObject target = this.objects.get(refId);
-                        oldVals.add(target);
+                        if (!oldVals.contains(target)) {
+                            oldVals.add(target);
+                        }
                     }
                 } else {
                     if (!ref.getReferencedIds().isEmpty()) {
