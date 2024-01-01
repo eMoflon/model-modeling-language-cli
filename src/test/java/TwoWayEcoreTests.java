@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 public class TwoWayEcoreTests {
-    private final static File TEST_DATA_FOLDER = new File("src/test/java/data");
+    private final static File TEST_DATA_FOLDER = new File("src/test/data");
 
     static Stream<TestBundle> testBundleProvider() {
         return TestUtils.getTestBundles(TEST_DATA_FOLDER).stream();
