@@ -2,13 +2,16 @@ package de.nexus.mmlcli.generator;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import de.nexus.mmlcli.generator.diagnostic.DocumentDiagnostic;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SerializedDocument {
     URI uri;
     String content;
+    ArrayList<DocumentDiagnostic> diagnostics;
 
     public DeserializedDocument getParsedGenerator() {
         return DeserializedDocument.build(this.content);
@@ -29,5 +32,9 @@ public class SerializedDocument {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         return gson.fromJson(json, SerializedDocument[].class);
+    }
+
+    public ArrayList<DocumentDiagnostic> getDiagnostics() {
+        return diagnostics;
     }
 }

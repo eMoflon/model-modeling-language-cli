@@ -3,6 +3,8 @@ package de.nexus.mmlcli.generator;
 import de.nexus.mmlcli.entities.instance.GeneratorInstance;
 import de.nexus.mmlcli.entities.model.ModelEntity;
 import de.nexus.mmlcli.entities.model.PackageEntity;
+import de.nexus.mmlcli.generator.diagnostic.DocumentDiagnostic;
+import de.nexus.mmlcli.generator.diagnostic.DocumentPoint;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
@@ -13,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The EmfResourceBuilder coordinates the export of metamodels and instance graphs.
@@ -35,6 +38,17 @@ public class EmfResourceBuilder {
                 Files.createDirectories(modelsDir);
             } catch (IOException ex) {
                 System.out.println("[MODEL PATH BUILDER] Could not create models directory: " + modelsDir);
+            }
+            ArrayList<DocumentDiagnostic> seriousDiagnostics = doc.getDiagnostics().stream().filter(x -> x.getSeverity() == 1).collect(Collectors.toCollection(ArrayList::new));
+            if (!seriousDiagnostics.isEmpty()) {
+                System.err.printf("[DOCUMENT SKIP] Skipping %s due to the following errors%n", doc.uri.toString());
+                System.err.flush();
+                seriousDiagnostics.forEach(diag -> {
+                    DocumentPoint startPoint = diag.getRange().getStart();
+                    System.err.printf("%s (%s) starting in line %d:%d%n", diag.getMessage(), diag.getCode(), startPoint.getLine(), startPoint.getCharacter());
+                    System.err.flush();
+                });
+                continue;
             }
             ModelEntity model = doc.getParsedGenerator().getTypegraph();
             for (PackageEntity pckgEntity : model.getPackages()) {
