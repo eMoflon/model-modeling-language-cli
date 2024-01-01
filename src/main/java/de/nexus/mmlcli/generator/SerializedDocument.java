@@ -11,7 +11,7 @@ import java.util.List;
 public class SerializedDocument {
     URI uri;
     String content;
-    ArrayList<DocumentDiagnostic> diagnostics;
+    ArrayList<DocumentDiagnostic> diagnostics = new ArrayList<>();
 
     public DeserializedDocument getParsedGenerator() {
         return DeserializedDocument.build(this.content);
