@@ -1,7 +1,6 @@
 import de.nexus.mmlcli.generator.EmfResourceBuilder;
 import de.nexus.mmlcli.generator.SerializedDocument;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -20,7 +19,6 @@ public class GeneratorTests {
         return TestUtils.getTestBundles(TEST_DATA_FOLDER).stream();
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource("testBundleProvider")
     void testCorrectEcoreGeneration(TestBundle bundle, @TempDir File workingDir) throws IOException {

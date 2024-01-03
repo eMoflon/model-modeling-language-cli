@@ -5,7 +5,6 @@ import de.nexus.mmlcli.serializer.EmfResourceLoader;
 import de.nexus.mmlcli.serializer.MmlSerializedGenerator;
 import org.eclipse.emf.ecore.EPackage;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -24,13 +23,9 @@ public class TwoWayEcoreTests {
         return TestUtils.getTestBundles(TEST_DATA_FOLDER).stream();
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource("testBundleProvider")
     void testCorrectTwowaySerialization(TestBundle bundle, @TempDir File workingDir) throws IOException {
-        if (!bundle.getBundleName().equals("HospitalExample")) {
-            return;
-        }
         EPackage ePackage = EmfResourceLoader.loadEmfResources(bundle.getEcoreFile());
         PackageEntity packageEntity = MmlSerializedGenerator.buildEntities(ePackage);
         String generatedSerialization = MmlSerializedGenerator.serializeEntities(packageEntity, bundle.getEcoreFile().toURI());
