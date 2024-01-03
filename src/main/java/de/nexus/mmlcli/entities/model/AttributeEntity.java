@@ -111,7 +111,7 @@ public class AttributeEntity<T> {
             throw new IllegalArgumentException("Unexpected attribute type: " + eAttribute.getEType().toString());
         }
 
-        ClassElementModifiers modifiers = new ClassElementModifiers(!eAttribute.isChangeable(), eAttribute.isVolatile(), eAttribute.isTransient(), eAttribute.isUnsettable(), eAttribute.isDerived(), eAttribute.isUnique(), eAttribute.isOrdered(), false, eAttribute.isID());
+        ClassElementModifiers modifiers = new ClassElementModifiers(!eAttribute.isChangeable(), eAttribute.isVolatile(), eAttribute.isTransient(), eAttribute.isUnsettable(), eAttribute.isDerived(), eAttribute.isUnique(), eAttribute.isOrdered(), false, false, eAttribute.isID());
         attribute.setModifiers(modifiers);
 
 

@@ -16,6 +16,7 @@ public class ClassElementModifiers {
     private boolean unique;
     private boolean ordered;
     private boolean resolve;
+    private boolean containment;
     private boolean id;
 
     public boolean isReadonly() {
@@ -50,11 +51,15 @@ public class ClassElementModifiers {
         return resolve;
     }
 
+    public boolean isContainment() {
+        return containment;
+    }
+
     public boolean isId() {
         return id;
     }
 
-    public ClassElementModifiers(boolean readonly, boolean _volatile, boolean _transient, boolean unsettable, boolean derived, boolean unique, boolean ordered, boolean resolve, boolean id) {
+    public ClassElementModifiers(boolean readonly, boolean _volatile, boolean _transient, boolean unsettable, boolean derived, boolean unique, boolean ordered, boolean resolve, boolean containment, boolean id) {
         this.readonly = readonly;
         this._volatile = _volatile;
         this._transient = _transient;
@@ -63,6 +68,7 @@ public class ClassElementModifiers {
         this.unique = unique;
         this.ordered = ordered;
         this.resolve = resolve;
+        this.containment = containment;
         this.id = id;
     }
 }

@@ -33,7 +33,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Department">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
-                         defaultValueLiteral="-1" iD="true"/>
+        defaultValueLiteral="-1" iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxRoomCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rooms" upperBound="-1"
         eType="#//Room" containment="true"/>

@@ -120,7 +120,7 @@ public class CReferenceEntity {
             refEntity.setHasOpposite(false);
         }
 
-        ClassElementModifiers modifiers = new ClassElementModifiers(!eRef.isChangeable(), eRef.isVolatile(), eRef.isTransient(), eRef.isUnsettable(), eRef.isDerived(), eRef.isUnique(), eRef.isOrdered(), eRef.isResolveProxies(), false);
+        ClassElementModifiers modifiers = new ClassElementModifiers(!eRef.isChangeable(), eRef.isVolatile(), eRef.isTransient(), eRef.isUnsettable(), eRef.isDerived(), eRef.isUnique(), eRef.isOrdered(), eRef.isResolveProxies(), eRef.isContainment(), false);
         refEntity.setModifiers(modifiers);
 
         return refEntity;

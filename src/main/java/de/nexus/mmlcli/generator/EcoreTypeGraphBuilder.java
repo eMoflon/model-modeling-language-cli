@@ -190,6 +190,7 @@ public class EcoreTypeGraphBuilder {
         reference.setTransient(cref.getModifiers().isTransient());
         reference.setOrdered(cref.getModifiers().isOrdered());
         reference.setResolveProxies(cref.getModifiers().isResolve());
+        reference.setContainment(cref.getModifiers().isContainment());
     }
 
     private EPackage createPackage(final String name, final String prefix, final String uri) {
