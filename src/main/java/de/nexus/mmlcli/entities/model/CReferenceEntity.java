@@ -107,7 +107,7 @@ public class CReferenceEntity {
                     mult = new MultiplicityEntity(true, false, false, false, false, 0, eRef.getUpperBound());
                 }
             } else {
-                mult = new MultiplicityEntity(false, false, false, false, false, 1, 0);
+                mult = new MultiplicityEntity(true, false, false, false, false, 0, 1);
             }
         }
         refEntity.setMultiplicity(mult);
