@@ -32,3 +32,44 @@ Enter the path to the Jar file in the field provided.
 🎉 You can now use the Modeling Language to its full extent directly in VSCode!
 
 ### Stand-alone use
+
+The CLI can also be used independently of the VSCode plugin. In this case, input and output are usually via files, 
+the path of which is also specified in the command.
+
+In general, the CLI can be called by executing the JAR file.
+
+```shell
+java -jar ./target/model-modeling-language-cli-1.0-SNAPSHOT.jar
+```
+
+In the following we use the alias `mmlcli`.
+
+```text
+Usage: mmlcli [-hV] [COMMAND]
+            -h, --help Show this help message and exit.
+            -V, --version Print version information and exit.
+```
+
+#### Generate
+The `generate` command is used to generate Ecore and XMI files from the serialized MML format. By default, the input 
+is via STDIN, the output is in the form of the generated files in a specified directory. Optionally, a file whose 
+content is in serialized MML format can be specified instead of the STDIN input.
+
+```text
+Usage: mmlcli generate [-f[=SERIALIZED]] <projectName> <outputDirectory>
+            <projectName>           Name of the entire project/workspace
+            <outputDirectory>       Path to the output directory
+            -f, --file[=SERIALIZED] Path to the serialized workspace as json file
+```
+
+#### Serialize
+The serialize command is used to serialize Ecore files into the MML format. The entry is made by specifying a path 
+to an Ecore file. The output is via STDOUT by default, but optionally a path to an output file can also be specified 
+in which the serialized model is to be saved.
+
+```text
+Usage: mmlcli serialize [-o[=SERIALIZED]] <ecoreFile>
+            <ecoreFile>             Path to an Ecore file
+            -o, --out[=SERIALIZED]  Path to the output directory
+```
+
