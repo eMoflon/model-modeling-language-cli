@@ -15,6 +15,102 @@
         </configuration>
       </plugin>
       <plugin>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>3.1.1</version>
+        <executions>
+          <execution>
+            <id>install-hipe-dependencies</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <configuration>
+              <file>${project.basedir}/lib/hipe.dependencies_1.0.0.202304031312.jar</file>
+              <groupId>io.github.hipe-devops</groupId>
+              <artifactId>dependencies</artifactId>
+              <version>1.0.0.202304031312</version>
+              <packaging>jar</packaging>
+              <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+            </configuration>
+          </execution>
+          <execution>
+            <id>install-hipe-engine</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <configuration>
+              <file>${project.basedir}/lib/hipe.engine_1.0.0.202304031312.jar</file>
+              <groupId>io.github.hipe-devops</groupId>
+              <artifactId>engine</artifactId>
+              <version>1.0.0.202304031312</version>
+              <packaging>jar</packaging>
+              <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+            </configuration>
+          </execution>
+          <execution>
+            <id>install-hipe-generator</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <configuration>
+              <file>${project.basedir}/lib/hipe.generator_1.0.0.202304031312.jar</file>
+              <groupId>io.github.hipe-devops</groupId>
+              <artifactId>generator</artifactId>
+              <version>1.0.0.202304031312</version>
+              <packaging>jar</packaging>
+              <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+            </configuration>
+          </execution>
+          <execution>
+            <id>install-hipe-network</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <configuration>
+              <file>${project.basedir}/lib/hipe.network_1.0.0.202304031312.jar</file>
+              <groupId>io.github.hipe-devops</groupId>
+              <artifactId>network</artifactId>
+              <version>1.0.0.202304031312</version>
+              <packaging>jar</packaging>
+              <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+            </configuration>
+          </execution>
+          <execution>
+            <id>install-hipe-pattern</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <configuration>
+              <file>${project.basedir}/lib/hipe.pattern_1.0.0.202304031312.jar</file>
+              <groupId>io.github.hipe-devops</groupId>
+              <artifactId>pattern</artifactId>
+              <version>1.0.0.202304031312</version>
+              <packaging>jar</packaging>
+              <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+            </configuration>
+          </execution>
+          <execution>
+            <id>install-hipe-searchplan</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <configuration>
+              <file>${project.basedir}/lib/hipe.searchplan_1.0.0.202304031312.jar</file>
+              <groupId>io.github.hipe-devops</groupId>
+              <artifactId>searchplan</artifactId>
+              <version>1.0.0.202304031312</version>
+              <packaging>jar</packaging>
+              <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.3.0</version>
         <configuration>
@@ -85,6 +181,12 @@
       </plugin>
     </plugins>
   </build>
+  <repositories>
+    <repository>
+      <id>hipe-repository</id>
+      <url>file://${project.basedir}/hipe-repository</url>
+    </repository>
+  </repositories>
   <dependencies>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
