@@ -9,6 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+        <hipe.version>1.0.0.202401121236</hipe.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,10 +38,10 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>${project.basedir}/lib/hipe.dependencies_1.0.0.202304031312.jar</file>
+                            <file>${project.basedir}/lib/hipe.dependencies_${hipe.version}.jar</file>
                             <groupId>io.github.hipe-devops</groupId>
                             <artifactId>dependencies</artifactId>
-                            <version>1.0.0.202304031312</version>
+                            <version>${hipe.version}</version>
                             <packaging>jar</packaging>
                             <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
                         </configuration>
@@ -52,10 +53,10 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>${project.basedir}/lib/hipe.engine_1.0.0.202304031312.jar</file>
+                            <file>${project.basedir}/lib/hipe.engine_${hipe.version}.jar</file>
                             <groupId>io.github.hipe-devops</groupId>
                             <artifactId>engine</artifactId>
-                            <version>1.0.0.202304031312</version>
+                            <version>${hipe.version}</version>
                             <packaging>jar</packaging>
                             <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
                         </configuration>
@@ -67,10 +68,10 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>${project.basedir}/lib/hipe.generator_1.0.0.202304031312.jar</file>
+                            <file>${project.basedir}/lib/hipe.generator_${hipe.version}.jar</file>
                             <groupId>io.github.hipe-devops</groupId>
                             <artifactId>generator</artifactId>
-                            <version>1.0.0.202304031312</version>
+                            <version>${hipe.version}</version>
                             <packaging>jar</packaging>
                             <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
                         </configuration>
@@ -82,10 +83,10 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>${project.basedir}/lib/hipe.network_1.0.0.202304031312.jar</file>
+                            <file>${project.basedir}/lib/hipe.network_${hipe.version}.jar</file>
                             <groupId>io.github.hipe-devops</groupId>
                             <artifactId>network</artifactId>
-                            <version>1.0.0.202304031312</version>
+                            <version>${hipe.version}</version>
                             <packaging>jar</packaging>
                             <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
                         </configuration>
@@ -97,10 +98,10 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>${project.basedir}/lib/hipe.pattern_1.0.0.202304031312.jar</file>
+                            <file>${project.basedir}/lib/hipe.pattern_${hipe.version}.jar</file>
                             <groupId>io.github.hipe-devops</groupId>
                             <artifactId>pattern</artifactId>
-                            <version>1.0.0.202304031312</version>
+                            <version>${hipe.version}</version>
                             <packaging>jar</packaging>
                             <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
                         </configuration>
@@ -112,10 +113,10 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>${project.basedir}/lib/hipe.searchplan_1.0.0.202304031312.jar</file>
+                            <file>${project.basedir}/lib/hipe.searchplan_${hipe.version}.jar</file>
                             <groupId>io.github.hipe-devops</groupId>
                             <artifactId>searchplan</artifactId>
-                            <version>1.0.0.202304031312</version>
+                            <version>${hipe.version}</version>
                             <packaging>jar</packaging>
                             <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
                         </configuration>
@@ -264,32 +265,32 @@
         <dependency>
             <groupId>io.github.hipe-devops</groupId>
             <artifactId>dependencies</artifactId>
-            <version>1.0.0.202304031312</version>
+            <version>${hipe.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.hipe-devops</groupId>
             <artifactId>engine</artifactId>
-            <version>1.0.0.202304031312</version>
+            <version>${hipe.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.hipe-devops</groupId>
             <artifactId>generator</artifactId>
-            <version>1.0.0.202304031312</version>
+            <version>${hipe.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.hipe-devops</groupId>
             <artifactId>network</artifactId>
-            <version>1.0.0.202304031312</version>
+            <version>${hipe.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.hipe-devops</groupId>
             <artifactId>pattern</artifactId>
-            <version>1.0.0.202304031312</version>
+            <version>${hipe.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.hipe-devops</groupId>
             <artifactId>searchplan</artifactId>
-            <version>1.0.0.202304031312</version>
+            <version>${hipe.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.xtend</groupId>
