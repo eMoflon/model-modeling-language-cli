@@ -7,9 +7,14 @@ import java.util.ArrayList;
 
 public class ConstraintDocumentEntity {
     private final ArrayList<PatternEntity> patterns = new ArrayList<>();
+    private String packageName;
 
     public ArrayList<PatternEntity> getPatterns() {
         return patterns;
+    }
+
+    public String getPackageName() {
+        return packageName;
     }
 
     public static ConstraintDocumentEntity build(String serialized) {
