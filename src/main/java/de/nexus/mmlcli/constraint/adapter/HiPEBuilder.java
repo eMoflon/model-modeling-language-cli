@@ -55,7 +55,7 @@ public class HiPEBuilder {
         }
 
         GCLToHipePatternTransformation transformation = new GCLToHipePatternTransformation();
-        HiPEContainer container = transformation.transform(this.metamodel,this.constraintDocument.getPatterns());
+        HiPEContainer container = transformation.transform(this.metamodel, this.constraintDocument.getPatterns());
 
         System.out.println("Creating search plan & generating Rete network..");
         SearchPlan searchPlan = new LocalSearchPlan(container);
@@ -64,15 +64,15 @@ public class HiPEBuilder {
 
         System.out.println("Generating code...");
         HiPEGeneratorConfig config = new HiPEGeneratorConfig();
-        HiPEGenerator.generateCode("WIPNetworkName", projectDirectory.toString(), network, config);
+        HiPEGenerator.generateCode(this.constraintDocument.getPackageName() + ".", projectDirectory.toString(), network, config);
 
         double toc = System.currentTimeMillis();
         System.out.println("Code generation completed in " + (toc - tic) / 1000.0 + " seconds.");
 
         System.out.println("Saving HiPE patterns and HiPE network..");
 
-        saveResource(container, genDir.resolve("hipe/engine/hipe-patterns.xmi").toString());
-        saveResource(network, genDir.resolve("hipe/engine/hipe-network.xmi").toString());
+        saveResource(container, genDir.resolve(this.constraintDocument.getPackageName() + "/hipe/engine/hipe-patterns.xmi").toString());
+        saveResource(network, genDir.resolve(this.constraintDocument.getPackageName() + "/hipe/engine/hipe-network.xmi").toString());
 
         System.out.println("Refreshing workspace and cleaning build ..");
         //TODO: hö?
