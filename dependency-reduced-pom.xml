@@ -108,6 +108,36 @@
               <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
             </configuration>
           </execution>
+          <execution>
+            <id>install-smartemf</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <configuration>
+              <file>${project.basedir}/lib/org.emoflon.smartemf_1.0.0.202312051648.jar</file>
+              <groupId>org.emoflon</groupId>
+              <artifactId>smartemf</artifactId>
+              <version>1.0.0.202312051648</version>
+              <packaging>jar</packaging>
+              <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+            </configuration>
+          </execution>
+          <execution>
+            <id>install-smartemf-dependencies</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <configuration>
+              <file>${project.basedir}/lib/org.emoflon.smartemf.dependencies_1.0.0.jar</file>
+              <groupId>org.emoflon</groupId>
+              <artifactId>smartemf-dependencies</artifactId>
+              <version>1.0.0</version>
+              <packaging>jar</packaging>
+              <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -141,6 +171,9 @@
                     <exclude>META-INF/*.SF</exclude>
                     <exclude>META-INF/*.DSA</exclude>
                     <exclude>META-INF/*.RSA</exclude>
+                    <exclude>META-INF/eclipse.inf</exclude>
+                    <exclude>META-INF/LICENSE</exclude>
+                    <exclude>META-INF/NOTICE</exclude>
                     <exclude>about.html</exclude>
                     <exclude>about.ini</exclude>
                     <exclude>about.mappings</exclude>
@@ -148,16 +181,33 @@
                     <exclude>modeling32.png</exclude>
                     <exclude>plugin.properties</exclude>
                     <exclude>plugin.xml</exclude>
+                    <exclude>.api_description</exclude>
+                    <exclude>bin/.gitkeep</exclude>
+                    <exclude>about_files/LICENSE-2.0.txt</exclude>
+                    <exclude>.options</exclude>
+                    <exclude>module-info.class</exclude>
                   </excludes>
                 </filter>
                 <filter>
-                  <artifact>com.google.code.gson:gson</artifact>
+                  <artifact>org.eclipse.*:*</artifact>
                   <excludes>
                     <exclude>META-INF/**</exclude>
                   </excludes>
                 </filter>
                 <filter>
-                  <artifact>org.eclipse.emf:*</artifact>
+                  <artifact>com.google.*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>org.osgi:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>org.checkerframework:*</artifact>
                   <excludes>
                     <exclude>META-INF/**</exclude>
                   </excludes>
@@ -170,6 +220,18 @@
                 </filter>
                 <filter>
                   <artifact>commons-io:commons-io</artifact>
+                  <excludes>
+                    <exclude>META-INF/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>io.github.hipe-devops:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>org.emoflon:*</artifact>
                   <excludes>
                     <exclude>META-INF/**</exclude>
                   </excludes>
