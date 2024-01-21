@@ -31,12 +31,18 @@ public class ModelServerBuilder {
 
         compileModelServer();
 
-        if (generateJar) {
-            packageModelServer();
-        }
-
         double toc = System.currentTimeMillis();
         System.out.println("[ModelServerBuilder] Code compilation completed in " + (toc - tic) / 1000.0 + " seconds.");
+
+        if (generateJar) {
+            double tic2 = System.currentTimeMillis();
+            System.out.println("[ModelServerBuilder] Packing model server...");
+
+            packageModelServer();
+
+            double toc2 = System.currentTimeMillis();
+            System.out.println("[ModelServerBuilder] Code packaging completed in " + (toc2 - tic2) / 1000.0 + " seconds.");
+        }
     }
 
     private void compileModelServer() {
