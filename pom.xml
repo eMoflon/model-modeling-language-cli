@@ -9,7 +9,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <hipe.version>1.0.0.202401121236</hipe.version>
+        <hipe.version>1.0.0.202401191543</hipe.version>
+        <smartemf.version>1.0.0.202401191551</smartemf.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -128,10 +129,10 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>${project.basedir}/lib/org.emoflon.smartemf_1.0.0.202312051648.jar</file>
+                            <file>${project.basedir}/lib/org.emoflon.smartemf_${smartemf.version}.jar</file>
                             <groupId>org.emoflon</groupId>
                             <artifactId>smartemf</artifactId>
-                            <version>1.0.0.202312051648</version>
+                            <version>${smartemf.version}</version>
                             <packaging>jar</packaging>
                             <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
                         </configuration>
@@ -147,6 +148,21 @@
                             <groupId>org.emoflon</groupId>
                             <artifactId>smartemf-dependencies</artifactId>
                             <version>1.0.0</version>
+                            <packaging>jar</packaging>
+                            <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-moflon-utilities</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/org.moflon.core.utilities_3.0.0.202312051648.jar</file>
+                            <groupId>org.moflon.core</groupId>
+                            <artifactId>utilities</artifactId>
+                            <version>3.0.0.202312051648</version>
                             <packaging>jar</packaging>
                             <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
                         </configuration>
@@ -178,7 +194,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>true</minimizeJar>
+                            <minimizeJar>false</minimizeJar>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
@@ -251,7 +267,55 @@
                                         <exclude>META-INF/**</exclude>
                                     </excludes>
                                 </filter>
+                                <filter>
+                                    <artifact>org.moflon.core:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>com.typesafe:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>com.typesafe.*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>gnu.trove:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.reactivestreams:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.scala-lang:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.scala-lang.*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
                             </filters>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>reference.conf</resource>
+                                </transformer>
+                            </transformers>
                         </configuration>
                     </execution>
                 </executions>
@@ -263,6 +327,11 @@
         <repository>
             <id>hipe-repository</id>
             <url>file://${project.basedir}/hipe-repository</url>
+        </repository>
+        <repository>
+            <id>ukp-oss-public-releases</id>
+            <name>UKP Maven Repository</name>
+            <url>https://zoidberg.ukp.informatik.tu-darmstadt.de/artifactory/public-releases</url>
         </repository>
     </repositories>
 
@@ -367,12 +436,37 @@
         <dependency>
             <groupId>org.emoflon</groupId>
             <artifactId>smartemf</artifactId>
-            <version>1.0.0.202312051648</version>
+            <version>${smartemf.version}</version>
         </dependency>
         <dependency>
             <groupId>org.emoflon</groupId>
             <artifactId>smartemf-dependencies</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-actor_3</artifactId>
+            <version>2.9.0-M2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-stream_3</artifactId>
+            <version>2.9.0-M2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.emf</groupId>
+            <artifactId>org.eclipse.emf.codegen.ecore</artifactId>
+            <version>2.36.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.moflon.core</groupId>
+            <artifactId>utilities</artifactId>
+            <version>3.0.0.202312051648</version>
+        </dependency>
+        <dependency>
+            <groupId>gnu.trove</groupId>
+            <artifactId>trove</artifactId>
+            <version>3.0.3</version>
         </dependency>
     </dependencies>
 </project>

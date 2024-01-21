@@ -81,5 +81,16 @@ public class EmfMetamodelSource {
         this.load(fileURI);
     }
 
+    public EPackage.Registry getPackageRegistry() {
+        return this.resourceSet.getPackageRegistry();
+    }
 
+    public EPackage getEPackage(int idx) {
+        Resource resource = this.resourceSet.getResources().get(idx);
+        EObject rootElement = resource.getContents().get(0);
+        if (rootElement instanceof EPackage ePackage) {
+            return ePackage;
+        }
+        return null;
+    }
 }
