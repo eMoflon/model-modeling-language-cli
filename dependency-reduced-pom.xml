@@ -19,21 +19,6 @@
         <version>3.1.1</version>
         <executions>
           <execution>
-            <id>install-hipe-dependencies</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>install-file</goal>
-            </goals>
-            <configuration>
-              <file>${project.basedir}/lib/hipe.dependencies_${hipe.version}.jar</file>
-              <groupId>io.github.hipe-devops</groupId>
-              <artifactId>dependencies</artifactId>
-              <version>${hipe.version}</version>
-              <packaging>jar</packaging>
-              <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
-            </configuration>
-          </execution>
-          <execution>
             <id>install-hipe-engine</id>
             <phase>validate</phase>
             <goals>
@@ -119,21 +104,6 @@
               <groupId>org.emoflon</groupId>
               <artifactId>smartemf</artifactId>
               <version>${smartemf.version}</version>
-              <packaging>jar</packaging>
-              <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
-            </configuration>
-          </execution>
-          <execution>
-            <id>install-smartemf-dependencies</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>install-file</goal>
-            </goals>
-            <configuration>
-              <file>${project.basedir}/lib/org.emoflon.smartemf.dependencies_1.0.0.jar</file>
-              <groupId>org.emoflon</groupId>
-              <artifactId>smartemf-dependencies</artifactId>
-              <version>1.0.0</version>
               <packaging>jar</packaging>
               <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
             </configuration>
