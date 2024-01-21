@@ -11,18 +11,10 @@ public class EntityReferenceResolver {
     EntityReferenceResolver(ConstraintDocumentEntity cDoc) {
         cDoc.getPatterns().forEach(patternEntity -> {
             this.patternIdToPatternMap.put(patternEntity.getPatternId(), patternEntity);
-            patternEntity.getPac().forEach(inv -> {
-                this.unresolvedObjects.add(new UnresolvedObject<>(inv));
-            });
-            patternEntity.getNac().forEach(inv -> {
-                this.unresolvedObjects.add(new UnresolvedObject<>(inv));
-            });
-            patternEntity.getNodes().forEach(node -> {
-                this.nodeIdToNodeMap.put(node.getNodeId(), node);
-            });
-            patternEntity.getEdges().forEach(edge -> {
-                this.unresolvedObjects.add(new UnresolvedObject<>(edge));
-            });
+            patternEntity.getPac().forEach(inv -> this.unresolvedObjects.add(new UnresolvedObject<>(inv)));
+            patternEntity.getNac().forEach(inv -> this.unresolvedObjects.add(new UnresolvedObject<>(inv)));
+            patternEntity.getNodes().forEach(node -> this.nodeIdToNodeMap.put(node.getNodeId(), node));
+            patternEntity.getEdges().forEach(edge -> this.unresolvedObjects.add(new UnresolvedObject<>(edge)));
         });
 
         this.unresolvedObjects.forEach(unresolvedObject -> unresolvedObject.resolve(this));

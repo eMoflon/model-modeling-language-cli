@@ -143,7 +143,7 @@ public class ModelServerBuilder {
         }
 
         @Override
-        public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
+        public CharSequence getCharContent(boolean ignoreEncodingErrors) {
             return sourceCode;
         }
 
@@ -196,7 +196,7 @@ public class ModelServerBuilder {
         }
 
         @Override
-        public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
+        public CharSequence getCharContent(boolean ignoreEncodingErrors) {
             return sourceCode;
         }
 

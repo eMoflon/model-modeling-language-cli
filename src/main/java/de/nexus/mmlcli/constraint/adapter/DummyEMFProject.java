@@ -1,7 +1,6 @@
 package de.nexus.mmlcli.constraint.adapter;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.QualifiedName;
@@ -22,67 +21,67 @@ public class DummyEMFProject implements IProject {
     }
 
     @Override
-    public void build(int kind, String builderName, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
+    public void build(int kind, String builderName, Map<String, String> args, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void build(int kind, IProgressMonitor monitor) throws CoreException {
+    public void build(int kind, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void build(IBuildConfiguration config, int kind, IProgressMonitor monitor) throws CoreException {
+    public void build(IBuildConfiguration config, int kind, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void close(IProgressMonitor monitor) throws CoreException {
+    public void close(IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void create(IProjectDescription description, IProgressMonitor monitor) throws CoreException {
+    public void create(IProjectDescription description, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void create(IProgressMonitor monitor) throws CoreException {
+    public void create(IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void create(IProjectDescription description, int updateFlags, IProgressMonitor monitor) throws CoreException {
+    public void create(IProjectDescription description, int updateFlags, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void delete(boolean deleteContent, boolean force, IProgressMonitor monitor) throws CoreException {
+    public void delete(boolean deleteContent, boolean force, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public IBuildConfiguration getActiveBuildConfig() throws CoreException {
+    public IBuildConfiguration getActiveBuildConfig() {
         return null;
     }
 
     @Override
-    public IBuildConfiguration getBuildConfig(String configName) throws CoreException {
+    public IBuildConfiguration getBuildConfig(String configName) {
         return null;
     }
 
     @Override
-    public IBuildConfiguration[] getBuildConfigs() throws CoreException {
+    public IBuildConfiguration[] getBuildConfigs() {
         return new IBuildConfiguration[0];
     }
 
     @Override
-    public IContentTypeMatcher getContentTypeMatcher() throws CoreException {
+    public IContentTypeMatcher getContentTypeMatcher() {
         return null;
     }
 
     @Override
-    public IProjectDescription getDescription() throws CoreException {
+    public IProjectDescription getDescription() {
         return null;
     }
 
@@ -97,7 +96,7 @@ public class DummyEMFProject implements IProject {
     }
 
     @Override
-    public IProjectNature getNature(String natureId) throws CoreException {
+    public IProjectNature getNature(String natureId) {
         return null;
     }
 
@@ -107,7 +106,7 @@ public class DummyEMFProject implements IProject {
     }
 
     @Override
-    public IProject[] getReferencedProjects() throws CoreException {
+    public IProject[] getReferencedProjects() {
         return new IProject[0];
     }
 
@@ -122,22 +121,22 @@ public class DummyEMFProject implements IProject {
     }
 
     @Override
-    public IBuildConfiguration[] getReferencedBuildConfigs(String configName, boolean includeMissing) throws CoreException {
+    public IBuildConfiguration[] getReferencedBuildConfigs(String configName, boolean includeMissing) {
         return new IBuildConfiguration[0];
     }
 
     @Override
-    public boolean hasBuildConfig(String configName) throws CoreException {
+    public boolean hasBuildConfig(String configName) {
         return false;
     }
 
     @Override
-    public boolean hasNature(String natureId) throws CoreException {
+    public boolean hasNature(String natureId) {
         return false;
     }
 
     @Override
-    public boolean isNatureEnabled(String natureId) throws CoreException {
+    public boolean isNatureEnabled(String natureId) {
         return false;
     }
 
@@ -147,42 +146,42 @@ public class DummyEMFProject implements IProject {
     }
 
     @Override
-    public void loadSnapshot(int options, URI snapshotLocation, IProgressMonitor monitor) throws CoreException {
+    public void loadSnapshot(int options, URI snapshotLocation, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void move(IProjectDescription description, boolean force, IProgressMonitor monitor) throws CoreException {
+    public void move(IProjectDescription description, boolean force, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void open(int updateFlags, IProgressMonitor monitor) throws CoreException {
+    public void open(int updateFlags, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void open(IProgressMonitor monitor) throws CoreException {
+    public void open(IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void saveSnapshot(int options, URI snapshotLocation, IProgressMonitor monitor) throws CoreException {
+    public void saveSnapshot(int options, URI snapshotLocation, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void setDescription(IProjectDescription description, IProgressMonitor monitor) throws CoreException {
+    public void setDescription(IProjectDescription description, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void setDescription(IProjectDescription description, int updateFlags, IProgressMonitor monitor) throws CoreException {
+    public void setDescription(IProjectDescription description, int updateFlags, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public String getDefaultLineSeparator() throws CoreException {
+    public String getDefaultLineSeparator() {
         return null;
     }
 
@@ -212,12 +211,12 @@ public class DummyEMFProject implements IProject {
     }
 
     @Override
-    public String getDefaultCharset() throws CoreException {
+    public String getDefaultCharset() {
         return null;
     }
 
     @Override
-    public String getDefaultCharset(boolean checkImplicit) throws CoreException {
+    public String getDefaultCharset(boolean checkImplicit) {
         return null;
     }
 
@@ -232,97 +231,97 @@ public class DummyEMFProject implements IProject {
     }
 
     @Override
-    public IResource[] members() throws CoreException {
+    public IResource[] members() {
         return new IResource[0];
     }
 
     @Override
-    public IResource[] members(boolean includePhantoms) throws CoreException {
+    public IResource[] members(boolean includePhantoms) {
         return new IResource[0];
     }
 
     @Override
-    public IResource[] members(int memberFlags) throws CoreException {
+    public IResource[] members(int memberFlags) {
         return new IResource[0];
     }
 
     @Override
-    public IFile[] findDeletedMembersWithHistory(int depth, IProgressMonitor monitor) throws CoreException {
+    public IFile[] findDeletedMembersWithHistory(int depth, IProgressMonitor monitor) {
         return new IFile[0];
     }
 
     @Override
-    public void setDefaultCharset(String charset) throws CoreException {
+    public void setDefaultCharset(String charset) {
 
     }
 
     @Override
-    public void setDefaultCharset(String charset, IProgressMonitor monitor) throws CoreException {
+    public void setDefaultCharset(String charset, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public IResourceFilterDescription createFilter(int type, FileInfoMatcherDescription matcherDescription, int updateFlags, IProgressMonitor monitor) throws CoreException {
+    public IResourceFilterDescription createFilter(int type, FileInfoMatcherDescription matcherDescription, int updateFlags, IProgressMonitor monitor) {
         return null;
     }
 
     @Override
-    public IResourceFilterDescription[] getFilters() throws CoreException {
+    public IResourceFilterDescription[] getFilters() {
         return new IResourceFilterDescription[0];
     }
 
     @Override
-    public void accept(IResourceProxyVisitor visitor, int memberFlags) throws CoreException {
+    public void accept(IResourceProxyVisitor visitor, int memberFlags) {
 
     }
 
     @Override
-    public void accept(IResourceProxyVisitor visitor, int depth, int memberFlags) throws CoreException {
+    public void accept(IResourceProxyVisitor visitor, int depth, int memberFlags) {
 
     }
 
     @Override
-    public void accept(IResourceVisitor visitor) throws CoreException {
+    public void accept(IResourceVisitor visitor) {
 
     }
 
     @Override
-    public void accept(IResourceVisitor visitor, int depth, boolean includePhantoms) throws CoreException {
+    public void accept(IResourceVisitor visitor, int depth, boolean includePhantoms) {
 
     }
 
     @Override
-    public void accept(IResourceVisitor visitor, int depth, int memberFlags) throws CoreException {
+    public void accept(IResourceVisitor visitor, int depth, int memberFlags) {
 
     }
 
     @Override
-    public void clearHistory(IProgressMonitor monitor) throws CoreException {
+    public void clearHistory(IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void copy(IPath destination, boolean force, IProgressMonitor monitor) throws CoreException {
+    public void copy(IPath destination, boolean force, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void copy(IPath destination, int updateFlags, IProgressMonitor monitor) throws CoreException {
+    public void copy(IPath destination, int updateFlags, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void copy(IProjectDescription description, boolean force, IProgressMonitor monitor) throws CoreException {
+    public void copy(IProjectDescription description, boolean force, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void copy(IProjectDescription description, int updateFlags, IProgressMonitor monitor) throws CoreException {
+    public void copy(IProjectDescription description, int updateFlags, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public IMarker createMarker(String type) throws CoreException {
+    public IMarker createMarker(String type) {
         return null;
     }
 
@@ -332,17 +331,17 @@ public class DummyEMFProject implements IProject {
     }
 
     @Override
-    public void delete(boolean force, IProgressMonitor monitor) throws CoreException {
+    public void delete(boolean force, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void delete(int updateFlags, IProgressMonitor monitor) throws CoreException {
+    public void delete(int updateFlags, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void deleteMarkers(String type, boolean includeSubtypes, int depth) throws CoreException {
+    public void deleteMarkers(String type, boolean includeSubtypes, int depth) {
 
     }
 
@@ -352,17 +351,17 @@ public class DummyEMFProject implements IProject {
     }
 
     @Override
-    public IMarker findMarker(long id) throws CoreException {
+    public IMarker findMarker(long id) {
         return null;
     }
 
     @Override
-    public IMarker[] findMarkers(String type, boolean includeSubtypes, int depth) throws CoreException {
+    public IMarker[] findMarkers(String type, boolean includeSubtypes, int depth) {
         return new IMarker[0];
     }
 
     @Override
-    public int findMaxProblemSeverity(String type, boolean includeSubtypes, int depth) throws CoreException {
+    public int findMaxProblemSeverity(String type, boolean includeSubtypes, int depth) {
         return 0;
     }
 
@@ -417,12 +416,12 @@ public class DummyEMFProject implements IProject {
     }
 
     @Override
-    public Map<QualifiedName, String> getPersistentProperties() throws CoreException {
+    public Map<QualifiedName, String> getPersistentProperties() {
         return null;
     }
 
     @Override
-    public String getPersistentProperty(QualifiedName key) throws CoreException {
+    public String getPersistentProperty(QualifiedName key) {
         return null;
     }
 
@@ -452,12 +451,12 @@ public class DummyEMFProject implements IProject {
     }
 
     @Override
-    public Map<QualifiedName, Object> getSessionProperties() throws CoreException {
+    public Map<QualifiedName, Object> getSessionProperties() {
         return null;
     }
 
     @Override
-    public Object getSessionProperty(QualifiedName key) throws CoreException {
+    public Object getSessionProperty(QualifiedName key) {
         return null;
     }
 
@@ -542,62 +541,62 @@ public class DummyEMFProject implements IProject {
     }
 
     @Override
-    public void move(IPath destination, boolean force, IProgressMonitor monitor) throws CoreException {
+    public void move(IPath destination, boolean force, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void move(IPath destination, int updateFlags, IProgressMonitor monitor) throws CoreException {
+    public void move(IPath destination, int updateFlags, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void move(IProjectDescription description, boolean force, boolean keepHistory, IProgressMonitor monitor) throws CoreException {
+    public void move(IProjectDescription description, boolean force, boolean keepHistory, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void move(IProjectDescription description, int updateFlags, IProgressMonitor monitor) throws CoreException {
+    public void move(IProjectDescription description, int updateFlags, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void refreshLocal(int depth, IProgressMonitor monitor) throws CoreException {
+    public void refreshLocal(int depth, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void revertModificationStamp(long value) throws CoreException {
+    public void revertModificationStamp(long value) {
 
     }
 
     @Override
-    public void setDerived(boolean isDerived) throws CoreException {
+    public void setDerived(boolean isDerived) {
 
     }
 
     @Override
-    public void setDerived(boolean isDerived, IProgressMonitor monitor) throws CoreException {
+    public void setDerived(boolean isDerived, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public void setHidden(boolean isHidden) throws CoreException {
+    public void setHidden(boolean isHidden) {
 
     }
 
     @Override
-    public void setLocal(boolean flag, int depth, IProgressMonitor monitor) throws CoreException {
+    public void setLocal(boolean flag, int depth, IProgressMonitor monitor) {
 
     }
 
     @Override
-    public long setLocalTimeStamp(long value) throws CoreException {
+    public long setLocalTimeStamp(long value) {
         return 0;
     }
 
     @Override
-    public void setPersistentProperty(QualifiedName key, String value) throws CoreException {
+    public void setPersistentProperty(QualifiedName key, String value) {
 
     }
 
@@ -607,22 +606,22 @@ public class DummyEMFProject implements IProject {
     }
 
     @Override
-    public void setResourceAttributes(ResourceAttributes attributes) throws CoreException {
+    public void setResourceAttributes(ResourceAttributes attributes) {
 
     }
 
     @Override
-    public void setSessionProperty(QualifiedName key, Object value) throws CoreException {
+    public void setSessionProperty(QualifiedName key, Object value) {
 
     }
 
     @Override
-    public void setTeamPrivateMember(boolean isTeamPrivate) throws CoreException {
+    public void setTeamPrivateMember(boolean isTeamPrivate) {
 
     }
 
     @Override
-    public void touch(IProgressMonitor monitor) throws CoreException {
+    public void touch(IProgressMonitor monitor) {
 
     }
 

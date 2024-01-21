@@ -18,7 +18,7 @@ public class SerializeCommand implements Callable<Integer> {
 
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         if (!ecoreFile.exists()) {
             System.err.println("Inputfile does not exist: " + ecoreFile.getAbsolutePath());
             return 2;

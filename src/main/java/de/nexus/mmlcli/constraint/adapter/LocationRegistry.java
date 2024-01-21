@@ -49,7 +49,6 @@ public class LocationRegistry {
             Files.createDirectories(this.binPath);
         } catch (IOException ex) {
             System.err.println("[LocationRegistry] Could not create bin directory: " + this.binPath);
-            return;
         }
     }
 

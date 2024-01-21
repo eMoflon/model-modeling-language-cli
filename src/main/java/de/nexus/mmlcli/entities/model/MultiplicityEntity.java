@@ -4,13 +4,13 @@ package de.nexus.mmlcli.entities.model;
  * Dataclass for reference multiplicities
  */
 public class MultiplicityEntity {
-    private boolean hasUpperBound;
-    private boolean lowerIsN;
-    private boolean lowerIsN0;
-    private boolean upperIsN;
-    private boolean upperIsN0;
-    private int lower;
-    private int upper;
+    private final boolean hasUpperBound;
+    private final boolean lowerIsN;
+    private final boolean lowerIsN0;
+    private final boolean upperIsN;
+    private final boolean upperIsN0;
+    private final int lower;
+    private final int upper;
 
     public boolean isHasUpperBound() {
         return hasUpperBound;

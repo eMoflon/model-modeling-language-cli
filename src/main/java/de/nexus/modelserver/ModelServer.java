@@ -46,13 +46,15 @@ public class ModelServer {
         System.out.println("[ModelServer] Creating ContentAdapter...");
         new HiPEContentAdapter(resourceSet.getResources(), this.engine);
 
-        System.out.println("\n" +
-                "                                               \n" +
-                " _____       _     _ _____                     \n" +
-                "|     |___ _| |___| |   __|___ ___ _ _ ___ ___ \n" +
-                "| | | | . | . | -_| |__   | -_|  _| | | -_|  _|\n" +
-                "|_|_|_|___|___|___|_|_____|___|_|  \\_/|___|_|  \n" +
-                "                                               \n");
+        System.out.println("""
+
+                                                              \s
+                 _____       _     _ _____                    \s
+                |     |___ _| |___| |   __|___ ___ _ _ ___ ___\s
+                | | | | . | . | -_| |__   | -_|  _| | | -_|  _|
+                |_|_|_|___|___|___|_|_____|___|_|  \\_/|___|_| \s
+                                                              \s
+                """);
 
 
         System.out.println("[ModelServer] TEST - Extract Data...");

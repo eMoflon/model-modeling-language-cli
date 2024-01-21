@@ -53,9 +53,7 @@ public class EmfMetamodelSource {
         newPathPrefix = newPathPrefix + ePackage.getName() + ".";
         String finalNewPathPrefix = newPathPrefix;
 
-        ePackage.getEClassifiers().stream().filter(x -> x instanceof EClass).forEach(clazz -> {
-            this.classMapping.put(finalNewPathPrefix + clazz.getName(), (EClass) clazz);
-        });
+        ePackage.getEClassifiers().stream().filter(x -> x instanceof EClass).forEach(clazz -> this.classMapping.put(finalNewPathPrefix + clazz.getName(), (EClass) clazz));
 
         ePackage.getESubpackages().forEach(p -> loadMetaModelClasses(p, finalNewPathPrefix));
     }
