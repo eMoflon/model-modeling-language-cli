@@ -22,15 +22,16 @@ import java.util.concurrent.Callable;
 @CommandLine.Command(name = "hipegen", mixinStandardHelpOptions = true, version = "v1.0.0", description = "Builds hipe network")
 public class HipeGenCommand implements Callable<Integer> {
     @CommandLine.Parameters(index = "0")
-    File ecorePath;
-    @CommandLine.Parameters(index = "1")
-    File sConstraintDocPath;
-
-    @CommandLine.Parameters(index = "2")
     File workspacePath;
 
-    @CommandLine.Parameters(index = "3")
+    @CommandLine.Parameters(index = "1")
+    File ecorePath;
+
+    @CommandLine.Parameters(index = "2")
     File modelPath;
+
+    @CommandLine.Option(names = {"-f", "--file"}, paramLabel = "SERIALIZED", description = "the serialized constraint document as json file", arity = "0..1")
+    File sConstraintDocPath;
 
     @CommandLine.Option(names = {"-p", "--package-jar"}, arity = "0..1", defaultValue = "false", description = "Package ModelServer into jar file.")
     boolean packageJar;
