@@ -1,5 +1,6 @@
 package de.nexus.mmlcli.constraint;
 
+import de.nexus.mmlcli.CommandUtils;
 import de.nexus.mmlcli.constraint.adapter.*;
 import de.nexus.mmlcli.constraint.entity.ConstraintDocumentEntity;
 import de.nexus.mmlcli.constraint.entity.EntityReferenceResolver;
@@ -13,10 +14,9 @@ import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "hipegen", mixinStandardHelpOptions = true, version = "v1.0.0", description = "Builds hipe network")
@@ -42,7 +42,16 @@ public class HipeGenCommand implements Callable<Integer> {
     boolean verbose;
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
+        Optional<String> loadedConstraintDoc = CommandUtils.loadDataFromFileOrStdIn(sConstraintDocPath);
+        if (loadedConstraintDoc.isEmpty()) {
+            return 2;
+        }
+
+        String sConstraintDoc = loadedConstraintDoc.get();
+
+        ConstraintDocumentEntity cDoc = ConstraintDocumentEntity.build(sConstraintDoc);
+
         System.out.println("[ModelServerGeneration] Starting ModelServer generation...");
         double tic = System.currentTimeMillis();
 
@@ -68,10 +77,6 @@ public class HipeGenCommand implements Callable<Integer> {
 
         String projectName = metamodelSource.getEPackage(0).getName();
         GenModelBuilder.createGenModel(metamodelSource.getEPackage(0), locations, projectName);
-
-        String sConstraintDoc = Files.readString(sConstraintDocPath.toPath(), StandardCharsets.UTF_8);
-
-        ConstraintDocumentEntity cDoc = ConstraintDocumentEntity.build(sConstraintDoc);
 
         EntityReferenceResolver.resolve(cDoc);
 
