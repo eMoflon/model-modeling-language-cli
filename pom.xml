@@ -429,11 +429,6 @@
             <version>2.33.0</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jdt</groupId>
-            <artifactId>org.eclipse.jdt.core</artifactId>
-            <version>3.36.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.emoflon</groupId>
             <artifactId>smartemf</artifactId>
             <version>${smartemf.version}</version>
