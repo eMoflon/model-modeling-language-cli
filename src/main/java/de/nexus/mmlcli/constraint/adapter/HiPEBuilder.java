@@ -6,7 +6,7 @@ import hipe.generator.HiPEGeneratorConfig;
 import hipe.network.HiPENetwork;
 import hipe.pattern.HiPEContainer;
 import hipe.searchplan.SearchPlan;
-import hipe.searchplan.simple.LocalSearchPlan;
+import hipe.searchplan.simple.StatelessSearchPlan;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -38,7 +38,8 @@ public class HiPEBuilder {
         HiPEContainer container = transformation.transform(this.metamodel, this.constraintDocument.getPatterns());
 
         System.out.println("[HiPEBuilder] Creating search plan & generating Rete network..");
-        SearchPlan searchPlan = new LocalSearchPlan(container);
+        //SearchPlan searchPlan = new LocalSearchPlan(container);
+        SearchPlan searchPlan = new StatelessSearchPlan(container);
         searchPlan.generateSearchPlan();
         HiPENetwork network = searchPlan.getNetwork();
 
