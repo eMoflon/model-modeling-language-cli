@@ -34,8 +34,7 @@ public class HiPEBuilder {
 
         double tic = System.currentTimeMillis();
 
-        GCLToHipePatternTransformation transformation = new GCLToHipePatternTransformation();
-        HiPEContainer container = transformation.transform(this.metamodel, this.constraintDocument.getPatterns());
+        HiPEContainer container = GCLToHipePatternTransformation.transform(this.metamodel, this.constraintDocument);
 
         System.out.println("[HiPEBuilder] Creating search plan & generating Rete network..");
         //SearchPlan searchPlan = new LocalSearchPlan(container);

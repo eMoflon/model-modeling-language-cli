@@ -1,9 +1,6 @@
 package de.nexus.mmlcli.constraint.adapter;
 
-import de.nexus.mmlcli.constraint.entity.EdgeEntity;
-import de.nexus.mmlcli.constraint.entity.PatternEntity;
-import de.nexus.mmlcli.constraint.entity.PatternNodeEntity;
-import de.nexus.mmlcli.constraint.entity.SupportPatternInvocationEntity;
+import de.nexus.mmlcli.constraint.entity.*;
 import hipe.pattern.*;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
@@ -15,9 +12,19 @@ import java.util.Map;
 public class GCLToHipePatternTransformation {
     private HiPEPatternFactory factory;
 
-    protected Map<String, HiPEPattern> name2pattern = new HashMap<>();
-    protected Map<PatternNodeEntity, HiPENode> node2node = new HashMap<>();
-    protected HiPEContainer container;
+    private Map<String, HiPEPattern> name2pattern = new HashMap<>();
+    private Map<PatternNodeEntity, HiPENode> node2node = new HashMap<>();
+    private HiPEContainer container;
+    private final ConstraintDocumentEntity cDoc;
+
+    private GCLToHipePatternTransformation(ConstraintDocumentEntity cDoc) {
+        this.cDoc = cDoc;
+    }
+
+    public static HiPEContainer transform(EmfMetamodelSource metamodelSource, ConstraintDocumentEntity cDoc) {
+        GCLToHipePatternTransformation transformation = new GCLToHipePatternTransformation(cDoc);
+        return transformation.transform(metamodelSource, cDoc.getPatterns());
+    }
 
     public HiPEContainer transform(EmfMetamodelSource metamodelSource, ArrayList<PatternEntity> patternSet) {
         factory = HiPEPatternFactory.eINSTANCE;
@@ -96,8 +103,7 @@ public class GCLToHipePatternTransformation {
 
         hNode.setType(metamodelSource.resolveClass(node));
 
-        //TODO: compute local
-        //hNode.setLocal(context.getLocalNodes().contains(node));
+        hNode.setLocal(this.cDoc.getLocalNodes().contains(node));
 
         node2node.put(node, hNode);
 

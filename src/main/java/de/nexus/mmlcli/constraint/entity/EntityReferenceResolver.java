@@ -2,11 +2,14 @@ package de.nexus.mmlcli.constraint.entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class EntityReferenceResolver {
     private final HashMap<String, PatternEntity> patternIdToPatternMap = new HashMap<>();
     private final HashMap<String, PatternNodeEntity> nodeIdToNodeMap = new HashMap<>();
     private final ArrayList<UnresolvedObject<?>> unresolvedObjects = new ArrayList<>();
+    private final HashSet<PatternNodeEntity> localNodes = new HashSet<>();
+    private final HashSet<PatternEntity> directlyCalledPatterns = new HashSet<>();
 
     EntityReferenceResolver(ConstraintDocumentEntity cDoc) {
         cDoc.getPatterns().forEach(patternEntity -> {
@@ -18,6 +21,19 @@ public class EntityReferenceResolver {
         });
 
         this.unresolvedObjects.forEach(unresolvedObject -> unresolvedObject.resolve(this));
+
+        // TODO: Fix direcly referenced patterns based on constraints
+        this.directlyCalledPatterns.addAll(this.patternIdToPatternMap.values());
+
+        this.localNodes.addAll(nodeIdToNodeMap.values());
+        this.directlyCalledPatterns.forEach(directPattern -> {
+            directPattern.getNodes().forEach(node -> {
+                if (!node.isLocal()) {
+                    this.localNodes.remove(node);
+                }
+            });
+        });
+        cDoc.setLocalNodes(this.localNodes);
     }
 
     public static EntityReferenceResolver resolve(ConstraintDocumentEntity cDoc) {

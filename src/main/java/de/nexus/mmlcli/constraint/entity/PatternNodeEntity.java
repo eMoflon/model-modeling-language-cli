@@ -4,6 +4,7 @@ public class PatternNodeEntity {
     private String nodeId;
     private String name;
     private String fqname;
+    private boolean local;
 
     public String getNodeId() {
         return nodeId;
@@ -15,5 +16,9 @@ public class PatternNodeEntity {
 
     public String getFQName() {
         return fqname;
+    }
+
+    public boolean isLocal() {
+        return local;
     }
 }
