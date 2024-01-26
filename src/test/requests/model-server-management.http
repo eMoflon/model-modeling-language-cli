@@ -1,0 +1,11 @@
+@targetService = {{host}}/{{managementService}}
+
+### Terminate ModelServer
+GRPC {{targetService}}/TerminateServer
+
+{}
+
+### Get ModelServer State
+GRPC {{targetService}}/GetState
+
+{}
