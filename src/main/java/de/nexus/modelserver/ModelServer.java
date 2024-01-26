@@ -56,27 +56,24 @@ public class ModelServer {
                                                               \s
                 """);
 
-
-        System.out.println("[ModelServer] TEST - Extract Data...");
-        Map<String, ProductionResult> extractData;
-
         try {
-            extractData = engine.extractData();
-            extractData.forEach((x, y) -> {
-                System.out.printf("=== New Matches (%d) ===%n", y.getNewMatches().size());
-                y.getNewMatches().forEach(System.out::println);
-                System.out.printf("=== Deleted Matches (%d) ===%n", y.getDeleteMatches().size());
-                y.getDeleteMatches().forEach(System.out::println);
-            });
-        } catch (InterruptedException e) {
+            ModelServerGrpc grpcServer = new ModelServerGrpc(this);
+            grpcServer.start();
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        System.out.println("Terminating...");
+    public Map<String, ProductionResult> extractData() throws InterruptedException {
+        return this.engine.extractData();
+    }
+
+    public void terminateEngine() {
+        System.out.println("[Engine] Terminating...");
 
         this.engine.terminate();
 
-        System.out.println("Bye!");
+        System.out.println("[Engine] Terminated!");
     }
 
     public static void main(String[] args) {
