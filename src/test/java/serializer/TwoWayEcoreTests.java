@@ -1,5 +1,11 @@
+package serializer;
+
+import de.nexus.mmlcli.entities.model.PackageEntity;
 import de.nexus.mmlcli.generator.EmfResourceBuilder;
 import de.nexus.mmlcli.generator.SerializedDocument;
+import de.nexus.mmlcli.serializer.EmfResourceLoader;
+import de.nexus.mmlcli.serializer.MmlSerializedGenerator;
+import org.eclipse.emf.ecore.EPackage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,7 +18,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public class GeneratorTests {
+public class TwoWayEcoreTests {
     private final static File TEST_DATA_FOLDER = new File("src/test/data");
 
     static Stream<TestBundle> testBundleProvider() {
@@ -21,10 +27,12 @@ public class GeneratorTests {
 
     @ParameterizedTest
     @MethodSource("testBundleProvider")
-    void testCorrectEcoreGeneration(TestBundle bundle, @TempDir File workingDir) throws IOException {
-        String serializedContent = Files.readString(bundle.getSerializedFile().toPath());
+    void testCorrectTwowaySerialization(TestBundle bundle, @TempDir File workingDir) throws IOException {
+        EPackage ePackage = EmfResourceLoader.loadEmfResources(bundle.getEcoreFile());
+        PackageEntity packageEntity = MmlSerializedGenerator.buildEntities(ePackage);
+        String generatedSerialization = MmlSerializedGenerator.serializeEntities(packageEntity, bundle.getEcoreFile().toURI());
 
-        SerializedDocument[] result = Objects.requireNonNull(SerializedDocument.deserialize(serializedContent));
+        SerializedDocument[] result = Objects.requireNonNull(SerializedDocument.deserialize(generatedSerialization));
         EmfResourceBuilder.buildEmfResources(result, bundle.getBundleName(), workingDir);
 
         String ecoreContent = Files.readString(bundle.getEcoreFile().toPath());

@@ -1,3 +1,5 @@
+package serializer;
+
 import java.io.File;
 
 public class TestBundle {
