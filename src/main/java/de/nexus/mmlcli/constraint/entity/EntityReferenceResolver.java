@@ -34,6 +34,7 @@ public class EntityReferenceResolver {
             });
         });
         cDoc.setLocalNodes(this.localNodes);
+        cDoc.setId2PatternNode(this.nodeIdToNodeMap);
     }
 
     public static EntityReferenceResolver resolve(ConstraintDocumentEntity cDoc) {

@@ -4,10 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class ConstraintDocumentEntity {
     private final ArrayList<PatternEntity> patterns = new ArrayList<>();
+    private volatile HashMap<String, PatternNodeEntity> id2PatternNode = new HashMap<>();
     private String packageName;
     private volatile HashSet<PatternNodeEntity> localNodes = new HashSet<>();
 
@@ -31,5 +33,13 @@ public class ConstraintDocumentEntity {
 
     public void setLocalNodes(HashSet<PatternNodeEntity> localNodes) {
         this.localNodes = localNodes;
+    }
+
+    public HashMap<String, PatternNodeEntity> getId2PatternNode() {
+        return id2PatternNode;
+    }
+
+    public void setId2PatternNode(HashMap<String, PatternNodeEntity> id2PatternNode) {
+        this.id2PatternNode = id2PatternNode;
     }
 }
