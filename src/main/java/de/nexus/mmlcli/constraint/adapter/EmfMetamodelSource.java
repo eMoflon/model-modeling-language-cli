@@ -1,6 +1,7 @@
 package de.nexus.mmlcli.constraint.adapter;
 
 import de.nexus.mmlcli.constraint.entity.PatternNodeEntity;
+import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntity;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -70,6 +71,11 @@ public class EmfMetamodelSource {
     public EAttribute resolveAttribute(PatternNodeEntity patternNode, String name) {
         EClass clazz = this.classMapping.get(patternNode.getFQName());
         return (EAttribute) clazz.getEStructuralFeature(name);
+    }
+
+    public EAttribute resolveAttribute(PrimaryExpressionEntity<?> primaryExpression) {
+        EClass clazz = this.classMapping.get(primaryExpression.getClassName());
+        return (EAttribute) clazz.getEStructuralFeature(primaryExpression.getElementName());
     }
 
     public void load(String pathName) {

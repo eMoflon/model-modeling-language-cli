@@ -1,13 +1,16 @@
 package de.nexus.mmlcli.constraint.adapter;
 
 import de.nexus.mmlcli.constraint.entity.*;
+import de.nexus.mmlcli.constraint.entity.expr.BinaryExpressionEntity;
+import de.nexus.mmlcli.constraint.entity.expr.ExpressionEntity;
+import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntity;
+import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntityType;
 import hipe.pattern.*;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class GCLToHipePatternTransformation {
     private HiPEPatternFactory factory;
@@ -26,7 +29,7 @@ public class GCLToHipePatternTransformation {
         return transformation.transform(metamodelSource, cDoc.getPatterns());
     }
 
-    public HiPEContainer transform(EmfMetamodelSource metamodelSource, ArrayList<PatternEntity> patternSet) {
+    private HiPEContainer transform(EmfMetamodelSource metamodelSource, ArrayList<PatternEntity> patternSet) {
         factory = HiPEPatternFactory.eINSTANCE;
 
         name2pattern = new HashMap<>();
@@ -41,7 +44,7 @@ public class GCLToHipePatternTransformation {
         return container;
     }
 
-    public HiPEPattern transform(EmfMetamodelSource metamodelSource, PatternEntity pattern) {
+    private HiPEPattern transform(EmfMetamodelSource metamodelSource, PatternEntity pattern) {
         assert pattern != null;
         String patternName = pattern.getName().replace("-", "_");
 
@@ -90,10 +93,27 @@ public class GCLToHipePatternTransformation {
             hPattern.getEdges().add(transform(metamodelSource, edge));
         }
 
+        List<AttributeConstraintEntity> simpleAttributeConstraints = pattern.getConstraints().stream().filter(AttributeConstraintEntity::isRelationalConstraint).toList();
+        List<AttributeConstraintEntity> complexAttributeConstraints = pattern.getConstraints().stream().filter(AttributeConstraintEntity::isComplexConstraint).toList();
+
+        for (AttributeConstraintEntity attributeConstraint : simpleAttributeConstraints) {
+            HiPEAttributeConstraint hiPEAttributeConstraint = transformSimpleAC(metamodelSource, attributeConstraint, hPattern);
+
+            if (hiPEAttributeConstraint != null) {
+                hPattern.getAttributeConstraints().add(hiPEAttributeConstraint);
+            }
+        }
+
+        for (AttributeConstraintEntity attributeConstraint : complexAttributeConstraints) {
+            HiPEAttributeConstraint hiPEAttributeConstraint = transformComplexAC(metamodelSource, attributeConstraint);
+
+            hPattern.getAttributeConstraints().add(hiPEAttributeConstraint);
+        }
+
         return hPattern;
     }
 
-    public HiPENode transform(EmfMetamodelSource metamodelSource, PatternNodeEntity node) {
+    private HiPENode transform(EmfMetamodelSource metamodelSource, PatternNodeEntity node) {
         assert node != null;
         if (node2node.containsKey(node))
             return node2node.get(node);
@@ -110,7 +130,7 @@ public class GCLToHipePatternTransformation {
         return hNode;
     }
 
-    public HiPEEdge transform(EmfMetamodelSource metamodelSource, EdgeEntity edge) {
+    private HiPEEdge transform(EmfMetamodelSource metamodelSource, EdgeEntity edge) {
         HiPEEdge hEdge = factory.createHiPEEdge();
         container.getEdges().add(hEdge);
         EClass sourceNode = metamodelSource.resolveClass(edge.getFromNode());
@@ -120,5 +140,114 @@ public class GCLToHipePatternTransformation {
         hEdge.setSource(transform(metamodelSource, edge.getFromNode()));
         hEdge.setTarget(transform(metamodelSource, edge.getToNode()));
         return hEdge;
+    }
+
+    private HiPEAttributeConstraint transformSimpleAC(EmfMetamodelSource metamodelSource, AttributeConstraintEntity ace, HiPEPattern pattern) {
+        RelationalConstraint relationalConstraint = factory.createRelationalConstraint();
+        ExpressionEntity expr = ace.getExpr();
+        if (expr instanceof BinaryExpressionEntity bexpr && bexpr.getLeft() instanceof PrimaryExpressionEntity<?> lexpr && bexpr.getRight() instanceof PrimaryExpressionEntity<?> rexpr) {
+            HiPEAttribute attrLeft = transformSimple(metamodelSource, lexpr);
+            HiPEAttribute attrRight = transformSimple(metamodelSource, rexpr);
+
+            if (attrLeft == null || attrRight == null) {
+                return null;
+            }
+
+            pattern.getAttributes().add(attrLeft);
+            pattern.getAttributes().add(attrRight);
+
+            relationalConstraint.setLeftAttribute(attrLeft);
+            relationalConstraint.setRightAttribute(attrRight);
+
+            relationalConstraint.setType(bexpr.getOperator().asHiPEComparatorType());
+
+            this.container.getAttributeConstraints().add(relationalConstraint);
+            return relationalConstraint;
+        } else {
+            throw new RuntimeException("Tried to transformSimpleAC with non-simple constraint!");
+        }
+    }
+
+    private HiPEAttribute transformSimple(EmfMetamodelSource metamodelSource, PrimaryExpressionEntity<?> primaryExpression) {
+        HiPEAttribute attr = factory.createHiPEAttribute();
+        this.container.getAttributes().add(attr);
+        if (primaryExpression.isConstantValue()) {
+            attr.setValue(primaryExpression.getValue());
+        } else if (primaryExpression.getType() == PrimaryExpressionEntityType.ENUM_VALUE) {
+            attr.setValue(primaryExpression.getValue());
+        } else if (primaryExpression.getType() == PrimaryExpressionEntityType.ATTRIBUTE) {
+            PatternNodeEntity nodeEntity = this.cDoc.getId2PatternNode().get(primaryExpression.getNodeId());
+            EAttribute targetAttribute = metamodelSource.resolveAttribute(primaryExpression);
+            attr.setNode(this.transform(metamodelSource, nodeEntity));
+            attr.setValue(targetAttribute);
+            attr.setEAttribute(targetAttribute);
+        }
+        return attr;
+    }
+
+    private HiPEAttributeConstraint transformComplexAC(EmfMetamodelSource metamodelSource, AttributeConstraintEntity ace) {
+        ComplexConstraint cConstraint = factory.createComplexConstraint();
+        Collection<HiPEAttribute> attributes = new HashSet<>();
+
+        String expression = transform2Java(metamodelSource, ace.getExpr(), attributes);
+        cConstraint.getAttributes().addAll(attributes);
+        cConstraint.setInitializationCode("");
+        cConstraint.setPredicateCode(expression);
+
+        container.getAttributeConstraints().add(cConstraint);
+        return cConstraint;
+    }
+
+    private String transform2Java(EmfMetamodelSource metamodelSource, ExpressionEntity expr, Collection<HiPEAttribute> attributes) {
+        if (expr instanceof BinaryExpressionEntity bexpr) {
+            return transform2Java(metamodelSource, bexpr, attributes);
+        } else if (expr instanceof PrimaryExpressionEntity<?> pexpr) {
+            return transform2Java(metamodelSource, pexpr, attributes);
+        }
+        //TODO: UnaryExpressions -> Negation!!!
+        throw new RuntimeException("Unexpected ExpressionEntityType!");
+    }
+
+    private String transform2Java(EmfMetamodelSource metamodelSource, BinaryExpressionEntity binaryExpression, Collection<HiPEAttribute> attributes) {
+        return switch (binaryExpression.getOperator()) {
+            case EQUALS ->
+                    "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " == " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+            case NOT_EQUALS ->
+                    "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " != " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+            case GREATER_THAN ->
+                    "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " > " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+            case GREATER_EQUAL_THAN ->
+                    "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " >= " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+            case LESS_THAN ->
+                    "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " < " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+            case LESS_EQUAL_THAN ->
+                    "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " <= " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+            case LOGICAL_AND ->
+                    "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " && " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+            case LOGICAL_OR ->
+                    "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " || " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+        };
+    }
+
+    private String transform2Java(EmfMetamodelSource metamodelSource, PrimaryExpressionEntity<?> primaryExpression, Collection<HiPEAttribute> attributes) {
+        return switch (primaryExpression.getType()) {
+            case NUMBER, INTEGER, DOUBLE, BOOLEAN, ENUM_VALUE -> String.valueOf(primaryExpression.getValue());
+            case STRING -> "\"" + primaryExpression.getValue() + "\"";
+            case ATTRIBUTE -> {
+                HiPEAttribute attr = factory.createHiPEAttribute();
+                container.getAttributes().add(attr);
+
+                PatternNodeEntity nodeEntity = this.cDoc.getId2PatternNode().get(primaryExpression.getNodeId());
+                EAttribute targetAttribute = metamodelSource.resolveAttribute(primaryExpression);
+                HiPENode node = this.transform(metamodelSource, nodeEntity);
+                attr.setNode(node);
+                attr.setValue(targetAttribute);
+                attr.setEAttribute(targetAttribute);
+
+                attributes.add(attr);
+
+                yield node.getName() + "_" + targetAttribute.getName();
+            }
+        };
     }
 }

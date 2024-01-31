@@ -8,7 +8,7 @@ public class PatternEntity {
     private final ArrayList<SupportPatternInvocationEntity> pac = new ArrayList<>();
     private final ArrayList<SupportPatternInvocationEntity> nac = new ArrayList<>();
     private final ArrayList<PatternNodeEntity> nodes = new ArrayList<>();
-    //private final ArrayList<SupportPatternInvocationEntity> constraints = new ArrayList<>();
+    private final ArrayList<AttributeConstraintEntity> constraints = new ArrayList<>();
     private final ArrayList<EdgeEntity> edges = new ArrayList<>();
 
     public String getName() {
@@ -33,5 +33,9 @@ public class PatternEntity {
 
     public ArrayList<EdgeEntity> getEdges() {
         return edges;
+    }
+
+    public ArrayList<AttributeConstraintEntity> getConstraints() {
+        return constraints;
     }
 }
