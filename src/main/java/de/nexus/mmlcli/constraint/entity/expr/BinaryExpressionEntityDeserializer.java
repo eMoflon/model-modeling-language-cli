@@ -25,10 +25,12 @@ public class BinaryExpressionEntityDeserializer implements JsonDeserializer<Bina
         JsonObject rightObject = jsonObject.getAsJsonObject("right");
 
         boolean leftIsBinary = jsonObject.get("leftIsBinary").getAsBoolean();
+        boolean leftIsUnary = jsonObject.get("leftIsUnary").getAsBoolean();
         boolean rightIsBinary = jsonObject.get("rightIsBinary").getAsBoolean();
+        boolean rightIsUnary = jsonObject.get("rightIsUnary").getAsBoolean();
 
-        Type leftType = leftIsBinary ? BinaryExpressionEntity.class : PrimaryExpressionEntity.class;
-        Type rightType = rightIsBinary ? BinaryExpressionEntity.class : PrimaryExpressionEntity.class;
+        Type leftType = leftIsBinary ? BinaryExpressionEntity.class : leftIsUnary ? UnaryExpressionEntity.class : PrimaryExpressionEntity.class;
+        Type rightType = rightIsBinary ? BinaryExpressionEntity.class : rightIsUnary ? UnaryExpressionEntity.class : PrimaryExpressionEntity.class;
 
         ExpressionEntity leftExpr = jsonDeserializationContext.deserialize(leftObject, leftType);
         ExpressionEntity rightExpr = jsonDeserializationContext.deserialize(rightObject, rightType);

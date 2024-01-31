@@ -1,10 +1,7 @@
 package de.nexus.mmlcli.constraint.adapter;
 
 import de.nexus.mmlcli.constraint.entity.*;
-import de.nexus.mmlcli.constraint.entity.expr.BinaryExpressionEntity;
-import de.nexus.mmlcli.constraint.entity.expr.ExpressionEntity;
-import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntity;
-import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntityType;
+import de.nexus.mmlcli.constraint.entity.expr.*;
 import hipe.pattern.*;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -203,8 +200,9 @@ public class GCLToHipePatternTransformation {
             return transform2Java(metamodelSource, bexpr, attributes);
         } else if (expr instanceof PrimaryExpressionEntity<?> pexpr) {
             return transform2Java(metamodelSource, pexpr, attributes);
+        } else if (expr instanceof UnaryExpressionEntity uexpr) {
+            return transform2Java(metamodelSource, uexpr, attributes);
         }
-        //TODO: UnaryExpressions -> Negation!!!
         throw new RuntimeException("Unexpected ExpressionEntityType!");
     }
 
@@ -226,6 +224,12 @@ public class GCLToHipePatternTransformation {
                     "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " && " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
             case LOGICAL_OR ->
                     "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " || " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+        };
+    }
+
+    private String transform2Java(EmfMetamodelSource metamodelSource, UnaryExpressionEntity unaryExpression, Collection<HiPEAttribute> attributes) {
+        return switch (unaryExpression.getOperator()) {
+            case NEGATION -> "!(" + transform2Java(metamodelSource, unaryExpression.getExpr(), attributes) + ")";
         };
     }
 

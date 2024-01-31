@@ -2,10 +2,7 @@ package de.nexus.mmlcli.constraint.entity;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import de.nexus.mmlcli.constraint.entity.expr.BinaryExpressionEntity;
-import de.nexus.mmlcli.constraint.entity.expr.BinaryExpressionEntityDeserializer;
-import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntity;
-import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntityDeserializer;
+import de.nexus.mmlcli.constraint.entity.expr.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +18,7 @@ public class ConstraintDocumentEntity {
         GsonBuilder builder = new GsonBuilder();
 
         builder.registerTypeAdapter(BinaryExpressionEntity.class, new BinaryExpressionEntityDeserializer());
+        builder.registerTypeAdapter(UnaryExpressionEntity.class, new UnaryExpressionEntityDeserializer());
         builder.registerTypeAdapter(PrimaryExpressionEntity.class, new PrimaryExpressionEntityDeserializer());
         builder.registerTypeAdapter(AttributeConstraintEntity.class, new AttributeConstraintEntityDeserializer());
 
