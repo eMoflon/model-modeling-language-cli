@@ -129,7 +129,6 @@ public class ModelServerBuilder {
         Manifest manifest = new Manifest();
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
         manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, "de.nexus.modelserver.ModelServer");
-        manifest.getMainAttributes().put(Attributes.Name.CLASS_PATH, "mmlcli.jar");
 
         Path jarPath = this.locationRegistry.getBinPath().resolve("model-server.jar");
 
