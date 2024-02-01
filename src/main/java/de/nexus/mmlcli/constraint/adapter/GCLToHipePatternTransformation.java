@@ -45,8 +45,9 @@ public class GCLToHipePatternTransformation {
         assert pattern != null;
         String patternName = pattern.getName().replace("-", "_");
 
-        if (name2pattern.containsKey(patternName))
+        if (name2pattern.containsKey(patternName)) {
             return name2pattern.get(patternName);
+        }
 
         HiPEPattern hPattern = factory.createHiPEPattern();
         hPattern.setName(patternName);
@@ -107,13 +108,38 @@ public class GCLToHipePatternTransformation {
             hPattern.getAttributeConstraints().add(hiPEAttributeConstraint);
         }
 
+        for (NodeConstraintEntity nodeConstraint : pattern.getNodeConstraints()) {
+            if (nodeConstraint.getNodeOperator() == NodeConstraintOperator.EQUAL) {
+                hPattern.getNodeConstraints().add(transformE(metamodelSource, nodeConstraint));
+            } else if (nodeConstraint.getNodeOperator() == NodeConstraintOperator.UNEQUAL) {
+                hPattern.getNodeConstraints().add(transformUE(metamodelSource, nodeConstraint));
+            }
+        }
+
         return hPattern;
+    }
+
+    private EqualConstraint transformE(EmfMetamodelSource metamodelSource, NodeConstraintEntity nodeConstraint) {
+        EqualConstraint constr = factory.createEqualConstraint();
+        container.getNodeConstraints().add(constr);
+        constr.setLeftNode(transform(metamodelSource, nodeConstraint.getNode1()));
+        constr.setRightNode(transform(metamodelSource, nodeConstraint.getNode2()));
+        return constr;
+    }
+
+    private UnequalConstraint transformUE(EmfMetamodelSource metamodelSource, NodeConstraintEntity nodeConstraint) {
+        UnequalConstraint constr = factory.createUnequalConstraint();
+        container.getNodeConstraints().add(constr);
+        constr.setLeftNode(transform(metamodelSource, nodeConstraint.getNode1()));
+        constr.setRightNode(transform(metamodelSource, nodeConstraint.getNode2()));
+        return constr;
     }
 
     private HiPENode transform(EmfMetamodelSource metamodelSource, PatternNodeEntity node) {
         assert node != null;
-        if (node2node.containsKey(node))
+        if (node2node.containsKey(node)) {
             return node2node.get(node);
+        }
         HiPENode hNode = factory.createHiPENode();
         container.getNodes().add(hNode);
         hNode.setName(node.getName());

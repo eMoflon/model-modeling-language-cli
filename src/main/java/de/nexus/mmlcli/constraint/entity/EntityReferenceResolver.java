@@ -18,6 +18,7 @@ public class EntityReferenceResolver {
             patternEntity.getNac().forEach(inv -> this.unresolvedObjects.add(new UnresolvedObject<>(inv)));
             patternEntity.getNodes().forEach(node -> this.nodeIdToNodeMap.put(node.getNodeId(), node));
             patternEntity.getEdges().forEach(edge -> this.unresolvedObjects.add(new UnresolvedObject<>(edge)));
+            patternEntity.getNodeConstraints().forEach(nodeConstraint -> this.unresolvedObjects.add(new UnresolvedObject<>(nodeConstraint)));
         });
 
         this.unresolvedObjects.forEach(unresolvedObject -> unresolvedObject.resolve(this));
@@ -67,6 +68,10 @@ class UnresolvedObject<T> {
                 binding.setPatternNode1(resolver.resolveNodeId(binding.getNode1()));
                 binding.setPatternNode2(resolver.resolveNodeId(binding.getNode2()));
             });
+        } else if (element instanceof NodeConstraintEntity nodeConstraint) {
+            nodeConstraint.setNode1(resolver.resolveNodeId(nodeConstraint.getNode1Id()));
+            nodeConstraint.setNode2(resolver.resolveNodeId(nodeConstraint.getNode2Id()));
+            nodeConstraint.setNodeOperator(NodeConstraintOperator.fromStringOperator(nodeConstraint.getOperator()));
         } else {
             throw new UnsupportedOperationException("Missing resolver for " + element.toString());
         }

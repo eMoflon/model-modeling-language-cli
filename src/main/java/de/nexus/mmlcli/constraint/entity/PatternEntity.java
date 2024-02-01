@@ -1,15 +1,19 @@
 package de.nexus.mmlcli.constraint.entity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class PatternEntity {
     private String name;
     private String patternId;
+    private boolean allowDuplicates;
     private final ArrayList<SupportPatternInvocationEntity> pac = new ArrayList<>();
     private final ArrayList<SupportPatternInvocationEntity> nac = new ArrayList<>();
     private final ArrayList<PatternNodeEntity> nodes = new ArrayList<>();
     private final ArrayList<AttributeConstraintEntity> constraints = new ArrayList<>();
     private final ArrayList<EdgeEntity> edges = new ArrayList<>();
+    private final ArrayList<NodeConstraintEntity> nodeConstraints = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -37,5 +41,38 @@ public class PatternEntity {
 
     public ArrayList<AttributeConstraintEntity> getConstraints() {
         return constraints;
+    }
+
+    public boolean isAllowDuplicates() {
+        return allowDuplicates;
+    }
+
+    public ArrayList<NodeConstraintEntity> getNodeConstraints() {
+        if (this.allowDuplicates) {
+            return nodeConstraints;
+        } else {
+            return getDefaultNodeConstraints();
+        }
+    }
+
+    private ArrayList<NodeConstraintEntity> getDefaultNodeConstraints() {
+        HashMap<String, HashSet<PatternNodeEntity>> lookupTable = new HashMap<>();
+        this.nodes.forEach(node -> {
+            lookupTable.putIfAbsent(node.getFQName(), new HashSet<>());
+            lookupTable.get(node.getFQName()).add(node);
+        });
+
+        ArrayList<NodeConstraintEntity> nodeConstraints = new ArrayList<>();
+
+        for (HashSet<PatternNodeEntity> group : lookupTable.values()) {
+            ArrayList<PatternNodeEntity> groupNodes = new ArrayList<>(group);
+            for (int i = 0; i < groupNodes.size(); i++) {
+                for (int j = i + 1; j < groupNodes.size(); j++) {
+                    nodeConstraints.add(new NodeConstraintEntity(groupNodes.get(i), groupNodes.get(j), NodeConstraintOperator.UNEQUAL));
+                }
+            }
+        }
+
+        return nodeConstraints;
     }
 }
