@@ -1,53 +1,15 @@
 package de.nexus.emfutils;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class EmfExtenderUtil {
+public class EMFExtenderUtils {
     private static final String IDENTIFIER_CLASS_NAME = "MMLConstraintIdentifier";
     private static final String IDENTIFIER_ATTRIBUTE_NAME = "nodeId";
-
-    public static ResourceSet getResourceSet() {
-        // Create a resource set.
-        ResourceSet resourceSet = new ResourceSetImpl();
-
-        // Register the default resource factory -- only needed for stand-alone!
-        resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
-        resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
-
-        // Register the package -- only needed for stand-alone!
-        EcorePackage ecorePackage = EcorePackage.eINSTANCE;
-
-        return resourceSet;
-    }
-
-    public static EPackage loadMetaModel(ResourceSet rSet, File metaModelSource) {
-        // Get the URI of the model file.
-        URI fileURI = URI.createFileURI(metaModelSource.toString());
-
-        // Demand load the resource for this file.
-        Resource resource = rSet.getResource(fileURI, true);
-
-        EObject rootElement = resource.getContents().get(0);
-
-        if (rootElement instanceof EPackage ePackage) {
-            rSet.getPackageRegistry().put(ePackage.getNsURI(), ePackage);
-            return ePackage;
-        }
-        return null;
-    }
 
     public static EClass getMMLIdentifierClass(EPackage ePackage) {
         List<EClassifier> classifiers = ePackage.getEClassifiers().stream().filter(x -> x instanceof EClass).filter(x -> ((EClass) x).isAbstract() && ((EClass) x).getESuperTypes().isEmpty() && x.getName().equals(IDENTIFIER_CLASS_NAME)).toList();
@@ -65,16 +27,8 @@ public class EmfExtenderUtil {
 
     }
 
-    public static Resource loadModel(ResourceSet rSet, File modelSource) {
-        // Get the URI of the model file.
-        URI fileURI = URI.createFileURI(modelSource.toString());
-
-        // Demand load the resource for this file.
-        return rSet.getResource(fileURI, true);
-    }
-
     public static void extendModel(EPackage ePackage, Resource resource) {
-        EClass identifierClass = EmfExtenderUtil.getMMLIdentifierClass(ePackage);
+        EClass identifierClass = EMFExtenderUtils.getMMLIdentifierClass(ePackage);
         if (identifierClass == null) {
             throw new IllegalStateException("Trying to extend model without extended metamodel");
         }
@@ -87,7 +41,7 @@ public class EmfExtenderUtil {
     }
 
     public static void unextendModel(EPackage ePackage, Resource resource) {
-        EClass identifierClass = EmfExtenderUtil.getMMLIdentifierClass(ePackage);
+        EClass identifierClass = EMFExtenderUtils.getMMLIdentifierClass(ePackage);
         if (identifierClass == null) {
             throw new IllegalStateException("Trying to extend model without extended metamodel");
         }
@@ -98,7 +52,7 @@ public class EmfExtenderUtil {
     }
 
     public static void extendMetaModel(EPackage ePackage) {
-        EClass identifierClass = EmfExtenderUtil.getMMLIdentifierClass(ePackage);
+        EClass identifierClass = EMFExtenderUtils.getMMLIdentifierClass(ePackage);
         if (identifierClass != null) {
             return;
         }
@@ -126,7 +80,7 @@ public class EmfExtenderUtil {
     }
 
     public static void unextendMetaModel(EPackage ePackage) {
-        EClass identifierClass = EmfExtenderUtil.getMMLIdentifierClass(ePackage);
+        EClass identifierClass = EMFExtenderUtils.getMMLIdentifierClass(ePackage);
         if (identifierClass == null) {
             return;
         }
@@ -136,47 +90,41 @@ public class EmfExtenderUtil {
         ePackage.getEClassifiers().remove(identifierClass);
     }
 
-    public static boolean writeFiles(ResourceSet rSet, EPackage metamodel, Resource model, File ecoreFile, File modelFile) {
-        Resource resource = rSet.createResource(URI.createFileURI(ecoreFile.toString()));
-        resource.getContents().add(metamodel);
+    public static boolean writeFiles(IEMFLoader emfLoader, EPackage metamodel, Resource model, File ecoreFile, File modelFile) {
+        Resource ecoreResource = emfLoader.copyResource(metamodel, ecoreFile);
 
-        Resource resource2 = rSet.createResource(URI.createFileURI(modelFile.toString()));
+        Resource xmiResource = emfLoader.copyResource(model, modelFile);
 
-        resource2.getContents().addAll(EcoreUtil.copyAll(model.getContents()));
-
-        try {
-            resource.save(Collections.emptyMap());
-            resource2.save(Collections.emptyMap());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (!emfLoader.saveResource(ecoreResource)) {
+            return false;
         }
-        return true;
+        return emfLoader.saveResource(xmiResource);
     }
 
-    public static boolean extendToFile(ResourceSet rSet, EPackage metamodel, File ecoreFile, File modelFile) {
+    public static boolean extendToFile(IEMFLoader emfLoader, EPackage metamodel, File ecoreFile, File modelFile) {
         File extEcoreFile = createExtendedFilePath(ecoreFile);
         File extModelFile = createExtendedFilePath(modelFile);
 
         extendMetaModel(metamodel);
 
-        Resource model = EmfExtenderUtil.loadModel(rSet, modelFile);
+        Resource model = emfLoader.loadResource(modelFile);
 
         extendModel(metamodel, model);
 
-        return writeFiles(rSet, metamodel, model, extEcoreFile, extModelFile);
+        return writeFiles(emfLoader, metamodel, model, extEcoreFile, extModelFile);
     }
 
-    public static boolean unextendToFile(ResourceSet rSet, EPackage metamodel, File ecoreFile, File modelFile) {
+    public static boolean unextendToFile(IEMFLoader emfLoader, EPackage metamodel, File ecoreFile, File modelFile) {
         File unextEcoreFile = createUnextendedFilePath(ecoreFile);
         File unextModelFile = createUnextendedFilePath(modelFile);
 
         unextendMetaModel(metamodel);
 
-        Resource model = EmfExtenderUtil.loadModel(rSet, modelFile);
+        Resource model = emfLoader.loadResource(modelFile);
 
         unextendModel(metamodel, model);
 
-        return writeFiles(rSet, metamodel, model, unextEcoreFile, unextModelFile);
+        return writeFiles(emfLoader, metamodel, model, unextEcoreFile, unextModelFile);
     }
 
     public static File createExtendedFilePath(File file) {
@@ -206,20 +154,20 @@ public class EmfExtenderUtil {
     }
 
     public static boolean extendFromFileToFile(File ecoreFile, File modelFile) {
-        ResourceSet rSet = EmfExtenderUtil.getResourceSet();
-        EPackage metaModel = EmfExtenderUtil.loadMetaModel(rSet, ecoreFile);
+        EMFLoader emfLoader = new EMFLoader();
+        EPackage metaModel = emfLoader.loadResourceAsPackage(ecoreFile);
         if (metaModel == null) {
             throw new IllegalStateException("Unable to load metamodel!");
         }
-        return extendToFile(rSet, metaModel, ecoreFile, modelFile);
+        return extendToFile(emfLoader, metaModel, ecoreFile, modelFile);
     }
 
     public static boolean unextendFromFileToFile(File ecoreFile, File modelFile) {
-        ResourceSet rSet = EmfExtenderUtil.getResourceSet();
-        EPackage metaModel = EmfExtenderUtil.loadMetaModel(rSet, ecoreFile);
+        EMFLoader emfLoader = new EMFLoader();
+        EPackage metaModel = emfLoader.loadResourceAsPackage(ecoreFile);
         if (metaModel == null) {
             throw new IllegalStateException("Unable to load metamodel!");
         }
-        return unextendToFile(rSet, metaModel, ecoreFile, modelFile);
+        return unextendToFile(emfLoader, metaModel, ecoreFile, modelFile);
     }
 }
