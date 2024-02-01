@@ -1,4 +1,4 @@
-package de.nexus.mmlcli.extender;
+package de.nexus.emfutils;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
