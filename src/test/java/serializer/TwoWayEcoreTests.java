@@ -1,9 +1,9 @@
 package serializer;
 
+import de.nexus.emfutils.EMFLoader;
 import de.nexus.mmlcli.entities.model.PackageEntity;
 import de.nexus.mmlcli.generator.EmfResourceBuilder;
 import de.nexus.mmlcli.generator.SerializedDocument;
-import de.nexus.mmlcli.serializer.EmfResourceLoader;
 import de.nexus.mmlcli.serializer.MmlSerializedGenerator;
 import org.eclipse.emf.ecore.EPackage;
 import org.junit.jupiter.api.Assertions;
@@ -28,7 +28,8 @@ public class TwoWayEcoreTests {
     @ParameterizedTest
     @MethodSource("testBundleProvider")
     void testCorrectTwowaySerialization(TestBundle bundle, @TempDir File workingDir) throws IOException {
-        EPackage ePackage = EmfResourceLoader.loadEmfResources(bundle.getEcoreFile());
+        EMFLoader emfLoader = new EMFLoader();
+        EPackage ePackage = emfLoader.loadResourceAsPackage(bundle.getEcoreFile());
         PackageEntity packageEntity = MmlSerializedGenerator.buildEntities(ePackage);
         String generatedSerialization = MmlSerializedGenerator.serializeEntities(packageEntity, bundle.getEcoreFile().toURI());
 

@@ -1,5 +1,6 @@
 package de.nexus.mmlcli.serializer;
 
+import de.nexus.emfutils.EMFLoader;
 import de.nexus.mmlcli.entities.model.PackageEntity;
 import org.eclipse.emf.ecore.EPackage;
 import picocli.CommandLine;
@@ -27,7 +28,10 @@ public class SerializeCommand implements Callable<Integer> {
             System.err.println("Could not read inputfile: " + ecoreFile.getAbsolutePath());
             return 2;
         }
-        EPackage ePackage = EmfResourceLoader.loadEmfResources(ecoreFile);
+
+        EMFLoader emfLoader = new EMFLoader();
+        EPackage ePackage = emfLoader.loadResourceAsPackage(ecoreFile);
+
         PackageEntity packageEntity = MmlSerializedGenerator.buildEntities(ePackage);
         String serialized = MmlSerializedGenerator.serializeEntities(packageEntity, ecoreFile.toURI());
 
