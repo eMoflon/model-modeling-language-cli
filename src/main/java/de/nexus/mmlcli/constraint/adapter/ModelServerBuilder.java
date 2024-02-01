@@ -1,10 +1,11 @@
 package de.nexus.mmlcli.constraint.adapter;
 
+import de.nexus.mmlcli.constraint.adapter.codegen.ModelServerConfigurationGenerator;
+import de.nexus.mmlcli.constraint.adapter.codegen.ModelServerEngineGenerator;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.tools.*;
 import java.io.*;
-import java.net.URI;
 import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -83,9 +84,9 @@ public class ModelServerBuilder {
         Iterable<JavaFileObject> uncompiledClasses = (Iterable<JavaFileObject>) fileManager.getJavaFileObjectsFromPaths(files);
         ArrayList<JavaFileObject> tmp = new ArrayList<>();
         uncompiledClasses.forEach(tmp::add);
-        tmp.add(new ModelServerConfigFileObject(projectName, this.locationRegistry.getModelPath().toString()));
+        tmp.add(ModelServerConfigurationGenerator.build(projectName, this.locationRegistry.getModelPath().toString()));
         String hipeNetworkPath = this.locationRegistry.getSrcGenPath().resolve(projectName).resolve("hipe/engine/hipe-network.xmi").toString();
-        tmp.add(new ModelServerEngineFileObject(projectName, hipeNetworkPath));
+        tmp.add(ModelServerEngineGenerator.build(projectName, hipeNetworkPath));
 
         JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, collector, options, null, tmp);
         boolean result = task.call();
@@ -122,99 +123,6 @@ public class ModelServerBuilder {
             }
         }
 
-    }
-
-    private static class ModelServerConfigFileObject extends SimpleJavaFileObject {
-        private final String sourceCode;
-
-        public ModelServerConfigFileObject(String projectName, String modelPath) {
-            super(URI.create("file:///ModelServerConfiguration" + Kind.SOURCE.extension), Kind.SOURCE);
-            String codeTemplate = """
-                    package de.nexus.modelserver;
-                                        
-                    import de.nexus.modelserver.IModelServerConfiguration;
-                                        
-                    public class ModelServerConfiguration implements IModelServerConfiguration {
-                        public String getProjectName(){
-                            return "%s";
-                        }
-                        
-                        public String getModelPath(){
-                            return "%s";
-                        }
-                    }
-                    """;
-            String normalizedNetworkPath = modelPath.replace("\\", "\\\\");
-            this.sourceCode = String.format(codeTemplate, projectName, normalizedNetworkPath);
-        }
-
-        @Override
-        public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-            return sourceCode;
-        }
-
-        @Override
-        public OutputStream openOutputStream() {
-            throw new IllegalStateException();
-        }
-
-        @Override
-        public InputStream openInputStream() {
-            return new ByteArrayInputStream(sourceCode.getBytes());
-        }
-    }
-
-    private static class ModelServerEngineFileObject extends SimpleJavaFileObject {
-        private final String sourceCode;
-
-        public ModelServerEngineFileObject(String projectName, String hipeNetworkPath) {
-            super(URI.create("file:///ModelServerEngine" + Kind.SOURCE.extension), Kind.SOURCE);
-            String codeTemplate = """
-                    package de.nexus.modelserver;
-                                        
-                    import de.nexus.modelserver.IModelServerEngine;
-                    import %s.hipe.engine.HiPEEngine;
-                    import hipe.engine.HiPEOptions;
-                    import %s.%sPackage;
-                                        
-                    public class ModelServerEngine extends HiPEEngine implements IModelServerEngine {
-                        @Override
-                        protected String getNetworkFilePath() {
-                            return "%s";
-                        }
-                        
-                        public void initializeEngine() {
-                            %sPackage.eINSTANCE.getName();
-                            
-                            HiPEOptions options = new HiPEOptions();
-                            options.cascadingNotifications = true;
-                            options.lazyInitialization = false;
-                            try {
-                                this.initialize(options);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    }
-                    """;
-            String normalizedNetworkPath = hipeNetworkPath.replace("\\", "\\\\");
-            this.sourceCode = String.format(codeTemplate, projectName, projectName, projectName, normalizedNetworkPath, projectName);
-        }
-
-        @Override
-        public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-            return sourceCode;
-        }
-
-        @Override
-        public OutputStream openOutputStream() {
-            throw new IllegalStateException();
-        }
-
-        @Override
-        public InputStream openInputStream() {
-            return new ByteArrayInputStream(sourceCode.getBytes());
-        }
     }
 
     private void packageModelServer() {
