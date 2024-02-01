@@ -1,5 +1,6 @@
 package de.nexus.mmlcli.extender;
 
+import de.nexus.emfutils.EmfExtenderUtil;
 import picocli.CommandLine;
 
 import java.io.File;
