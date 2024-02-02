@@ -1,49 +1,33 @@
 package de.nexus.mmlcli.constraint.adapter;
 
+import de.nexus.emfutils.EMFLoader;
 import de.nexus.mmlcli.constraint.entity.PatternNodeEntity;
 import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntity;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.BasicExtendedMetaData;
-import org.eclipse.emf.ecore.util.ExtendedMetaData;
-import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EmfMetamodelSource {
-    private final ResourceSet resourceSet;
+public class EmfMetamodelSource extends EMFLoader {
     private final Map<String, EClass> classMapping = new HashMap<>();
 
-    public EmfMetamodelSource() {
-        // Create a resource set.
-        this.resourceSet = new ResourceSetImpl();
+//    public EmfMetamodelSource(Path workspacePath) {
+//        super(workspacePath);
+//    }
 
-        // Register the default resource factory -- only needed for stand-alone!
-        this.resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
-                "ecore", new EcoreResourceFactoryImpl());
-
-        // enable extended metadata
-        final ExtendedMetaData extendedMetaData = new BasicExtendedMetaData(this.resourceSet.getPackageRegistry());
-        this.resourceSet.getLoadOptions().put(XMLResource.OPTION_EXTENDED_META_DATA,
-                extendedMetaData);
-
-        // Register the package -- only needed for stand-alone!
-        EcorePackage ecorePackage = EcorePackage.eINSTANCE;
+    @Override
+    public EPackage loadResourceAsPackage(File file) {
+        EPackage ePackage = super.loadResourceAsPackage(file);
+        loadMetaModelClasses(ePackage, "");
+        return ePackage;
     }
 
-    public void load(URI uri) {
-        // Demand load the resource for this file.
-        Resource resource = this.resourceSet.getResource(uri, true);
-
-        EObject rootElement = resource.getContents().get(0);
-        if (rootElement instanceof EPackage ePackage) {
-            loadMetaModelClasses(ePackage, "");
-        }
+    @Override
+    public EPackage loadResourceAsPackage(Path file) {
+        return this.loadResourceAsPackage(file.toFile());
     }
 
     private void loadMetaModelClasses(final EPackage ePackage, final String pathPrefix) {
@@ -78,19 +62,8 @@ public class EmfMetamodelSource {
         return (EAttribute) clazz.getEStructuralFeature(primaryExpression.getElementName());
     }
 
-    public void load(String pathName) {
-        // Get the URI of the model file.
-        URI fileURI = URI.createFileURI(pathName);
-
-        this.load(fileURI);
-    }
-
-    public EPackage.Registry getPackageRegistry() {
-        return this.resourceSet.getPackageRegistry();
-    }
-
     public EPackage getEPackage(int idx) {
-        Resource resource = this.resourceSet.getResources().get(idx);
+        Resource resource = getResourceSet().getResources().get(idx);
         EObject rootElement = resource.getContents().get(0);
         if (rootElement instanceof EPackage ePackage) {
             return ePackage;

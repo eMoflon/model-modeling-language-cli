@@ -5,11 +5,6 @@ import de.nexus.mmlcli.constraint.adapter.*;
 import de.nexus.mmlcli.constraint.entity.ConstraintDocumentEntity;
 import de.nexus.mmlcli.constraint.entity.EntityReferenceResolver;
 import de.nexus.modelserver.ModelServer;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -62,18 +57,9 @@ public class HipeGenCommand implements Callable<Integer> {
 
         locations.createGeneratorDirectories();
 
+        //EmfMetamodelSource metamodelSource = new EmfMetamodelSource(workspacePath.toPath());
         EmfMetamodelSource metamodelSource = new EmfMetamodelSource();
-        metamodelSource.load(this.ecorePath.toString());
-
-
-        ResourceSet rs = new ResourceSetImpl();
-        rs.getResourceFactoryRegistry().getExtensionToFactoryMap()
-                .put(Resource.Factory.Registry.DEFAULT_EXTENSION, new SmartEMFResourceFactoryImpl(workspacePath.toPath().toAbsolutePath().toString()));
-        try {
-            rs.getURIConverter().getURIMap().put(URI.createPlatformResourceURI("/", true), URI.createFileURI(this.workspacePath.getCanonicalPath() + java.io.File.separator));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        metamodelSource.loadResourceAsPackage(this.ecorePath);
 
         String projectName = metamodelSource.getEPackage(0).getName();
         GenModelBuilder.createGenModel(metamodelSource.getEPackage(0), locations, projectName);

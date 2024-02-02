@@ -132,5 +132,9 @@ public class EMFLoader implements IEMFLoader {
         resource.getContents().add(ePackage);
         return resource;
     }
+
+    protected ResourceSet getResourceSet() {
+        return this.resourceSet;
+    }
 }
 
