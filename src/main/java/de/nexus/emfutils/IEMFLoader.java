@@ -1,5 +1,6 @@
 package de.nexus.emfutils;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -43,4 +44,6 @@ public interface IEMFLoader {
     Resource copyResource(EPackage ePackage, File file);
 
     Resource copyResource(EPackage ePackage, URI path);
+
+    EList<Resource> getResources();
 }

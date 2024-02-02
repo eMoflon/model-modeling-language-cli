@@ -1,23 +1,16 @@
 package de.nexus.modelserver;
 
+import de.nexus.emfutils.EMFLoader;
 import hipe.engine.HiPEContentAdapter;
 import hipe.engine.IHiPEEngine;
 import hipe.engine.message.production.ProductionResult;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
 import java.util.Map;
 
 public class ModelServer {
-
-    private final ResourceSet resourceSet;
-
     private final IHiPEEngine engine;
     private final IModelServerConfiguration configuration;
 
@@ -33,18 +26,11 @@ public class ModelServer {
 
 
         System.out.println("[ModelServer] Loading model...");
-        this.resourceSet = new ResourceSetImpl();
-
-        URI modelUri = URI.createFileURI(configuration.getModelPath());
-
-        try {
-            loadResource(modelUri);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        EMFLoader emfLoader = new EMFLoader();
+        emfLoader.loadResource(Path.of(configuration.getModelPath()));
 
         System.out.println("[ModelServer] Creating ContentAdapter...");
-        new HiPEContentAdapter(resourceSet.getResources(), this.engine);
+        new HiPEContentAdapter(emfLoader.getResources(), this.engine);
 
         System.out.println("""
 
@@ -111,17 +97,5 @@ public class ModelServer {
             System.err.println("[ModelServer] Could not find constructor!");
             throw new RuntimeException(e);
         }
-    }
-
-    public void loadResource(URI modelUri) throws Exception {
-        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
-        this.resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
-        this.resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
-
-        Resource modelResource = this.resourceSet.getResource(modelUri, true);
-        EcoreUtil.resolveAll(this.resourceSet);
-
-        if (modelResource == null)
-            throw new IOException("File did not contain a valid model.");
     }
 }

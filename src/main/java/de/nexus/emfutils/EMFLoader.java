@@ -1,5 +1,6 @@
 package de.nexus.emfutils;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -131,6 +132,11 @@ public class EMFLoader implements IEMFLoader {
         Resource resource = createNewResource(path);
         resource.getContents().add(ePackage);
         return resource;
+    }
+
+    @Override
+    public EList<Resource> getResources() {
+        return this.resourceSet.getResources();
     }
 
     protected ResourceSet getResourceSet() {
