@@ -44,7 +44,9 @@ public class EMFLoaderUtils {
 
         // Register the default resource factory -- only needed for stand-alone!
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-                .put(Resource.Factory.Registry.DEFAULT_EXTENSION, new SmartEMFResourceFactoryImpl(workspacePath.toAbsolutePath().toString()));
+                .put("ecore", new EcoreResourceFactoryImpl());
+        resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
+                .put("xmi", new SmartEMFResourceFactoryImpl(workspacePath.toAbsolutePath().toString()));
         try {
             resourceSet.getURIConverter().getURIMap().put(URI.createPlatformResourceURI("/", true), URI.createFileURI(workspacePath.toFile().getCanonicalPath() + java.io.File.separator));
         } catch (IOException e) {

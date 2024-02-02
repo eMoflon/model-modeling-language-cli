@@ -1,6 +1,6 @@
 package de.nexus.mmlcli.constraint.adapter;
 
-import de.nexus.emfutils.EMFLoader;
+import de.nexus.emfutils.SmartEMFLoader;
 import de.nexus.mmlcli.constraint.entity.PatternNodeEntity;
 import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntity;
 import org.eclipse.emf.ecore.*;
@@ -11,12 +11,12 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EmfMetamodelSource extends EMFLoader {
+public class EmfMetamodelSource extends SmartEMFLoader {
     private final Map<String, EClass> classMapping = new HashMap<>();
 
-//    public EmfMetamodelSource(Path workspacePath) {
-//        super(workspacePath);
-//    }
+    public EmfMetamodelSource(Path workspacePath) {
+        super(workspacePath);
+    }
 
     @Override
     public EPackage loadResourceAsPackage(File file) {

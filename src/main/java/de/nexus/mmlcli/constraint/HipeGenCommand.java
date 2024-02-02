@@ -57,8 +57,7 @@ public class HipeGenCommand implements Callable<Integer> {
 
         locations.createGeneratorDirectories();
 
-        //EmfMetamodelSource metamodelSource = new EmfMetamodelSource(workspacePath.toPath());
-        EmfMetamodelSource metamodelSource = new EmfMetamodelSource();
+        EmfMetamodelSource metamodelSource = new EmfMetamodelSource(workspacePath.toPath());
         metamodelSource.loadResourceAsPackage(this.ecorePath);
 
         String projectName = metamodelSource.getEPackage(0).getName();
