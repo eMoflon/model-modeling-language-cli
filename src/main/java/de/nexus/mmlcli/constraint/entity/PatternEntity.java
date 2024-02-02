@@ -7,7 +7,7 @@ import java.util.HashSet;
 public class PatternEntity {
     private String name;
     private String patternId;
-    private boolean allowDuplicates;
+    private boolean disableDefaultNodeConstraints;
     private final ArrayList<SupportPatternInvocationEntity> pac = new ArrayList<>();
     private final ArrayList<SupportPatternInvocationEntity> nac = new ArrayList<>();
     private final ArrayList<PatternNodeEntity> nodes = new ArrayList<>();
@@ -43,12 +43,8 @@ public class PatternEntity {
         return constraints;
     }
 
-    public boolean isAllowDuplicates() {
-        return allowDuplicates;
-    }
-
     public ArrayList<NodeConstraintEntity> getNodeConstraints() {
-        if (this.allowDuplicates) {
+        if (this.disableDefaultNodeConstraints) {
             return nodeConstraints;
         } else {
             return getDefaultNodeConstraints();
