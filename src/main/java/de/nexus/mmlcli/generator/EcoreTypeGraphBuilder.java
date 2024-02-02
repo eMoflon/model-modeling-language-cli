@@ -1,14 +1,12 @@
 package de.nexus.mmlcli.generator;
 
+import de.nexus.emfutils.IEMFLoader;
 import de.nexus.mmlcli.entities.model.*;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -75,26 +73,23 @@ public class EcoreTypeGraphBuilder {
      *
      * @param graphBuilderList List of EcoreTypeGraphBuilders
      * @param resolver         EcoreTypeResolver
-     * @param resSet           Common resource set
+     * @param emfLoader        EMFLoader instance
      */
     public static void buildEcoreFile(List<EcoreTypeGraphBuilder> graphBuilderList, EcoreTypeResolver resolver,
-                                      ResourceSet resSet) {
+                                      IEMFLoader emfLoader) {
         // resolve all unresolved types
         resolver.resolveUnresovedTypes();
 
         for (EcoreTypeGraphBuilder builder : graphBuilderList) {
             builder.ePackage.eClass();
         }
-        Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-        Map<String, Object> m = reg.getExtensionToFactoryMap();
-        m.put(EcorePackage.eNAME, new EcoreResourceFactoryImpl());
 
         List<Resource> resources = new ArrayList<>();
         // create a resource
         try {
             for (EcoreTypeGraphBuilder builder : graphBuilderList) {
-                Resource resource = resSet
-                        .createResource(URI.createFileURI(Objects.requireNonNull(builder.exportPath)));
+                Resource resource = emfLoader.createNewResource(builder.exportPath);
+
                 /*
                  * add your EPackage as root, everything is hierarchical included in this first
                  * node
@@ -108,11 +103,7 @@ public class EcoreTypeGraphBuilder {
 
         // now save the content.
         for (Resource resource : resources) {
-            try {
-                resource.save(Collections.EMPTY_MAP);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            emfLoader.saveResource(resource);
         }
     }
 

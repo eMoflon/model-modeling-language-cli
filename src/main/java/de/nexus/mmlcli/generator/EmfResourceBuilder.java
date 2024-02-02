@@ -1,12 +1,11 @@
 package de.nexus.mmlcli.generator;
 
+import de.nexus.emfutils.EMFLoader;
 import de.nexus.mmlcli.entities.instance.GeneratorInstance;
 import de.nexus.mmlcli.entities.model.ModelEntity;
 import de.nexus.mmlcli.entities.model.PackageEntity;
 import de.nexus.mmlcli.generator.diagnostic.DocumentDiagnostic;
 import de.nexus.mmlcli.generator.diagnostic.DocumentPoint;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,12 +25,12 @@ public class EmfResourceBuilder {
     public static void buildEmfResources(SerializedDocument[] documents, String projectName, File basePath) {
         System.out.println("Deserialize model");
         System.out.println("==========[Building resources]==========");
+        EMFLoader emfLoader = new EMFLoader();
         List<EcoreTypeGraphBuilder> typeBuilders = new ArrayList<>();
         List<XMIInstanceGraphBuilder> instanceBuilders = new ArrayList<>();
         EcoreTypeResolver typeResolver = new EcoreTypeResolver();
         XMIInstanceResolver instanceResolver = new XMIInstanceResolver();
         // Obtain a new resource set
-        ResourceSet resSet = new ResourceSetImpl();
         Path modelsDir = Paths.get(basePath.toString(), "model");
         for (SerializedDocument doc : documents) {
             try {
@@ -60,7 +59,7 @@ public class EmfResourceBuilder {
                 System.out.printf("\t- %s [EXPORTED to %s]%n", pckgEntity.getName(), filePath);
             }
         }
-        EcoreTypeGraphBuilder.buildEcoreFile(typeBuilders, typeResolver, resSet);
+        EcoreTypeGraphBuilder.buildEcoreFile(typeBuilders, typeResolver, emfLoader);
         System.out.println("Ecore created!");
 
         for (SerializedDocument doc : documents) {
@@ -78,7 +77,7 @@ public class EmfResourceBuilder {
                 System.out.printf("\t- %s [EXPORTED to %s]%n", instWrapper.getInstanceName(), filePath);
             }
         }
-        XMIInstanceGraphBuilder.buildXmiFile(instanceBuilders, typeResolver, instanceResolver, resSet);
+        XMIInstanceGraphBuilder.buildXmiFile(instanceBuilders, typeResolver, instanceResolver, emfLoader);
         System.out.println("XMI created!");
     }
 }
