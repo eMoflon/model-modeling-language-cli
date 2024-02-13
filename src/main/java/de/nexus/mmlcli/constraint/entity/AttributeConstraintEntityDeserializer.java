@@ -4,6 +4,7 @@ import com.google.gson.*;
 import de.nexus.mmlcli.constraint.entity.expr.BinaryExpressionEntity;
 import de.nexus.mmlcli.constraint.entity.expr.ExpressionEntity;
 import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntity;
+import de.nexus.mmlcli.constraint.entity.expr.UnaryExpressionEntity;
 
 import java.lang.reflect.Type;
 
@@ -11,10 +12,12 @@ public class AttributeConstraintEntityDeserializer implements JsonDeserializer<A
     @Override
     public AttributeConstraintEntity deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonObject exprObject = jsonObject.getAsJsonObject("expr");
-        boolean isBinary = jsonObject.get("isBinary").getAsBoolean();
+        JsonObject exprContainerObject = jsonObject.getAsJsonObject("expr");
+        JsonObject exprObject = exprContainerObject.getAsJsonObject("expr");
+        boolean isBinary = exprContainerObject.get("isBinary").getAsBoolean();
+        boolean isUnary = exprContainerObject.get("isUnary").getAsBoolean();
 
-        Type exprType = isBinary ? BinaryExpressionEntity.class : PrimaryExpressionEntity.class;
+        Type exprType = isBinary ? BinaryExpressionEntity.class : isUnary ? UnaryExpressionEntity.class : PrimaryExpressionEntity.class;
 
         ExpressionEntity expressionEntity = jsonDeserializationContext.deserialize(exprObject, exprType);
 

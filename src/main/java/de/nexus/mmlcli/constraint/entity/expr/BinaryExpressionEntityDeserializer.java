@@ -21,13 +21,15 @@ public class BinaryExpressionEntityDeserializer implements JsonDeserializer<Bina
             default -> throw new RuntimeException("Unknown binary operator: " + operator);
         };
 
-        JsonObject leftObject = jsonObject.getAsJsonObject("left");
-        JsonObject rightObject = jsonObject.getAsJsonObject("right");
+        JsonObject leftContainerObject = jsonObject.getAsJsonObject("left");
+        JsonObject rightContainerObject = jsonObject.getAsJsonObject("right");
+        JsonObject leftObject = leftContainerObject.getAsJsonObject("expr");
+        JsonObject rightObject = rightContainerObject.getAsJsonObject("expr");
 
-        boolean leftIsBinary = jsonObject.get("leftIsBinary").getAsBoolean();
-        boolean leftIsUnary = jsonObject.get("leftIsUnary").getAsBoolean();
-        boolean rightIsBinary = jsonObject.get("rightIsBinary").getAsBoolean();
-        boolean rightIsUnary = jsonObject.get("rightIsUnary").getAsBoolean();
+        boolean leftIsBinary = leftContainerObject.get("isBinary").getAsBoolean();
+        boolean leftIsUnary = leftContainerObject.get("isUnary").getAsBoolean();
+        boolean rightIsBinary = rightContainerObject.get("isBinary").getAsBoolean();
+        boolean rightIsUnary = rightContainerObject.get("isUnary").getAsBoolean();
 
         Type leftType = leftIsBinary ? BinaryExpressionEntity.class : leftIsUnary ? UnaryExpressionEntity.class : PrimaryExpressionEntity.class;
         Type rightType = rightIsBinary ? BinaryExpressionEntity.class : rightIsUnary ? UnaryExpressionEntity.class : PrimaryExpressionEntity.class;

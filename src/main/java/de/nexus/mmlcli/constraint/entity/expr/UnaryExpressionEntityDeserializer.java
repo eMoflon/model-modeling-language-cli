@@ -14,10 +14,11 @@ public class UnaryExpressionEntityDeserializer implements JsonDeserializer<Unary
             default -> throw new RuntimeException("Unknown unary operator: " + operator);
         };
 
-        JsonObject exprObject = jsonObject.getAsJsonObject("expr");
+        JsonObject exprContainerObject = jsonObject.getAsJsonObject("expr");
+        JsonObject exprObject = exprContainerObject.getAsJsonObject("expr");
 
-        boolean exprIsBinary = jsonObject.get("exprIsBinary").getAsBoolean();
-        boolean exprIsUnary = jsonObject.get("exprIsUnary").getAsBoolean();
+        boolean exprIsBinary = exprContainerObject.get("isBinary").getAsBoolean();
+        boolean exprIsUnary = exprContainerObject.get("isUnary").getAsBoolean();
 
         Type exprType = exprIsBinary ? BinaryExpressionEntity.class : exprIsUnary ? UnaryExpressionEntity.class : PrimaryExpressionEntity.class;
 
