@@ -278,6 +278,8 @@ public class GCLToHipePatternTransformation {
 
                 yield node.getName() + "_" + targetAttribute.getName();
             }
+            case PATTERN_INVOCATION ->
+                    throw new UnsupportedOperationException("Pattern Invocations are not supported in attribute constraints!");
         };
     }
 }

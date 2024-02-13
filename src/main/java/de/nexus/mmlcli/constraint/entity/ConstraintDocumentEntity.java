@@ -13,6 +13,7 @@ public class ConstraintDocumentEntity {
     private volatile HashMap<String, PatternNodeEntity> id2PatternNode = new HashMap<>();
     private String packageName;
     private volatile HashSet<PatternNodeEntity> localNodes = new HashSet<>();
+    private final ArrayList<ConstraintEntity> constraints = new ArrayList<>();
 
     public static ConstraintDocumentEntity build(String serialized) {
         GsonBuilder builder = new GsonBuilder();
@@ -21,6 +22,7 @@ public class ConstraintDocumentEntity {
         builder.registerTypeAdapter(UnaryExpressionEntity.class, new UnaryExpressionEntityDeserializer());
         builder.registerTypeAdapter(PrimaryExpressionEntity.class, new PrimaryExpressionEntityDeserializer());
         builder.registerTypeAdapter(AttributeConstraintEntity.class, new AttributeConstraintEntityDeserializer());
+        builder.registerTypeAdapter(ConstraintAssertionEntity.class, new ConstraintAssertionEntityDeserializer());
 
         Gson gson = builder.create();
         return gson.fromJson(serialized, ConstraintDocumentEntity.class);
@@ -48,5 +50,9 @@ public class ConstraintDocumentEntity {
 
     public void setId2PatternNode(HashMap<String, PatternNodeEntity> id2PatternNode) {
         this.id2PatternNode = id2PatternNode;
+    }
+
+    public ArrayList<ConstraintEntity> getConstraints() {
+        return constraints;
     }
 }

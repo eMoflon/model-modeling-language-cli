@@ -7,5 +7,6 @@ public enum PrimaryExpressionEntityType {
     STRING,
     BOOLEAN,
     ENUM_VALUE,
-    ATTRIBUTE
+    ATTRIBUTE,
+    PATTERN_INVOCATION
 }

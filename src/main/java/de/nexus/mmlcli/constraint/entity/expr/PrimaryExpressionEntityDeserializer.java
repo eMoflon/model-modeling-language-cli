@@ -11,6 +11,7 @@ public class PrimaryExpressionEntityDeserializer implements JsonDeserializer<Pri
         String valueType = jsonObject.get("valueType").getAsString();
         boolean isAttribute = jsonObject.get("isAttribute").getAsBoolean();
         boolean isEnumLiteral = jsonObject.get("isEnumLiteral").getAsBoolean();
+        boolean isPatternDeclarationReference = jsonObject.get("isPatternDeclarationReference").getAsBoolean();
         PrimaryExpressionEntityType primaryValueType = switch (valueType) {
             case "number" -> PrimaryExpressionEntityType.NUMBER;
             case "boolean" -> PrimaryExpressionEntityType.BOOLEAN;
@@ -19,6 +20,8 @@ public class PrimaryExpressionEntityDeserializer implements JsonDeserializer<Pri
                     yield PrimaryExpressionEntityType.ATTRIBUTE;
                 } else if (isEnumLiteral) {
                     yield PrimaryExpressionEntityType.ENUM_VALUE;
+                } else if (isPatternDeclarationReference) {
+                    yield PrimaryExpressionEntityType.PATTERN_INVOCATION;
                 } else {
                     yield PrimaryExpressionEntityType.STRING;
                 }

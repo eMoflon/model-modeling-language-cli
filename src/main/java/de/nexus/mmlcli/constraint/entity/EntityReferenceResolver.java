@@ -21,6 +21,10 @@ public class EntityReferenceResolver {
             patternEntity.getNodeConstraints().forEach(nodeConstraint -> this.unresolvedObjects.add(new UnresolvedObject<>(nodeConstraint)));
         });
 
+        cDoc.getConstraints().forEach(constraintEntity -> {
+            constraintEntity.getPatternDeclarations().forEach(patternDec -> this.unresolvedObjects.add(new UnresolvedObject<>(patternDec)));
+        });
+
         this.unresolvedObjects.forEach(unresolvedObject -> unresolvedObject.resolve(this));
 
         // TODO: Fix direcly referenced patterns based on constraints
@@ -72,6 +76,8 @@ class UnresolvedObject<T> {
             nodeConstraint.setNode1(resolver.resolveNodeId(nodeConstraint.getNode1Id()));
             nodeConstraint.setNode2(resolver.resolveNodeId(nodeConstraint.getNode2Id()));
             nodeConstraint.setNodeOperator(NodeConstraintOperator.fromStringOperator(nodeConstraint.getOperator()));
+        } else if (element instanceof ConstraintPatternDeclarationEntity patternDeclaration) {
+            patternDeclaration.setPattern(resolver.resolvePatternId(patternDeclaration.getPatternId()));
         } else {
             throw new UnsupportedOperationException("Missing resolver for " + element.toString());
         }

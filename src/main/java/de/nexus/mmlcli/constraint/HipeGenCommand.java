@@ -47,6 +47,8 @@ public class HipeGenCommand implements Callable<Integer> {
 
         ConstraintDocumentEntity cDoc = ConstraintDocumentEntity.build(sConstraintDoc);
 
+        EntityReferenceResolver.resolve(cDoc);
+
         System.out.println("[ModelServerGeneration] Starting ModelServer generation...");
         double tic = System.currentTimeMillis();
 
@@ -62,8 +64,6 @@ public class HipeGenCommand implements Callable<Integer> {
 
         String projectName = metamodelSource.getEPackage(0).getName();
         GenModelBuilder.createGenModel(metamodelSource.getEPackage(0), locations, projectName);
-
-        EntityReferenceResolver.resolve(cDoc);
 
         HiPEBuilder hiPEBuilder = new HiPEBuilder(metamodelSource, cDoc, locations);
 
