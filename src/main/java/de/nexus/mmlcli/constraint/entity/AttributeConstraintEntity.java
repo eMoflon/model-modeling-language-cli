@@ -6,6 +6,7 @@ import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntity;
 
 public class AttributeConstraintEntity {
     private final ExpressionEntity expr;
+    private String alias;
 
     public AttributeConstraintEntity(ExpressionEntity expr) {
         this.expr = expr;
@@ -24,5 +25,9 @@ public class AttributeConstraintEntity {
 
     public ExpressionEntity getExpr() {
         return expr;
+    }
+
+    public String getAlias() {
+        return alias;
     }
 }
