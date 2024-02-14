@@ -1,6 +1,8 @@
 package de.nexus.modelserver.runtime;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An interface for matches for a pattern providing a mapping between parameter names and
@@ -55,6 +57,8 @@ public interface IMatch {
      * @return the objects
      */
     Collection<Object> getObjects();
+
+    public Set<Map.Entry<String, Object>> getParameters();
 
     /**
      * Returns whether there is a parameter with the given name in the match.

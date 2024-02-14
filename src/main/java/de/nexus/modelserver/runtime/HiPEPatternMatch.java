@@ -5,6 +5,7 @@ import hipe.engine.match.ProductionMatch;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class HiPEPatternMatch implements IMatch {
     /**
@@ -62,6 +63,10 @@ public class HiPEPatternMatch implements IMatch {
     @Override
     public Object get(final String name) {
         return parameters.get(name);
+    }
+
+    public Set<Map.Entry<String, Object>> getParameters(){
+        return this.parameters.entrySet();
     }
 
     @Override
