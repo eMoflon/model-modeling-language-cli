@@ -1,6 +1,6 @@
 package de.nexus.mmlcli.constraint.adapter;
 
-import de.nexus.mmlcli.constraint.adapter.codegen.ConstraintInitializerGenerator;
+import de.nexus.mmlcli.constraint.adapter.codegen.ConstraintGenerator;
 import de.nexus.mmlcli.constraint.adapter.codegen.ModelServerConfigurationGenerator;
 import de.nexus.mmlcli.constraint.adapter.codegen.ModelServerEngineGenerator;
 import de.nexus.mmlcli.constraint.adapter.codegen.PatternInitializerGenerator;
@@ -130,10 +130,11 @@ public class ModelServerBuilder {
     private ArrayList<JavaFileObject> generateModelServerFiles() {
         String hipeNetworkPath = this.locationRegistry.getSrcGenPath().resolve(this.projectName).resolve("hipe/engine/hipe-network.xmi").toString();
         ArrayList<JavaFileObject> files = new ArrayList<>();
-        files.add(ModelServerConfigurationGenerator.build(this.projectName, this.locationRegistry.getModelPath().toString()));
+        files.add(ModelServerConfigurationGenerator.build(this.projectName, this.locationRegistry.getModelPath().toString(), this.cDoc));
         files.add(ModelServerEngineGenerator.build(this.projectName, hipeNetworkPath));
 
-        files.add(ConstraintInitializerGenerator.build(this.cDoc.getConstraints()));
+        this.cDoc.getConstraints().forEach(constraint -> files.add(ConstraintGenerator.build(constraint)));
+
         files.add(PatternInitializerGenerator.build(this.cDoc.getPatterns()));
 
         return files;

@@ -9,5 +9,5 @@ public interface IModelServerConfiguration {
 
     List<Pattern> getPattern();
 
-    List<Constraint> getConstraints();
+    List<Class<? extends AbstractConstraint>> getConstraintClasses();
 }
