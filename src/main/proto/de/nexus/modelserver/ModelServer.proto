@@ -19,6 +19,8 @@ service ModelServerManagement {
 
 service ModelServerPattern {
   rpc GetPatterns(GetPatternsRequest) returns (GetPatternsResponse);
+  rpc GetPattern(GetPatternRequest) returns (GetPatternResponse);
+  rpc ListPatterns(ListPatternsRequest) returns (ListPatternsResponse);
 }
 
 service ModelServerConstraints {

@@ -22,6 +22,10 @@ public class PatternRegistry {
         return this.patterns.get(patternName);
     }
 
+    public HashMap<String, Pattern> getPatterns() {
+        return patterns;
+    }
+
     public void processHiPE(Map<String, ProductionResult> extractData) {
         addNewMatches(extractData);
         deleteInvalidMatches(extractData);

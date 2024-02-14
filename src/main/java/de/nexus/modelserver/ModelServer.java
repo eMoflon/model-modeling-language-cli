@@ -59,8 +59,12 @@ public class ModelServer {
         }
     }
 
-    public Map<String, ProductionResult> extractData() throws InterruptedException {
-        return this.engine.extractData();
+    public Map<String, ProductionResult> extractData() {
+        try {
+            return this.engine.extractData();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void terminateEngine() {
