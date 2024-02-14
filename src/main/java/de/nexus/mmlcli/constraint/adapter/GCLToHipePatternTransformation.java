@@ -1,7 +1,7 @@
 package de.nexus.mmlcli.constraint.adapter;
 
+import de.nexus.expr.*;
 import de.nexus.mmlcli.constraint.entity.*;
-import de.nexus.mmlcli.constraint.entity.expr.*;
 import hipe.pattern.*;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;

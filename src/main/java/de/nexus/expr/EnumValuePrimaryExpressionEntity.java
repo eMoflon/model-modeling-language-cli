@@ -1,4 +1,4 @@
-package de.nexus.mmlcli.constraint.entity.expr;
+package de.nexus.expr;
 
 public class EnumValuePrimaryExpressionEntity implements PrimaryExpressionEntity {
     private final String value;

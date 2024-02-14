@@ -1,4 +1,4 @@
-package de.nexus.mmlcli.constraint.entity.expr;
+package de.nexus.expr;
 
 public class PrimitivePrimaryExpressionEntity<T> implements PrimaryExpressionEntity {
     private final T value;

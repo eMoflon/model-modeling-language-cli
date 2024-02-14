@@ -2,7 +2,7 @@ package de.nexus.mmlcli.constraint.entity;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import de.nexus.mmlcli.constraint.entity.expr.*;
+import de.nexus.expr.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

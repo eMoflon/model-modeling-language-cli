@@ -1,6 +1,6 @@
 package de.nexus.modelserver.evaltree;
 
-import de.nexus.mmlcli.constraint.entity.expr.UnaryExpressionEntity;
+import de.nexus.expr.UnaryExpressionEntity;
 import de.nexus.modelserver.PatternRegistry;
 
 public class EvalTreeUniNode implements IEvalTreeNode {

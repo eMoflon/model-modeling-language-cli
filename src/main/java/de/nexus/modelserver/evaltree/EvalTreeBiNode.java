@@ -1,7 +1,7 @@
 package de.nexus.modelserver.evaltree;
 
-import de.nexus.mmlcli.constraint.entity.expr.BinaryExpressionEntity;
-import de.nexus.mmlcli.constraint.entity.expr.BinaryOperator;
+import de.nexus.expr.BinaryExpressionEntity;
+import de.nexus.expr.BinaryOperator;
 import de.nexus.modelserver.PatternRegistry;
 
 public class EvalTreeBiNode implements IEvalTreeNode {

@@ -9,7 +9,7 @@ public class ConstraintGenerator extends TemporaryFileObject {
             package de.nexus.modelserver.constraints;
                         
             import de.nexus.modelserver.AbstractConstraint;
-            import de.nexus.mmlcli.constraint.entity.expr.*;
+            import de.nexus.expr.*;
                         
             public class %s extends AbstractConstraint {
                         

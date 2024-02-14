@@ -1,6 +1,6 @@
 package de.nexus.modelserver;
 
-import de.nexus.mmlcli.constraint.entity.expr.ExpressionEntity;
+import de.nexus.expr.ExpressionEntity;
 import de.nexus.modelserver.evaltree.EvalTree;
 
 import java.util.ArrayList;

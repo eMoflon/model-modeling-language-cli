@@ -1,4 +1,4 @@
-package de.nexus.mmlcli.constraint.entity.expr;
+package de.nexus.expr;
 
 public class BinaryExpressionEntity implements ExpressionEntity {
     private final BinaryOperator operator;

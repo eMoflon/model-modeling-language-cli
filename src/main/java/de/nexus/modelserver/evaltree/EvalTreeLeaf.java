@@ -1,9 +1,9 @@
 package de.nexus.modelserver.evaltree;
 
-import de.nexus.mmlcli.constraint.entity.expr.ExpressionEntity;
-import de.nexus.mmlcli.constraint.entity.expr.PatternPrimaryExpressionEntity;
-import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntity;
-import de.nexus.mmlcli.constraint.entity.expr.PrimitivePrimaryExpressionEntity;
+import de.nexus.expr.ExpressionEntity;
+import de.nexus.expr.PatternPrimaryExpressionEntity;
+import de.nexus.expr.PrimaryExpressionEntity;
+import de.nexus.expr.PrimitivePrimaryExpressionEntity;
 import de.nexus.modelserver.PatternRegistry;
 
 public class EvalTreeLeaf implements IEvalTreeNode {

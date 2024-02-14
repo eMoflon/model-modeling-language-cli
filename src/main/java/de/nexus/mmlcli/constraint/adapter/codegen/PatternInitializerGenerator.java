@@ -9,7 +9,7 @@ public class PatternInitializerGenerator extends TemporaryFileObject {
     private static final String CODE_TEMPLATE = """
             package de.nexus.modelserver.patterns;
               
-            import de.nexus.mmlcli.constraint.entity.expr.*;
+            import de.nexus.expr.*;
             import de.nexus.modelserver.Pattern;
               
             import java.util.List;

@@ -1,10 +1,10 @@
 package de.nexus.mmlcli.constraint.entity;
 
 import com.google.gson.*;
-import de.nexus.mmlcli.constraint.entity.expr.BinaryExpressionEntity;
-import de.nexus.mmlcli.constraint.entity.expr.ExpressionEntity;
-import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntity;
-import de.nexus.mmlcli.constraint.entity.expr.UnaryExpressionEntity;
+import de.nexus.expr.BinaryExpressionEntity;
+import de.nexus.expr.ExpressionEntity;
+import de.nexus.expr.PrimaryExpressionEntity;
+import de.nexus.expr.UnaryExpressionEntity;
 
 import java.lang.reflect.Type;
 

@@ -1,6 +1,6 @@
 package de.nexus.mmlcli.constraint.entity;
 
-import de.nexus.mmlcli.constraint.entity.expr.ExpressionEntity;
+import de.nexus.expr.ExpressionEntity;
 
 public class ConstraintAssertionEntity {
     private final ExpressionEntity expr;

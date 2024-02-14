@@ -1,8 +1,8 @@
 package de.nexus.mmlcli.constraint.entity;
 
-import de.nexus.mmlcli.constraint.entity.expr.BinaryExpressionEntity;
-import de.nexus.mmlcli.constraint.entity.expr.ExpressionEntity;
-import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntity;
+import de.nexus.expr.BinaryExpressionEntity;
+import de.nexus.expr.ExpressionEntity;
+import de.nexus.expr.PrimaryExpressionEntity;
 
 public class AttributeConstraintEntity {
     private final ExpressionEntity expr;
