@@ -58,7 +58,7 @@ public interface IMatch {
      */
     Collection<Object> getObjects();
 
-    public Set<Map.Entry<String, Object>> getParameters();
+    Set<Map.Entry<String, Object>> getParameters();
 
     /**
      * Returns whether there is a parameter with the given name in the match.

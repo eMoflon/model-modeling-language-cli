@@ -5,7 +5,7 @@ public class NodeConstraintEntity {
     private volatile PatternNodeEntity node1;
     private String node2Id;
     private volatile PatternNodeEntity node2;
-    private String operator;
+    private final String operator;
     private volatile NodeConstraintOperator nodeOperator;
 
     public NodeConstraintEntity(PatternNodeEntity node1, PatternNodeEntity node2, String operator) {

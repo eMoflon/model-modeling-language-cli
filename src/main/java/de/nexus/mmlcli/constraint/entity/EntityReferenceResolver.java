@@ -31,13 +31,11 @@ public class EntityReferenceResolver {
         this.directlyCalledPatterns.addAll(this.patternIdToPatternMap.values());
 
         this.localNodes.addAll(nodeIdToNodeMap.values());
-        this.directlyCalledPatterns.forEach(directPattern -> {
-            directPattern.getNodes().forEach(node -> {
-                if (!node.isLocal()) {
-                    this.localNodes.remove(node);
-                }
-            });
-        });
+        this.directlyCalledPatterns.forEach(directPattern -> directPattern.getNodes().forEach(node -> {
+            if (!node.isLocal()) {
+                this.localNodes.remove(node);
+            }
+        }));
         cDoc.setLocalNodes(this.localNodes);
         cDoc.setId2PatternNode(this.nodeIdToNodeMap);
     }

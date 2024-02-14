@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 public class ConstraintGenerator extends TemporaryFileObject {
     private static final String CODE_TEMPLATE = """
             package de.nexus.modelserver.constraints;
-            
+                        
             import de.nexus.modelserver.AbstractConstraint;
             import de.nexus.mmlcli.constraint.entity.expr.*;
                         
@@ -41,7 +41,7 @@ public class ConstraintGenerator extends TemporaryFileObject {
     }
 
     public static ConstraintGenerator build(ConstraintEntity constraint) {
-        String className = constraint.getCapitalizedName()+"Constraint";
+        String className = constraint.getCapitalizedName() + "Constraint";
         String assertionRegisterTemplate = "this.registerAssertion(%s);\n";
         String constructor = constraint.getAssertions().stream().map(x -> String.format(assertionRegisterTemplate, x.getExpr().toJavaCode())).collect(Collectors.joining("\n"));
 
