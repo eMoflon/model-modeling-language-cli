@@ -71,6 +71,14 @@ public class ModelServer {
         System.out.println("[Engine] Terminated!");
     }
 
+    public PatternRegistry getPatternRegistry() {
+        return patternRegistry;
+    }
+
+    public ConstraintRegistry getConstraintRegistry() {
+        return constraintRegistry;
+    }
+
     public static void main(String[] args) {
         IModelServerConfiguration configuration;
 
