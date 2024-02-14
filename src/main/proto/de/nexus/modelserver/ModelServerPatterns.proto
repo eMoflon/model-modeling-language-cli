@@ -19,6 +19,11 @@ message GetPatternResponse{
 message Pattern{
   string name = 1;
   int32 numberOfMatches = 2;
+  repeated Match matches = 3;
+}
+
+message Match {
+  repeated string nodes = 1;
 }
 
 message ListPatternsRequest{
