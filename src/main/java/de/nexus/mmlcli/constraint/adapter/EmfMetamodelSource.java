@@ -2,7 +2,7 @@ package de.nexus.mmlcli.constraint.adapter;
 
 import de.nexus.emfutils.SmartEMFLoader;
 import de.nexus.mmlcli.constraint.entity.PatternNodeEntity;
-import de.nexus.mmlcli.constraint.entity.expr.PrimaryExpressionEntity;
+import de.nexus.mmlcli.constraint.entity.expr.AttributePrimaryExpressionEntity;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -57,7 +57,7 @@ public class EmfMetamodelSource extends SmartEMFLoader {
         return (EAttribute) clazz.getEStructuralFeature(name);
     }
 
-    public EAttribute resolveAttribute(PrimaryExpressionEntity<?> primaryExpression) {
+    public EAttribute resolveAttribute(AttributePrimaryExpressionEntity primaryExpression) {
         EClass clazz = this.classMapping.get(primaryExpression.getClassName());
         return (EAttribute) clazz.getEStructuralFeature(primaryExpression.getElementName());
     }

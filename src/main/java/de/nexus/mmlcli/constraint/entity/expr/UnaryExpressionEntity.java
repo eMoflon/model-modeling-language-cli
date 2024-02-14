@@ -1,6 +1,6 @@
 package de.nexus.mmlcli.constraint.entity.expr;
 
-public class UnaryExpressionEntity {
+public class UnaryExpressionEntity implements ExpressionEntity {
     private final UnaryOperator operator;
     private final ExpressionEntity expr;
 
@@ -15,5 +15,10 @@ public class UnaryExpressionEntity {
 
     public ExpressionEntity getExpr() {
         return expr;
+    }
+
+    @Override
+    public String toJavaCode() {
+        return String.format("new UnaryExpressionEntity(%s, %s)", this.operator, this.expr.toJavaCode());
     }
 }

@@ -4,9 +4,9 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
-public class PrimaryExpressionEntityDeserializer implements JsonDeserializer<PrimaryExpressionEntity<?>> {
+public class PrimaryExpressionEntityDeserializer implements JsonDeserializer<PrimaryExpressionEntity> {
     @Override
-    public PrimaryExpressionEntity<?> deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public PrimaryExpressionEntity deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         String valueType = jsonObject.get("valueType").getAsString();
         boolean isAttribute = jsonObject.get("isAttribute").getAsBoolean();
@@ -34,17 +34,20 @@ public class PrimaryExpressionEntityDeserializer implements JsonDeserializer<Pri
         String elementName = jsonObject.get("elementName").getAsString();
         String nodeId = jsonObject.get("nodeId").getAsString();
 
-        if (primaryValueType == PrimaryExpressionEntityType.NUMBER) {
-            double valueAsDouble = value.getAsDouble();
-            if (valueAsDouble % 1 == 0) {
-                return new PrimaryExpressionEntity<>(value.getAsInt(), PrimaryExpressionEntityType.INTEGER, className, elementName, nodeId);
+        return switch (primaryValueType) {
+            case NUMBER -> {
+                double valueAsDouble = value.getAsDouble();
+                if (valueAsDouble % 1 == 0) {
+                    yield new PrimitivePrimaryExpressionEntity<>(value.getAsInt(), PrimaryExpressionEntityType.INTEGER);
+                }
+                yield new PrimitivePrimaryExpressionEntity<>(valueAsDouble, PrimaryExpressionEntityType.DOUBLE);
             }
-            return new PrimaryExpressionEntity<>(valueAsDouble, PrimaryExpressionEntityType.DOUBLE, className, elementName, nodeId);
-        } else if (primaryValueType == PrimaryExpressionEntityType.BOOLEAN) {
-            return new PrimaryExpressionEntity<>(value.getAsBoolean(), primaryValueType, className, elementName, nodeId);
-        } else {
-            return new PrimaryExpressionEntity<>(value.getAsString(), primaryValueType, className, elementName, nodeId);
-        }
-
+            case BOOLEAN -> new PrimitivePrimaryExpressionEntity<>(value.getAsBoolean(), primaryValueType);
+            case STRING -> new PrimitivePrimaryExpressionEntity<>(value.getAsString(), primaryValueType);
+            case ENUM_VALUE -> new EnumValuePrimaryExpressionEntity(value.getAsString());
+            case ATTRIBUTE -> new AttributePrimaryExpressionEntity(className, elementName, nodeId);
+            case PATTERN_INVOCATION -> new PatternPrimaryExpressionEntity(nodeId, value.getAsString());
+            default -> throw new IllegalStateException("Unexpected value: " + primaryValueType);
+        };
     }
 }

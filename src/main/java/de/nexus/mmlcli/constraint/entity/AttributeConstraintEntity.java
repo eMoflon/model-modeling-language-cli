@@ -14,7 +14,7 @@ public class AttributeConstraintEntity {
 
     public boolean isRelationalConstraint() {
         if (expr instanceof BinaryExpressionEntity bexpr) {
-            return bexpr.getLeft() instanceof PrimaryExpressionEntity<?> && bexpr.getRight() instanceof PrimaryExpressionEntity<?>;
+            return bexpr.getLeft() instanceof PrimaryExpressionEntity && bexpr.getRight() instanceof PrimaryExpressionEntity;
         }
         return false;
     }

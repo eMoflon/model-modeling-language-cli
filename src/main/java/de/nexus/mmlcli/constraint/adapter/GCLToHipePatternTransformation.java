@@ -168,7 +168,7 @@ public class GCLToHipePatternTransformation {
     private HiPEAttributeConstraint transformSimpleAC(EmfMetamodelSource metamodelSource, AttributeConstraintEntity ace, HiPEPattern pattern) {
         RelationalConstraint relationalConstraint = factory.createRelationalConstraint();
         ExpressionEntity expr = ace.getExpr();
-        if (expr instanceof BinaryExpressionEntity bexpr && bexpr.getLeft() instanceof PrimaryExpressionEntity<?> lexpr && bexpr.getRight() instanceof PrimaryExpressionEntity<?> rexpr) {
+        if (expr instanceof BinaryExpressionEntity bexpr && bexpr.getLeft() instanceof PrimaryExpressionEntity lexpr && bexpr.getRight() instanceof PrimaryExpressionEntity rexpr) {
             HiPEAttribute attrLeft = transformSimple(metamodelSource, lexpr);
             HiPEAttribute attrRight = transformSimple(metamodelSource, rexpr);
 
@@ -191,16 +191,16 @@ public class GCLToHipePatternTransformation {
         }
     }
 
-    private HiPEAttribute transformSimple(EmfMetamodelSource metamodelSource, PrimaryExpressionEntity<?> primaryExpression) {
+    private HiPEAttribute transformSimple(EmfMetamodelSource metamodelSource, PrimaryExpressionEntity primaryExpression) {
         HiPEAttribute attr = factory.createHiPEAttribute();
         this.container.getAttributes().add(attr);
-        if (primaryExpression.isConstantValue()) {
-            attr.setValue(primaryExpression.getValue());
-        } else if (primaryExpression.getType() == PrimaryExpressionEntityType.ENUM_VALUE) {
-            attr.setValue(primaryExpression.getValue());
-        } else if (primaryExpression.getType() == PrimaryExpressionEntityType.ATTRIBUTE) {
-            PatternNodeEntity nodeEntity = this.cDoc.getId2PatternNode().get(primaryExpression.getNodeId());
-            EAttribute targetAttribute = metamodelSource.resolveAttribute(primaryExpression);
+        if (primaryExpression instanceof PrimitivePrimaryExpressionEntity<?> primitiveExpr) {
+            attr.setValue(primitiveExpr.getValue());
+        } else if (primaryExpression instanceof EnumValuePrimaryExpressionEntity enumExpr) {
+            attr.setValue(enumExpr.getValue());
+        } else if (primaryExpression instanceof AttributePrimaryExpressionEntity attrExpr) {
+            PatternNodeEntity nodeEntity = this.cDoc.getId2PatternNode().get(attrExpr.getNodeId());
+            EAttribute targetAttribute = metamodelSource.resolveAttribute(attrExpr);
             attr.setNode(this.transform(metamodelSource, nodeEntity));
             attr.setValue(targetAttribute);
             attr.setEAttribute(targetAttribute);
@@ -224,7 +224,7 @@ public class GCLToHipePatternTransformation {
     private String transform2Java(EmfMetamodelSource metamodelSource, ExpressionEntity expr, Collection<HiPEAttribute> attributes) {
         if (expr instanceof BinaryExpressionEntity bexpr) {
             return transform2Java(metamodelSource, bexpr, attributes);
-        } else if (expr instanceof PrimaryExpressionEntity<?> pexpr) {
+        } else if (expr instanceof PrimaryExpressionEntity pexpr) {
             return transform2Java(metamodelSource, pexpr, attributes);
         } else if (expr instanceof UnaryExpressionEntity uexpr) {
             return transform2Java(metamodelSource, uexpr, attributes);
@@ -250,6 +250,18 @@ public class GCLToHipePatternTransformation {
                     "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " && " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
             case LOGICAL_OR ->
                     "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " || " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+            case ADDITION ->
+                    "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " + " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+            case SUBTRACTION ->
+                    "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " - " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+            case MULTIPLICATION ->
+                    "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " * " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+            case DIVISION ->
+                    "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " / " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+            case EXPONENTIATION ->
+                    "Math.pow(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + ", " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
+            case MODULO ->
+                    "(" + transform2Java(metamodelSource, binaryExpression.getLeft(), attributes) + " % " + transform2Java(metamodelSource, binaryExpression.getRight(), attributes) + ")";
         };
     }
 
@@ -259,27 +271,25 @@ public class GCLToHipePatternTransformation {
         };
     }
 
-    private String transform2Java(EmfMetamodelSource metamodelSource, PrimaryExpressionEntity<?> primaryExpression, Collection<HiPEAttribute> attributes) {
-        return switch (primaryExpression.getType()) {
-            case NUMBER, INTEGER, DOUBLE, BOOLEAN, ENUM_VALUE -> String.valueOf(primaryExpression.getValue());
-            case STRING -> "\"" + primaryExpression.getValue() + "\"";
-            case ATTRIBUTE -> {
-                HiPEAttribute attr = factory.createHiPEAttribute();
-                container.getAttributes().add(attr);
+    private String transform2Java(EmfMetamodelSource metamodelSource, PrimaryExpressionEntity primaryExpression, Collection<HiPEAttribute> attributes) {
+        if (primaryExpression instanceof PrimitivePrimaryExpressionEntity<?> primitiveExpr) {
+            return primitiveExpr.getAsString();
+        } else if (primaryExpression instanceof AttributePrimaryExpressionEntity attrExpr) {
+            HiPEAttribute attr = factory.createHiPEAttribute();
+            container.getAttributes().add(attr);
 
-                PatternNodeEntity nodeEntity = this.cDoc.getId2PatternNode().get(primaryExpression.getNodeId());
-                EAttribute targetAttribute = metamodelSource.resolveAttribute(primaryExpression);
-                HiPENode node = this.transform(metamodelSource, nodeEntity);
-                attr.setNode(node);
-                attr.setValue(targetAttribute);
-                attr.setEAttribute(targetAttribute);
+            PatternNodeEntity nodeEntity = this.cDoc.getId2PatternNode().get(attrExpr.getNodeId());
+            EAttribute targetAttribute = metamodelSource.resolveAttribute(attrExpr);
+            HiPENode node = this.transform(metamodelSource, nodeEntity);
+            attr.setNode(node);
+            attr.setValue(targetAttribute);
+            attr.setEAttribute(targetAttribute);
 
-                attributes.add(attr);
+            attributes.add(attr);
 
-                yield node.getName() + "_" + targetAttribute.getName();
-            }
-            case PATTERN_INVOCATION ->
-                    throw new UnsupportedOperationException("Pattern Invocations are not supported in attribute constraints!");
-        };
+            return node.getName() + "_" + targetAttribute.getName();
+        } else {
+            throw new UnsupportedOperationException("Pattern Invocations are not supported in attribute constraints!");
+        }
     }
 }
