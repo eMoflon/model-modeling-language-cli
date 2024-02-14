@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class EMFExtenderUtils {
-    private static final String IDENTIFIER_CLASS_NAME = "MMLConstraintIdentifier";
-    private static final String IDENTIFIER_ATTRIBUTE_NAME = "nodeId";
+    public static final String IDENTIFIER_CLASS_NAME = "MMLConstraintIdentifier";
+    public static final String IDENTIFIER_ATTRIBUTE_NAME = "nodeId";
 
     public static EClass getMMLIdentifierClass(EPackage ePackage) {
         List<EClassifier> classifiers = ePackage.getEClassifiers().stream().filter(x -> x instanceof EClass).filter(x -> ((EClass) x).isAbstract() && ((EClass) x).getESuperTypes().isEmpty() && x.getName().equals(IDENTIFIER_CLASS_NAME)).toList();
@@ -21,7 +21,7 @@ public class EMFExtenderUtils {
             if (classifiers.get(0) instanceof EClass clazz) {
                 return clazz;
             } else {
-                throw new IllegalStateException(String.format("%s not no EClass!", IDENTIFIER_CLASS_NAME));
+                throw new IllegalStateException(String.format("%s is no EClass!", IDENTIFIER_CLASS_NAME));
             }
         }
 

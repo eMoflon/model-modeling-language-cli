@@ -1,6 +1,5 @@
 package de.nexus.modelserver;
 
-import de.nexus.emfutils.EMFLoader;
 import hipe.engine.HiPEContentAdapter;
 import hipe.engine.IHiPEEngine;
 import hipe.engine.message.production.ProductionResult;
@@ -28,7 +27,7 @@ public class ModelServer {
 
 
         System.out.println("[ModelServer] Loading model...");
-        EMFLoader emfLoader = new EMFLoader();
+        IndexedEMFLoader emfLoader = new IndexedEMFLoader();
         emfLoader.loadResource(Path.of(configuration.getModelPath()));
 
         System.out.println("[ModelServer] Creating ContentAdapter...");
