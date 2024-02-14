@@ -1,7 +1,10 @@
 package de.nexus.mmlcli.constraint.adapter;
 
+import de.nexus.mmlcli.constraint.adapter.codegen.ConstraintInitializerGenerator;
 import de.nexus.mmlcli.constraint.adapter.codegen.ModelServerConfigurationGenerator;
 import de.nexus.mmlcli.constraint.adapter.codegen.ModelServerEngineGenerator;
+import de.nexus.mmlcli.constraint.adapter.codegen.PatternInitializerGenerator;
+import de.nexus.mmlcli.constraint.entity.ConstraintDocumentEntity;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.tools.*;
@@ -17,12 +20,14 @@ import java.util.jar.Manifest;
 
 public class ModelServerBuilder {
     private final LocationRegistry locationRegistry;
+    private final ConstraintDocumentEntity cDoc;
     private final String projectName;
     private final boolean verbose;
 
-    public ModelServerBuilder(LocationRegistry locationRegistry, String projectName, boolean verbose) {
+    public ModelServerBuilder(LocationRegistry locationRegistry, String projectName, ConstraintDocumentEntity cDoc, boolean verbose) {
         this.locationRegistry = locationRegistry;
         this.projectName = projectName;
+        this.cDoc = cDoc;
         this.verbose = verbose;
     }
 
@@ -82,13 +87,10 @@ public class ModelServerBuilder {
                 .getStandardFileManager(collector, null, null);
         @SuppressWarnings("unchecked")
         Iterable<JavaFileObject> uncompiledClasses = (Iterable<JavaFileObject>) fileManager.getJavaFileObjectsFromPaths(files);
-        ArrayList<JavaFileObject> tmp = new ArrayList<>();
-        uncompiledClasses.forEach(tmp::add);
-        tmp.add(ModelServerConfigurationGenerator.build(projectName, this.locationRegistry.getModelPath().toString()));
-        String hipeNetworkPath = this.locationRegistry.getSrcGenPath().resolve(projectName).resolve("hipe/engine/hipe-network.xmi").toString();
-        tmp.add(ModelServerEngineGenerator.build(projectName, hipeNetworkPath));
+        ArrayList<JavaFileObject> classesToCompile = this.generateModelServerFiles();
+        uncompiledClasses.forEach(classesToCompile::add);
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, collector, options, null, tmp);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, collector, options, null, classesToCompile);
         boolean result = task.call();
         if (!result || !collector.getDiagnostics().isEmpty()) {
             if (!result) {
@@ -123,6 +125,18 @@ public class ModelServerBuilder {
             }
         }
 
+    }
+
+    private ArrayList<JavaFileObject> generateModelServerFiles() {
+        String hipeNetworkPath = this.locationRegistry.getSrcGenPath().resolve(this.projectName).resolve("hipe/engine/hipe-network.xmi").toString();
+        ArrayList<JavaFileObject> files = new ArrayList<>();
+        files.add(ModelServerConfigurationGenerator.build(this.projectName, this.locationRegistry.getModelPath().toString()));
+        files.add(ModelServerEngineGenerator.build(this.projectName, hipeNetworkPath));
+
+        files.add(ConstraintInitializerGenerator.build(this.cDoc.getConstraints()));
+        files.add(PatternInitializerGenerator.build(this.cDoc.getPatterns()));
+
+        return files;
     }
 
     private void packageModelServer() {

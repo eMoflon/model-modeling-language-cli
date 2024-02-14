@@ -69,7 +69,7 @@ public class HipeGenCommand implements Callable<Integer> {
 
         hiPEBuilder.build();
 
-        ModelServerBuilder modelServerBuilder = new ModelServerBuilder(locations, projectName, verbose);
+        ModelServerBuilder modelServerBuilder = new ModelServerBuilder(locations, projectName, cDoc, verbose);
 
         modelServerBuilder.buildModelServer(packageJar);
 

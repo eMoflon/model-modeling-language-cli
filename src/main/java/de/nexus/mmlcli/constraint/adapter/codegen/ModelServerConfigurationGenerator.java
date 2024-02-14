@@ -6,6 +6,11 @@ public class ModelServerConfigurationGenerator extends TemporaryFileObject {
             package de.nexus.modelserver;
                                 
             import de.nexus.modelserver.IModelServerConfiguration;
+            import de.nexus.modelserver.Constraint;
+            import de.nexus.modelserver.constraints.ConstraintInitializer;
+            import de.nexus.modelserver.patterns.PatternInitializer;
+            
+            import java.util.List;
                                 
             public class ModelServerConfiguration implements IModelServerConfiguration {
                 public String getProjectName(){
@@ -14,6 +19,14 @@ public class ModelServerConfigurationGenerator extends TemporaryFileObject {
                 
                 public String getModelPath(){
                     return "%s";
+                }
+                
+                public List<Pattern> getPattern(){
+                    return PatternInitializer.PATTERNS;
+                }
+                
+                public List<Constraint> getConstraints(){
+                    return ConstraintInitializer.CONSTRAINTS;
                 }
             }
             """;

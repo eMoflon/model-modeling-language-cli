@@ -13,6 +13,8 @@ import java.util.Map;
 public class ModelServer {
     private final IHiPEEngine engine;
     private final IModelServerConfiguration configuration;
+    private final PatternRegistry patternRegistry;
+    private final ConstraintRegistry constraintRegistry;
 
     public ModelServer(IModelServerConfiguration configuration, IHiPEEngine engine) {
         this.engine = engine;
@@ -31,6 +33,13 @@ public class ModelServer {
 
         System.out.println("[ModelServer] Creating ContentAdapter...");
         new HiPEContentAdapter(emfLoader.getResources(), this.engine);
+
+        System.out.println("[ModelServer] Loading pattern registry...");
+        this.patternRegistry = new PatternRegistry(configuration);
+
+        System.out.println("[ModelServer] Loading constraint registry...");
+        this.constraintRegistry = new ConstraintRegistry(configuration);
+
 
         System.out.println("""
 
