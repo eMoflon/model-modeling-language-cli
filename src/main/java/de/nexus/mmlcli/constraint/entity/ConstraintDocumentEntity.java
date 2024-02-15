@@ -23,6 +23,7 @@ public class ConstraintDocumentEntity {
         builder.registerTypeAdapter(PrimaryExpressionEntity.class, new PrimaryExpressionEntityDeserializer());
         builder.registerTypeAdapter(AttributeConstraintEntity.class, new AttributeConstraintEntityDeserializer());
         builder.registerTypeAdapter(ConstraintAssertionEntity.class, new ConstraintAssertionEntityDeserializer());
+        builder.registerTypeAdapter(IFixStatementEntity.class, new FixStatementEntityDeserializer());
 
         Gson gson = builder.create();
         return gson.fromJson(serialized, ConstraintDocumentEntity.class);
