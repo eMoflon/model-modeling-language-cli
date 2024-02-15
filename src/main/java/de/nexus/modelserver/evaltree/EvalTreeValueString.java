@@ -10,4 +10,9 @@ public class EvalTreeValueString implements EvalTreeValue {
     public String getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return String.format("EvalTreeValueString(value = %s)", this.value);
+    }
 }

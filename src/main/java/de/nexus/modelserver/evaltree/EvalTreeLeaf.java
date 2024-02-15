@@ -46,4 +46,9 @@ public class EvalTreeLeaf implements IEvalTreeNode {
             throw new UnsupportedOperationException("BoolEvalTree does currently not support: " + expr.getClass().getName());
         }
     }
+
+    @Override
+    public String toFormattedString(int indent) {
+        return "    ".repeat(indent) + String.format("%s -> %s", this.expression.toString(), this.value.toString());
+    }
 }

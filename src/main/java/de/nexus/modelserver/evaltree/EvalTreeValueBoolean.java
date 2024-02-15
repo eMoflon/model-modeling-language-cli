@@ -10,4 +10,9 @@ public class EvalTreeValueBoolean implements EvalTreeValue {
     public boolean getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return String.format("EvalTreeValueBoolean(value = %b)", this.value);
+    }
 }

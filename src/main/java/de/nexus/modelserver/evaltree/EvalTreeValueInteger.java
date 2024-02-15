@@ -10,4 +10,9 @@ public class EvalTreeValueInteger implements EvalTreeValue {
     public int getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return String.format("EvalTreeValueInteger(value = %d)", this.value);
+    }
 }

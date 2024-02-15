@@ -21,7 +21,7 @@ public class EvalTreeBiNode implements IEvalTreeNode {
     static EvalTreeBiNode evaluate(BinaryExpressionEntity expr, PatternRegistry patternRegistry, AbstractConstraint constraint) {
         IEvalTreeNode leftChild = EvalTree.evaluateSubExpr(expr.getLeft(), patternRegistry, constraint);
         IEvalTreeNode rightChild = EvalTree.evaluateSubExpr(expr.getRight(), patternRegistry, constraint);
-        EvalTreeValue value = evaluateBinaryExpr(expr.getOperator(), leftChild, rightChild);
+        EvalTreeValue value = evaluateBinaryExpr(expr.getOperator(), leftChild.getValue(), rightChild.getValue());
 
         return new EvalTreeBiNode(expr, leftChild, rightChild, value);
     }
@@ -48,5 +48,15 @@ public class EvalTreeBiNode implements IEvalTreeNode {
         }
     }
 
+    @Override
+    public String toFormattedString(int indent) {
+        String indentString = "    ".repeat(indent);
+        return indentString + String.format("%s -> %s", this.expr.toString(), this.value.toString()) + "\n" + indentString + this.leftChild.toFormattedString(indent + 1) + "\n" + indentString + this.rightChild.toFormattedString(indent + 1);
+    }
+
+    @Override
+    public EvalTreeValue getValue() {
+        return this.value;
+    }
 
 }

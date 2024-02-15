@@ -10,4 +10,9 @@ public class EvalTreeValueDouble implements EvalTreeValue {
     public double getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return String.format("EvalTreeValueDouble(value = %f)", this.value);
+    }
 }

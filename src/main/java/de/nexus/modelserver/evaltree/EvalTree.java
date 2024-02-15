@@ -32,4 +32,9 @@ public class EvalTree {
         }
         throw new RuntimeException("Unexpected ExpressionEntity of type: " + expr.getClass().getName());
     }
+
+    @Override
+    public String toString() {
+        return "EvalTree\n" + this.root.toFormattedString(0);
+    }
 }

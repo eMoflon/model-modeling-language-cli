@@ -36,4 +36,10 @@ public class EvalTreeUniNode implements IEvalTreeNode {
         IEvalTreeNode node = EvalTree.evaluateSubExpr(expr.getExpr(), patternRegistry, constraint);
         return new EvalTreeUniNode(expr, node);
     }
+
+    @Override
+    public String toFormattedString(int indent) {
+        String indentString = "    ".repeat(indent);
+        return indentString + String.format("%s -> %s", this.expression.toString(), this.value.toString()) + "\n" + indentString + child.toFormattedString(indent + 1);
+    }
 }
