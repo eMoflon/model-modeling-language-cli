@@ -32,4 +32,9 @@ public class AttributePrimaryExpressionEntity implements PrimaryExpressionEntity
     public String toJavaCode() {
         throw new UnsupportedOperationException("AttributePrimaryExpressions cannot be transfered to the model server!");
     }
+
+    @Override
+    public String toString() {
+        return String.format("{(AttributeValue) %s -> %s}", this.className, this.elementName);
+    }
 }

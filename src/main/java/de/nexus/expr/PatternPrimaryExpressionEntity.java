@@ -26,4 +26,9 @@ public class PatternPrimaryExpressionEntity implements PrimaryExpressionEntity {
     public String toJavaCode() {
         return String.format("new PatternPrimaryExpressionEntity(\"%s\", \"%s\")", this.nodeId, this.patternName);
     }
+
+    @Override
+    public String toString() {
+        return String.format("{(PatternExistanceValue) %s}", this.patternName);
+    }
 }

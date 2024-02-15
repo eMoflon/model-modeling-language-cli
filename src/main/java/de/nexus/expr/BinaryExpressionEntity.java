@@ -27,4 +27,9 @@ public class BinaryExpressionEntity implements ExpressionEntity {
     public String toJavaCode() {
         return String.format("new BinaryExpressionEntity(%s, %s, %s)", this.operator, this.left.toJavaCode(), this.right.toJavaCode());
     }
+
+    @Override
+    public String toString() {
+        return String.format("{%s [%s] %s}", this.left.toString(), this.operator.name(), this.right.toString());
+    }
 }

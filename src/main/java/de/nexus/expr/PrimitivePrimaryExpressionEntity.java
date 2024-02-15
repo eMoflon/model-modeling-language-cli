@@ -30,4 +30,9 @@ public class PrimitivePrimaryExpressionEntity<T> implements PrimaryExpressionEnt
     public String toJavaCode() {
         return String.format("new PrimitivePrimaryExpressionEntity(%s, %s)", this.getAsString(), this.type);
     }
+
+    @Override
+    public String toString() {
+        return String.format("{(PrimitiveValue) %s}", this.value);
+    }
 }

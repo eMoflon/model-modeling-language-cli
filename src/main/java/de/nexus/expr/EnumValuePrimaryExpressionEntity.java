@@ -20,4 +20,9 @@ public class EnumValuePrimaryExpressionEntity implements PrimaryExpressionEntity
     public String toJavaCode() {
         throw new UnsupportedOperationException("EnumValuePrimaryExpressions cannot be transfered to the model server!");
     }
+
+    @Override
+    public String toString() {
+        return String.format("{(EnumValue) %s}", this.value);
+    }
 }
