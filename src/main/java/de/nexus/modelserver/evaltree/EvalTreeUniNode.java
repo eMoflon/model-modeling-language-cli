@@ -1,6 +1,7 @@
 package de.nexus.modelserver.evaltree;
 
 import de.nexus.expr.UnaryExpressionEntity;
+import de.nexus.modelserver.AbstractConstraint;
 import de.nexus.modelserver.PatternRegistry;
 
 public class EvalTreeUniNode implements IEvalTreeNode {
@@ -31,8 +32,8 @@ public class EvalTreeUniNode implements IEvalTreeNode {
         return value;
     }
 
-    static EvalTreeUniNode evaluate(UnaryExpressionEntity expr, PatternRegistry patternRegistry) {
-        IEvalTreeNode node = EvalTree.evaluateSubExpr(expr.getExpr(), patternRegistry);
+    static EvalTreeUniNode evaluate(UnaryExpressionEntity expr, PatternRegistry patternRegistry, AbstractConstraint constraint) {
+        IEvalTreeNode node = EvalTree.evaluateSubExpr(expr.getExpr(), patternRegistry, constraint);
         return new EvalTreeUniNode(expr, node);
     }
 }

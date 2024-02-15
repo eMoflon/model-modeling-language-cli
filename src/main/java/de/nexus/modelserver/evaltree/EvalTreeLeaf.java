@@ -4,6 +4,8 @@ import de.nexus.expr.ExpressionEntity;
 import de.nexus.expr.PatternPrimaryExpressionEntity;
 import de.nexus.expr.PrimaryExpressionEntity;
 import de.nexus.expr.PrimitivePrimaryExpressionEntity;
+import de.nexus.modelserver.AbstractConstraint;
+import de.nexus.modelserver.Pattern;
 import de.nexus.modelserver.PatternRegistry;
 
 public class EvalTreeLeaf implements IEvalTreeNode {
@@ -23,7 +25,7 @@ public class EvalTreeLeaf implements IEvalTreeNode {
         return value;
     }
 
-    static EvalTreeLeaf evaluate(PrimaryExpressionEntity expr, PatternRegistry patternRegistry) {
+    static EvalTreeLeaf evaluate(PrimaryExpressionEntity expr, PatternRegistry patternRegistry, AbstractConstraint constraint) {
         if (expr instanceof PrimitivePrimaryExpressionEntity<?> primitiveExpr) {
             return switch (primitiveExpr.getType()) {
                 case STRING ->
@@ -37,7 +39,9 @@ public class EvalTreeLeaf implements IEvalTreeNode {
                 default -> throw new IllegalStateException("Unexpected value: " + primitiveExpr.getType());
             };
         } else if (expr instanceof PatternPrimaryExpressionEntity patternExpr) {
-            return new EvalTreeLeaf(expr, new EvalTreeValueBoolean(patternRegistry.getPattern(patternExpr.getPatternName()).hasNone()));
+            String patternName = constraint.getPatternDeclarations().get(patternExpr.getPatternName()).getPatternName();
+            Pattern pattern = patternRegistry.getPattern(patternName);
+            return new EvalTreeLeaf(expr, new EvalTreeValueBoolean(pattern.hasAny()));
         } else {
             throw new UnsupportedOperationException("BoolEvalTree does currently not support: " + expr.getClass().getName());
         }

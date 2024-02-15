@@ -31,8 +31,12 @@ public abstract class AbstractConstraint {
         this.patternDeclarations.put(pDec.getPatternVariableName(), pDec);
     }
 
+    public Map<String, PatternDeclaration> getPatternDeclarations() {
+        return patternDeclarations;
+    }
+
     public List<EvalTree> evaluate(PatternRegistry patternRegistry) {
-        return this.assertions.stream().map(expr -> EvalTree.build(expr, patternRegistry)).collect(Collectors.toList());
+        return this.assertions.stream().map(expr -> EvalTree.build(expr, patternRegistry, this)).collect(Collectors.toList());
     }
 
     public List<FixContainer> getEnablingFixesForPatternVariable(String patternVar) {

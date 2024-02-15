@@ -2,6 +2,7 @@ package de.nexus.modelserver.evaltree;
 
 import de.nexus.expr.BinaryExpressionEntity;
 import de.nexus.expr.BinaryOperator;
+import de.nexus.modelserver.AbstractConstraint;
 import de.nexus.modelserver.PatternRegistry;
 
 public class EvalTreeBiNode implements IEvalTreeNode {
@@ -17,9 +18,9 @@ public class EvalTreeBiNode implements IEvalTreeNode {
         this.value = value;
     }
 
-    static EvalTreeBiNode evaluate(BinaryExpressionEntity expr, PatternRegistry patternRegistry) {
-        IEvalTreeNode leftChild = EvalTree.evaluateSubExpr(expr.getLeft(), patternRegistry);
-        IEvalTreeNode rightChild = EvalTree.evaluateSubExpr(expr.getRight(), patternRegistry);
+    static EvalTreeBiNode evaluate(BinaryExpressionEntity expr, PatternRegistry patternRegistry, AbstractConstraint constraint) {
+        IEvalTreeNode leftChild = EvalTree.evaluateSubExpr(expr.getLeft(), patternRegistry, constraint);
+        IEvalTreeNode rightChild = EvalTree.evaluateSubExpr(expr.getRight(), patternRegistry, constraint);
         EvalTreeValue value = evaluateBinaryExpr(expr.getOperator(), leftChild, rightChild);
 
         return new EvalTreeBiNode(expr, leftChild, rightChild, value);
