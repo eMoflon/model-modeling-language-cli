@@ -26,26 +26,47 @@ public class EvalTreeBiNode implements IEvalTreeNode {
         return new EvalTreeBiNode(expr, leftChild, rightChild, value);
     }
 
-    private static EvalTreeValue evaluateBinaryExpr(BinaryOperator operator, IEvalTreeNode leftChild, IEvalTreeNode rightChild) {
-        if (leftChild instanceof EvalTreeValueInteger lVal && rightChild instanceof EvalTreeValueInteger rVal) {
-            return new EvalTreeValueDouble(operator.applyDouble(lVal.getValue(), rVal.getValue()));
-        } else if (leftChild instanceof EvalTreeValueInteger lVal && rightChild instanceof EvalTreeValueDouble rVal) {
-            return new EvalTreeValueDouble(operator.applyDouble(lVal.getValue(), rVal.getValue()));
-        } else if (leftChild instanceof EvalTreeValueInteger lVal && rightChild instanceof EvalTreeValueString rVal) {
-            return new EvalTreeValueString(operator.applyString(lVal.getValue(), rVal.getValue()));
-        } else if (leftChild instanceof EvalTreeValueDouble lVal && rightChild instanceof EvalTreeValueInteger rVal) {
-            return new EvalTreeValueDouble(operator.applyDouble(lVal.getValue(), rVal.getValue()));
-        } else if (leftChild instanceof EvalTreeValueDouble lVal && rightChild instanceof EvalTreeValueDouble rVal) {
-            return new EvalTreeValueDouble(operator.applyDouble(lVal.getValue(), rVal.getValue()));
-        } else if (leftChild instanceof EvalTreeValueBoolean lVal && rightChild instanceof EvalTreeValueBoolean rVal) {
-            return new EvalTreeValueBoolean(operator.applyBool(lVal.getValue(), rVal.getValue()));
-        } else if (leftChild instanceof EvalTreeValueString lVal && rightChild instanceof EvalTreeValueInteger rVal) {
-            return new EvalTreeValueString(operator.applyString(lVal.getValue(), rVal.getValue()));
-        } else if (leftChild instanceof EvalTreeValueString lVal && rightChild instanceof EvalTreeValueString rVal) {
-            return new EvalTreeValueString(operator.applyString(lVal.getValue(), rVal.getValue()));
-        } else {
-            throw new UnsupportedOperationException("Unsupported child types in BoolEvalTree BinaryEvaluation!");
-        }
+    private static EvalTreeValue evaluateBinaryExpr(BinaryOperator operator, EvalTreeValue leftChild, EvalTreeValue rightChild) {
+        return switch (operator) {
+            case LOGICAL_AND, LOGICAL_OR -> {
+                if (leftChild instanceof EvalTreeValueBoolean lVal && rightChild instanceof EvalTreeValueBoolean rVal) {
+                    yield new EvalTreeValueBoolean(operator.applyBool(lVal.getValue(), rVal.getValue()));
+                } else {
+                    throw new UnsupportedOperationException("Unsupported child types in BoolEvalTree BinaryEvaluation!");
+                }
+            }
+            case EQUALS, NOT_EQUALS -> {
+                if (leftChild instanceof EvalTreeValueInteger lVal && rightChild instanceof EvalTreeValueInteger rVal) {
+                    yield new EvalTreeValueBoolean(operator.applyBool(lVal.getValue(), rVal.getValue()));
+                } else if (leftChild instanceof EvalTreeValueInteger lVal && rightChild instanceof EvalTreeValueDouble rVal) {
+                    yield new EvalTreeValueBoolean(operator.applyBool(lVal.getValue(), rVal.getValue()));
+                } else if (leftChild instanceof EvalTreeValueDouble lVal && rightChild instanceof EvalTreeValueInteger rVal) {
+                    yield new EvalTreeValueBoolean(operator.applyBool(lVal.getValue(), rVal.getValue()));
+                } else if (leftChild instanceof EvalTreeValueDouble lVal && rightChild instanceof EvalTreeValueDouble rVal) {
+                    yield new EvalTreeValueBoolean(operator.applyBool(lVal.getValue(), rVal.getValue()));
+                } else if (leftChild instanceof EvalTreeValueBoolean lVal && rightChild instanceof EvalTreeValueBoolean rVal) {
+                    yield new EvalTreeValueBoolean(operator.applyBool(lVal.getValue(), rVal.getValue()));
+                } else if (leftChild instanceof EvalTreeValueString lVal && rightChild instanceof EvalTreeValueString rVal) {
+                    yield new EvalTreeValueBoolean(operator.applyBool(lVal.getValue(), rVal.getValue()));
+                } else {
+                    throw new UnsupportedOperationException("Unsupported child types in BoolEvalTree BinaryEvaluation!");
+                }
+            }
+            case LESS_THAN, LESS_EQUAL_THAN, GREATER_THAN, GREATER_EQUAL_THAN -> {
+                if (leftChild instanceof EvalTreeValueInteger lVal && rightChild instanceof EvalTreeValueInteger rVal) {
+                    yield new EvalTreeValueBoolean(operator.applyBool(lVal.getValue(), rVal.getValue()));
+                } else if (leftChild instanceof EvalTreeValueInteger lVal && rightChild instanceof EvalTreeValueDouble rVal) {
+                    yield new EvalTreeValueBoolean(operator.applyBool(lVal.getValue(), rVal.getValue()));
+                } else if (leftChild instanceof EvalTreeValueDouble lVal && rightChild instanceof EvalTreeValueInteger rVal) {
+                    yield new EvalTreeValueBoolean(operator.applyBool(lVal.getValue(), rVal.getValue()));
+                } else if (leftChild instanceof EvalTreeValueDouble lVal && rightChild instanceof EvalTreeValueDouble rVal) {
+                    yield new EvalTreeValueBoolean(operator.applyBool(lVal.getValue(), rVal.getValue()));
+                } else {
+                    throw new UnsupportedOperationException("Unsupported child types in BoolEvalTree BinaryEvaluation!");
+                }
+            }
+            default -> throw new UnsupportedOperationException("Unsupported binary operator!");
+        };
     }
 
     @Override
