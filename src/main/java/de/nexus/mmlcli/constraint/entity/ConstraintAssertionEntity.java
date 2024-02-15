@@ -12,4 +12,8 @@ public class ConstraintAssertionEntity {
     public ExpressionEntity getExpr() {
         return expr;
     }
+
+    public String toJavaCode() {
+        return String.format("this.registerAssertion(%s);", this.expr.toJavaCode());
+    }
 }
