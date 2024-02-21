@@ -1,6 +1,7 @@
 package de.nexus.modelserver;
 
 import de.nexus.modelserver.evaltree.EvalTree;
+import de.nexus.modelserver.evaltree.EvalTreeAnalysisProposal;
 import de.nexus.modelserver.proto.ModelServerConstraints;
 import de.nexus.modelserver.proto.ModelServerPatterns;
 
@@ -27,6 +28,7 @@ public class ProtoMapper {
                 .setName(constraint.getName())
                 .setViolated(constraint.isViolated())
                 .addAllAssertions(constraint.getEvalTrees().stream().map(ProtoMapper::mapEvalTree).toList())
+                .addAllProposals(constraint.getProposals().stream().map(ProtoMapper::mapProposals).toList())
                 .build();
     }
 
@@ -34,6 +36,17 @@ public class ProtoMapper {
         return ModelServerConstraints.ConstraintAssertion.newBuilder()
                 .setExpression(evalTree.getRoot().toFormattedString(0))
                 .setViolated(!evalTree.getState())
+                .build();
+    }
+
+    public static ModelServerConstraints.FixProposal mapProposals(EvalTreeAnalysisProposal proposal) {
+        ModelServerConstraints.FixProposalType type = switch (proposal.getProposalType()) {
+            case ENABLE_PATTERN -> ModelServerConstraints.FixProposalType.ENABLE_PATTERN;
+            case DISABLE_PATTERN -> ModelServerConstraints.FixProposalType.DISABLE_PATTERN;
+        };
+
+        return ModelServerConstraints.FixProposal.newBuilder()
+                .setType(type)
                 .build();
     }
 }

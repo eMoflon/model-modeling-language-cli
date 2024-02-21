@@ -129,6 +129,7 @@ public class ModelServerGrpc {
 
             grpcHandler.modelServer.getConstraintRegistry().getConstraints().values().forEach(constraint -> {
                 constraint.evaluate(grpcHandler.modelServer.getPatternRegistry());
+                constraint.computeProposals(grpcHandler.modelServer.getPatternRegistry());
             });
 
             List<de.nexus.modelserver.proto.ModelServerConstraints.Constraint> constraints = grpcHandler.modelServer.getConstraintRegistry().getConstraints().values().stream().map(ProtoMapper::mapConstraint).toList();
@@ -144,6 +145,7 @@ public class ModelServerGrpc {
 
             AbstractConstraint constraint = grpcHandler.modelServer.getConstraintRegistry().getConstraint(request.getConstraintName());
             constraint.evaluate(grpcHandler.modelServer.getPatternRegistry());
+            constraint.computeProposals(grpcHandler.modelServer.getPatternRegistry());
 
             de.nexus.modelserver.proto.ModelServerConstraints.Constraint protoConstraint = ProtoMapper.mapConstraint(constraint);
 

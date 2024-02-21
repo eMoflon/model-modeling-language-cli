@@ -29,7 +29,7 @@ message Constraint {
   string name = 3;
   bool violated = 4;
   repeated ConstraintAssertion assertions = 5;
-  repeated FixProposals proposals = 6;
+  repeated FixProposal proposals = 6;
 }
 
 message ConstraintAssertion {
@@ -37,6 +37,12 @@ message ConstraintAssertion {
   string expression = 2;
 }
 
-message FixProposals {
+message FixProposal {
+  FixProposalType type = 1;
+}
 
+enum FixProposalType {
+  UNKNOWN = 0;
+  ENABLE_PATTERN = 1;
+  DISABLE_PATTERN = 2;
 }

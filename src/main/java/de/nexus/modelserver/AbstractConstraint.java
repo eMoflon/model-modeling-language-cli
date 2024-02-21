@@ -2,11 +2,10 @@ package de.nexus.modelserver;
 
 import de.nexus.expr.ExpressionEntity;
 import de.nexus.modelserver.evaltree.EvalTree;
+import de.nexus.modelserver.evaltree.EvalTreeAnalyser;
+import de.nexus.modelserver.evaltree.EvalTreeAnalysisProposal;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class AbstractConstraint {
@@ -14,6 +13,7 @@ public abstract class AbstractConstraint {
     private final Map<String, PatternDeclaration> patternDeclarations = new HashMap<>();
     private boolean violated = false;
     private List<EvalTree> evalTrees;
+    private List<EvalTreeAnalysisProposal> proposals = Collections.emptyList();
 
     public abstract String getName();
 
@@ -40,6 +40,20 @@ public abstract class AbstractConstraint {
     public void evaluate(PatternRegistry patternRegistry) {
         this.evalTrees = this.assertions.stream().map(expr -> EvalTree.build(expr, patternRegistry, this)).collect(Collectors.toList());
         this.violated = !this.evalTrees.stream().allMatch(EvalTree::getState);
+        this.proposals = Collections.emptyList();
+    }
+
+    public void computeProposals(PatternRegistry patternRegistry) {
+        ArrayList<EvalTreeAnalysisProposal> allProposals = new ArrayList<>();
+        for (EvalTree evalTree : this.evalTrees) {
+            EvalTreeAnalyser analyzer = new EvalTreeAnalyser(evalTree, patternRegistry, this);
+            allProposals.addAll(analyzer.analyze());
+        }
+        this.proposals = allProposals;
+    }
+
+    public List<EvalTreeAnalysisProposal> getProposals() {
+        return proposals;
     }
 
     public boolean isViolated() {
