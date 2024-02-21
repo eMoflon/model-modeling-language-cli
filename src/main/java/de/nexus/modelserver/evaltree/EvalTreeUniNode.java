@@ -13,7 +13,7 @@ public class EvalTreeUniNode implements IEvalTreeNode {
         this.expression = expression;
         this.child = child;
 
-        if (child instanceof EvalTreeValueBoolean boolValue) {
+        if (child.getValue() instanceof EvalTreeValueBoolean boolValue) {
             this.value = new EvalTreeValueBoolean(expression.getOperator().applyBool(boolValue.getValue()));
         } else {
             throw new UnsupportedOperationException("Unsupported BoolEvalTreeValue: " + child.getClass().getName());
