@@ -32,11 +32,11 @@ public class Pattern {
     }
 
     public boolean hasAny() {
-        return this.matches.isEmpty();
+        return !this.matches.isEmpty();
     }
 
     public boolean hasNone() {
-        return !this.matches.isEmpty();
+        return this.matches.isEmpty();
     }
 
     public boolean hasExact(int num) {
