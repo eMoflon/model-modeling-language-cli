@@ -19,7 +19,7 @@ public class UnaryExpressionEntity implements ExpressionEntity {
 
     @Override
     public String toJavaCode() {
-        return String.format("new UnaryExpressionEntity(%s, %s)", this.operator, this.expr.toJavaCode());
+        return String.format("new UnaryExpressionEntity(%s, %s)", "UnaryOperator." + this.operator.name(), this.expr.toJavaCode());
     }
 
     @Override
