@@ -69,6 +69,18 @@ public class EvalTreeBiNode implements IEvalTreeNode {
         };
     }
 
+    public BinaryExpressionEntity getExpr() {
+        return expr;
+    }
+
+    public IEvalTreeNode getLeftChild() {
+        return leftChild;
+    }
+
+    public IEvalTreeNode getRightChild() {
+        return rightChild;
+    }
+
     @Override
     public String toFormattedString(int indent) {
         String indentString = "    ".repeat(indent);

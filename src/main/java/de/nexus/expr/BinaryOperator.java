@@ -3,7 +3,7 @@ package de.nexus.expr;
 import hipe.pattern.ComparatorType;
 
 public enum BinaryOperator {
-    EQUALS(ComparatorType.EQUAL) {
+    EQUALS(ComparatorType.EQUAL, true) {
         @Override
         public boolean applyBool(int a, int b) {
             return a == b;
@@ -34,7 +34,7 @@ public enum BinaryOperator {
             return a.equals(b);
         }
     },
-    NOT_EQUALS(ComparatorType.UNEQUAL) {
+    NOT_EQUALS(ComparatorType.UNEQUAL, true) {
         @Override
         public boolean applyBool(int a, int b) {
             return a != b;
@@ -65,7 +65,7 @@ public enum BinaryOperator {
             return !a.equals(b);
         }
     },
-    GREATER_THAN(ComparatorType.GREATER) {
+    GREATER_THAN(ComparatorType.GREATER, false) {
         @Override
         public boolean applyBool(int a, int b) {
             return a > b;
@@ -86,7 +86,7 @@ public enum BinaryOperator {
             return a > b;
         }
     },
-    LESS_THAN(ComparatorType.LESS) {
+    LESS_THAN(ComparatorType.LESS, false) {
         @Override
         public boolean applyBool(int a, int b) {
             return a < b;
@@ -107,7 +107,7 @@ public enum BinaryOperator {
             return a < b;
         }
     },
-    GREATER_EQUAL_THAN(ComparatorType.GREATER_OR_EQUAL) {
+    GREATER_EQUAL_THAN(ComparatorType.GREATER_OR_EQUAL, false) {
         @Override
         public boolean applyBool(int a, int b) {
             return a >= b;
@@ -128,7 +128,7 @@ public enum BinaryOperator {
             return a >= b;
         }
     },
-    LESS_EQUAL_THAN(ComparatorType.LESS_OR_EQUAL) {
+    LESS_EQUAL_THAN(ComparatorType.LESS_OR_EQUAL, false) {
         @Override
         public boolean applyBool(int a, int b) {
             return a <= b;
@@ -149,19 +149,19 @@ public enum BinaryOperator {
             return a <= b;
         }
     },
-    LOGICAL_AND {
+    LOGICAL_AND(true) {
         @Override
         public boolean applyBool(boolean a, boolean b) {
             return a && b;
         }
     },
-    LOGICAL_OR {
+    LOGICAL_OR(true) {
         @Override
         public boolean applyBool(boolean a, boolean b) {
             return a || b;
         }
     },
-    ADDITION {
+    ADDITION(false) {
         @Override
         public String applyString(String a, String b) {
             return a + b;
@@ -187,7 +187,7 @@ public enum BinaryOperator {
             return a + b;
         }
     },
-    SUBTRACTION {
+    SUBTRACTION(false) {
         @Override
         public double applyDouble(int a, int b) {
             return a - b;
@@ -208,7 +208,7 @@ public enum BinaryOperator {
             return a - b;
         }
     },
-    MULTIPLICATION {
+    MULTIPLICATION(false) {
         @Override
         public double applyDouble(int a, int b) {
             return a * b;
@@ -239,7 +239,7 @@ public enum BinaryOperator {
             return a.repeat(b);
         }
     },
-    DIVISION {
+    DIVISION(false) {
         @Override
         public double applyDouble(int a, int b) {
             return (double) a / b;
@@ -260,7 +260,7 @@ public enum BinaryOperator {
             return a / b;
         }
     },
-    EXPONENTIATION {
+    EXPONENTIATION(false) {
         @Override
         public double applyDouble(int a, int b) {
             return Math.pow(a, b);
@@ -281,7 +281,7 @@ public enum BinaryOperator {
             return Math.pow(a, b);
         }
     },
-    MODULO {
+    MODULO(false) {
         @Override
         public double applyDouble(int a, int b) {
             return a % b;
@@ -305,17 +305,24 @@ public enum BinaryOperator {
     ;
 
     private final ComparatorType hipeType;
+    private final boolean isBooleanOperator;
 
-    BinaryOperator(ComparatorType hipeType) {
+    BinaryOperator(ComparatorType hipeType, boolean isBooleanOperator) {
         this.hipeType = hipeType;
+        this.isBooleanOperator = isBooleanOperator;
     }
 
-    BinaryOperator() {
+    BinaryOperator(boolean isBooleanOperator) {
+        this.isBooleanOperator = isBooleanOperator;
         this.hipeType = null;
     }
 
     public ComparatorType asHiPEComparatorType() {
         return this.hipeType;
+    }
+
+    public boolean isBooleanOperator() {
+        return isBooleanOperator;
     }
 
     public boolean isHiPEComparator() {
