@@ -33,6 +33,13 @@ public class EvalTree {
         throw new RuntimeException("Unexpected ExpressionEntity of type: " + expr.getClass().getName());
     }
 
+    public boolean getState() {
+        if (this.root.getValue() instanceof EvalTreeValueBoolean boolValueNode) {
+            return boolValueNode.getValue();
+        }
+        throw new IllegalStateException("EvalTree root does not yield boolean value!");
+    }
+
     @Override
     public String toString() {
         return "EvalTree\n" + this.root.toFormattedString(0);

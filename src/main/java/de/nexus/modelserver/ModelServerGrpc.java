@@ -1,5 +1,6 @@
 package de.nexus.modelserver;
 
+import de.nexus.modelserver.proto.ModelServerConstraintsGrpc;
 import de.nexus.modelserver.proto.ModelServerManagementGrpc;
 import de.nexus.modelserver.proto.ModelServerPatternGrpc;
 import de.nexus.modelserver.proto.ModelServerPatterns;
@@ -24,6 +25,7 @@ public class ModelServerGrpc {
                 .forPort(GRPC_PORT)
                 .addService(new ModelServerManagement(this))
                 .addService(new ModelServerPattern(this))
+                .addService(new ModelServerConstraints(this))
                 .build();
     }
 
@@ -89,7 +91,7 @@ public class ModelServerGrpc {
             Map<String, ProductionResult> extractData = this.grpcHandler.modelServer.extractData();
             grpcHandler.modelServer.getPatternRegistry().processHiPE(extractData);
 
-            List<ModelServerPatterns.Pattern> patterns = grpcHandler.modelServer.getPatternRegistry().getPatterns().values().stream().map(PatternProtoMapper::mapPattern).toList();
+            List<ModelServerPatterns.Pattern> patterns = grpcHandler.modelServer.getPatternRegistry().getPatterns().values().stream().map(ProtoMapper::mapPattern).toList();
 
             responseObserver.onNext(ModelServerPatterns.GetPatternsResponse.newBuilder().addAllPatterns(patterns).build());
             responseObserver.onCompleted();
@@ -100,7 +102,7 @@ public class ModelServerGrpc {
             Map<String, ProductionResult> extractData = this.grpcHandler.modelServer.extractData();
             grpcHandler.modelServer.getPatternRegistry().processHiPE(extractData);
 
-            ModelServerPatterns.Pattern pattern = PatternProtoMapper.mapPattern(grpcHandler.modelServer.getPatternRegistry().getPattern(request.getPatternName()));
+            ModelServerPatterns.Pattern pattern = ProtoMapper.mapPattern(grpcHandler.modelServer.getPatternRegistry().getPattern(request.getPatternName()));
 
             responseObserver.onNext(ModelServerPatterns.GetPatternResponse.newBuilder().setPattern(pattern).build());
             responseObserver.onCompleted();
@@ -109,6 +111,49 @@ public class ModelServerGrpc {
         @Override
         public void listPatterns(ModelServerPatterns.ListPatternsRequest request, StreamObserver<ModelServerPatterns.ListPatternsResponse> responseObserver) {
             responseObserver.onNext(ModelServerPatterns.ListPatternsResponse.newBuilder().addAllPatterns(this.grpcHandler.modelServer.getPatternRegistry().getPatterns().keySet()).build());
+            responseObserver.onCompleted();
+        }
+    }
+
+    private static class ModelServerConstraints extends ModelServerConstraintsGrpc.ModelServerConstraintsImplBase {
+        private final ModelServerGrpc grpcHandler;
+
+        public ModelServerConstraints(ModelServerGrpc handler) {
+            this.grpcHandler = handler;
+        }
+
+        @Override
+        public void getConstraints(de.nexus.modelserver.proto.ModelServerConstraints.GetConstraintsRequest request, StreamObserver<de.nexus.modelserver.proto.ModelServerConstraints.GetConstraintsResponse> responseObserver) {
+            Map<String, ProductionResult> extractData = this.grpcHandler.modelServer.extractData();
+            grpcHandler.modelServer.getPatternRegistry().processHiPE(extractData);
+
+            grpcHandler.modelServer.getConstraintRegistry().getConstraints().values().forEach(constraint -> {
+                constraint.evaluate(grpcHandler.modelServer.getPatternRegistry());
+            });
+
+            List<de.nexus.modelserver.proto.ModelServerConstraints.Constraint> constraints = grpcHandler.modelServer.getConstraintRegistry().getConstraints().values().stream().map(ProtoMapper::mapConstraint).toList();
+
+            responseObserver.onNext(de.nexus.modelserver.proto.ModelServerConstraints.GetConstraintsResponse.newBuilder().addAllConstraints(constraints).build());
+            responseObserver.onCompleted();
+        }
+
+        @Override
+        public void getConstraint(de.nexus.modelserver.proto.ModelServerConstraints.GetConstraintRequest request, StreamObserver<de.nexus.modelserver.proto.ModelServerConstraints.GetConstraintResponse> responseObserver) {
+            Map<String, ProductionResult> extractData = this.grpcHandler.modelServer.extractData();
+            grpcHandler.modelServer.getPatternRegistry().processHiPE(extractData);
+
+            AbstractConstraint constraint = grpcHandler.modelServer.getConstraintRegistry().getConstraint(request.getConstraintName());
+            constraint.evaluate(grpcHandler.modelServer.getPatternRegistry());
+
+            de.nexus.modelserver.proto.ModelServerConstraints.Constraint protoConstraint = ProtoMapper.mapConstraint(constraint);
+
+            responseObserver.onNext(de.nexus.modelserver.proto.ModelServerConstraints.GetConstraintResponse.newBuilder().setConstraint(protoConstraint).build());
+            responseObserver.onCompleted();
+        }
+
+        @Override
+        public void listConstraints(de.nexus.modelserver.proto.ModelServerConstraints.ListConstraintsRequest request, StreamObserver<de.nexus.modelserver.proto.ModelServerConstraints.ListConstraintsResponse> responseObserver) {
+            responseObserver.onNext(de.nexus.modelserver.proto.ModelServerConstraints.ListConstraintsResponse.newBuilder().addAllConstraints(this.grpcHandler.modelServer.getConstraintRegistry().getConstraints().keySet()).build());
             responseObserver.onCompleted();
         }
     }

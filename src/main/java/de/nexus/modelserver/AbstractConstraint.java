@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 public abstract class AbstractConstraint {
     private final List<ExpressionEntity> assertions = new ArrayList<>();
     private final Map<String, PatternDeclaration> patternDeclarations = new HashMap<>();
+    private boolean violated = false;
+    private List<EvalTree> evalTrees;
 
     public abstract String getName();
 
@@ -35,8 +37,17 @@ public abstract class AbstractConstraint {
         return patternDeclarations;
     }
 
-    public List<EvalTree> evaluate(PatternRegistry patternRegistry) {
-        return this.assertions.stream().map(expr -> EvalTree.build(expr, patternRegistry, this)).collect(Collectors.toList());
+    public void evaluate(PatternRegistry patternRegistry) {
+        this.evalTrees = this.assertions.stream().map(expr -> EvalTree.build(expr, patternRegistry, this)).collect(Collectors.toList());
+        this.violated = !this.evalTrees.stream().allMatch(EvalTree::getState);
+    }
+
+    public boolean isViolated() {
+        return violated;
+    }
+
+    public List<EvalTree> getEvalTrees() {
+        return evalTrees;
     }
 
     public List<FixContainer> getEnablingFixesForPatternVariable(String patternVar) {

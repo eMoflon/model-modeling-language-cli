@@ -25,4 +25,6 @@ service ModelServerPattern {
 
 service ModelServerConstraints {
   rpc GetConstraints(GetConstraintsRequest) returns (GetConstraintsResponse);
+  rpc GetConstraint(GetConstraintRequest) returns (GetConstraintResponse);
+  rpc ListConstraints(ListConstraintsRequest) returns (ListConstraintsResponse);
 }
