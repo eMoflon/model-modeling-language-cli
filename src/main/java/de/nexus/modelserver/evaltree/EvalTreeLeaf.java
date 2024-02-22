@@ -39,8 +39,7 @@ public class EvalTreeLeaf implements IEvalTreeNode {
                 default -> throw new IllegalStateException("Unexpected value: " + primitiveExpr.getType());
             };
         } else if (expr instanceof PatternPrimaryExpressionEntity patternExpr) {
-            String patternName = constraint.getPatternDeclarations().get(patternExpr.getPatternName()).getPatternName();
-            Pattern pattern = patternRegistry.getPattern(patternName);
+            Pattern pattern = constraint.getPattern(patternExpr.getPatternName());
             return new EvalTreeLeaf(expr, new EvalTreeValueBoolean(pattern.hasAny()));
         } else {
             throw new UnsupportedOperationException("BoolEvalTree does currently not support: " + expr.getClass().getName());

@@ -47,10 +47,8 @@ public class ProtoMapper {
         };
 
         List<FixContainer> fixContainers = switch (proposal.getProposalType()) {
-            case ENABLE_PATTERN ->
-                    constraint.getPatternDeclarations().get(proposal.getPatternVariable()).getEnablingFixes();
-            case DISABLE_PATTERN ->
-                    constraint.getPatternDeclarations().get(proposal.getPatternVariable()).getDisablingFixes();
+            case ENABLE_PATTERN -> constraint.getEnablingFixesForPatternVariable(proposal.getPatternVariable());
+            case DISABLE_PATTERN -> constraint.getDisablingFixesForPatternVariable(proposal.getPatternVariable());
         };
 
         List<ModelServerConstraints.FixVariant> variants = fixContainers.stream().map(ProtoMapper::map).toList();

@@ -39,6 +39,8 @@ public class ModelServer {
         System.out.println("[ModelServer] Loading constraint registry...");
         this.constraintRegistry = new ConstraintRegistry(configuration);
 
+        this.constraintRegistry.initializePatternDeclarations(this.patternRegistry);
+
 
         System.out.println("""
 

@@ -2,8 +2,8 @@ package de.nexus.modelserver;
 
 import de.nexus.expr.ExpressionEntity;
 import de.nexus.modelserver.evaltree.EvalTree;
-import de.nexus.modelserver.evaltree.EvalTreeAnalyzer;
 import de.nexus.modelserver.evaltree.EvalTreeAnalysisProposal;
+import de.nexus.modelserver.evaltree.EvalTreeAnalyzer;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,6 +33,14 @@ public abstract class AbstractConstraint {
         this.patternDeclarations.put(pDec.getPatternVariableName(), pDec);
     }
 
+    public PatternDeclaration getPatternDeclaration(String patternVariableName) {
+        return this.patternDeclarations.get(patternVariableName);
+    }
+
+    public Pattern getPattern(String patternVarName) {
+        return this.patternDeclarations.get(patternVarName).getPattern();
+    }
+
     public Map<String, PatternDeclaration> getPatternDeclarations() {
         return patternDeclarations;
     }
@@ -46,7 +54,7 @@ public abstract class AbstractConstraint {
     public void computeProposals(PatternRegistry patternRegistry) {
         ArrayList<EvalTreeAnalysisProposal> allProposals = new ArrayList<>();
         for (EvalTree evalTree : this.evalTrees) {
-            EvalTreeAnalyzer analyzer = new EvalTreeAnalyzer(evalTree, patternRegistry, this);
+            EvalTreeAnalyzer analyzer = new EvalTreeAnalyzer(evalTree, this);
             allProposals.addAll(analyzer.analyze());
         }
         this.proposals = allProposals;

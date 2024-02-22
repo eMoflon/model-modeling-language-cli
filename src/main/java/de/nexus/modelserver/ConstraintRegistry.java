@@ -18,6 +18,14 @@ public class ConstraintRegistry {
         }
     }
 
+    public void initializePatternDeclarations(PatternRegistry registry) {
+        this.constraints.values().forEach(constraint ->
+                constraint.getPatternDeclarations().values().forEach(
+                        patternDeclaration -> patternDeclaration.connectPattern(registry)
+                )
+        );
+    }
+
     public AbstractConstraint getConstraint(String name) {
         return this.constraints.get(name);
     }

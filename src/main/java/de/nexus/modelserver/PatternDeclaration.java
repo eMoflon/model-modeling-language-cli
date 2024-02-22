@@ -6,6 +6,7 @@ import java.util.List;
 public class PatternDeclaration {
     private final String patternName;
     private final String patternVariableName;
+    private volatile Pattern pattern;
     private final List<FixContainer> enablingFixes = new ArrayList<>();
     private final List<FixContainer> disablingFixes = new ArrayList<>();
 
@@ -23,6 +24,19 @@ public class PatternDeclaration {
             return this;
         }
         throw new IllegalArgumentException("Unknown FixContainer subtype: " + fixContainer.getClass().getName());
+    }
+
+    public Pattern getPattern() {
+        return pattern;
+    }
+
+    public void connectPattern(PatternRegistry registry) {
+        Pattern pattern1 = registry.getPattern(this.patternName);
+        if (pattern1 != null) {
+            this.pattern = pattern1;
+        } else {
+            throw new IllegalArgumentException("Could not find pattern with name: " + this.patternName);
+        }
     }
 
     public String getPatternName() {

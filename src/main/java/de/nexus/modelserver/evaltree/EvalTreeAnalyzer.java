@@ -6,7 +6,6 @@ import de.nexus.expr.PrimitivePrimaryExpressionEntity;
 import de.nexus.expr.UnaryOperator;
 import de.nexus.modelserver.AbstractConstraint;
 import de.nexus.modelserver.Pattern;
-import de.nexus.modelserver.PatternRegistry;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,12 +14,10 @@ import java.util.Optional;
 
 public class EvalTreeAnalyzer {
     private final EvalTree tree;
-    private final PatternRegistry patternRegistry;
     private final AbstractConstraint constraint;
 
-    public EvalTreeAnalyzer(EvalTree tree, PatternRegistry patternRegistry, AbstractConstraint constraint) {
+    public EvalTreeAnalyzer(EvalTree tree, AbstractConstraint constraint) {
         this.tree = tree;
-        this.patternRegistry = patternRegistry;
         this.constraint = constraint;
     }
 
@@ -47,8 +44,7 @@ public class EvalTreeAnalyzer {
                 if (boolValue.getValue() != targetState) {
                     EvalTreeAnalysisProposalType proposalType = boolValue.getValue() ? EvalTreeAnalysisProposalType.DISABLE_PATTERN : EvalTreeAnalysisProposalType.ENABLE_PATTERN;
                     if (((EvalTreeLeaf) node).getExpression() instanceof PatternPrimaryExpressionEntity patternExpr) {
-                        String patternName = this.constraint.getPatternDeclarations().get(patternExpr.getPatternName()).getPatternName();
-                        Pattern pattern = this.patternRegistry.getPattern(patternName);
+                        Pattern pattern = this.constraint.getPattern(patternExpr.getPatternName());
                         return List.of(new EvalTreeAnalysisProposal(proposalType, pattern, patternExpr.getPatternName(), false));
                     } else {
                         return List.of(new EvalTreeAnalysisProposal(proposalType, null, null, true));
@@ -115,8 +111,7 @@ public class EvalTreeAnalyzer {
             }
         } else if (node instanceof EvalTreeLeaf leaf) {
             if (leaf.getExpression() instanceof PatternPrimaryExpressionEntity patternExpr) {
-                String patternName = this.constraint.getPatternDeclarations().get(patternExpr.getPatternName()).getPatternName();
-                Pattern pattern = this.patternRegistry.getPattern(patternName);
+                Pattern pattern = this.constraint.getPattern(patternExpr.getPatternName());
                 if (pattern.hasAny() == reference) {
                     return Optional.of(node);
                 }
