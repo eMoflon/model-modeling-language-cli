@@ -47,6 +47,7 @@ public class ProtoMapper {
 
         return ModelServerConstraints.FixProposal.newBuilder()
                 .setType(type)
+                .setPatternName(proposal.getPattern().getName())
                 .build();
     }
 }

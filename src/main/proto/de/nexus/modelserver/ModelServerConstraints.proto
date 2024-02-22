@@ -39,6 +39,7 @@ message ConstraintAssertion {
 
 message FixProposal {
   FixProposalType type = 1;
+  string patternName = 2;
 }
 
 enum FixProposalType {
