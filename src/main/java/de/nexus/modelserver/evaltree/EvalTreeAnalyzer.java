@@ -13,12 +13,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class EvalTreeAnalyser {
+public class EvalTreeAnalyzer {
     private final EvalTree tree;
     private final PatternRegistry patternRegistry;
     private final AbstractConstraint constraint;
 
-    public EvalTreeAnalyser(EvalTree tree, PatternRegistry patternRegistry, AbstractConstraint constraint) {
+    public EvalTreeAnalyzer(EvalTree tree, PatternRegistry patternRegistry, AbstractConstraint constraint) {
         this.tree = tree;
         this.patternRegistry = patternRegistry;
         this.constraint = constraint;

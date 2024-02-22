@@ -2,7 +2,7 @@ package de.nexus.modelserver;
 
 import de.nexus.expr.ExpressionEntity;
 import de.nexus.modelserver.evaltree.EvalTree;
-import de.nexus.modelserver.evaltree.EvalTreeAnalyser;
+import de.nexus.modelserver.evaltree.EvalTreeAnalyzer;
 import de.nexus.modelserver.evaltree.EvalTreeAnalysisProposal;
 
 import java.util.*;
@@ -46,7 +46,7 @@ public abstract class AbstractConstraint {
     public void computeProposals(PatternRegistry patternRegistry) {
         ArrayList<EvalTreeAnalysisProposal> allProposals = new ArrayList<>();
         for (EvalTree evalTree : this.evalTrees) {
-            EvalTreeAnalyser analyzer = new EvalTreeAnalyser(evalTree, patternRegistry, this);
+            EvalTreeAnalyzer analyzer = new EvalTreeAnalyzer(evalTree, patternRegistry, this);
             allProposals.addAll(analyzer.analyze());
         }
         this.proposals = allProposals;
