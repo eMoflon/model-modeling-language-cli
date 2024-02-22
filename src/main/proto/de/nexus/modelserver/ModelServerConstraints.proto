@@ -40,10 +40,34 @@ message ConstraintAssertion {
 message FixProposal {
   FixProposalType type = 1;
   string patternName = 2;
+  repeated FixVariant variants = 3;
+}
+
+message FixVariant {
+  repeated FixStatement statements = 1;
+}
+
+message FixStatement {
+  FixStatementType type = 1;
+  oneof payload {
+    FixInfoStatement infoStatement = 2;
+  }
+}
+
+message FixInfoStatement {
+  string msg = 1;
 }
 
 enum FixProposalType {
   UNKNOWN = 0;
   ENABLE_PATTERN = 1;
   DISABLE_PATTERN = 2;
+}
+
+enum FixStatementType {
+  INFO = 0;
+  DELETE_EDGE = 1;
+  DELETE_NODE = 2;
+  CREATE_EDGE = 3;
+  CREATE_NODE = 4;
 }

@@ -49,9 +49,9 @@ public class EvalTreeAnalyzer {
                     if (((EvalTreeLeaf) node).getExpression() instanceof PatternPrimaryExpressionEntity patternExpr) {
                         String patternName = this.constraint.getPatternDeclarations().get(patternExpr.getPatternName()).getPatternName();
                         Pattern pattern = this.patternRegistry.getPattern(patternName);
-                        return List.of(new EvalTreeAnalysisProposal(proposalType, pattern, false));
+                        return List.of(new EvalTreeAnalysisProposal(proposalType, pattern, patternExpr.getPatternName(), false));
                     } else {
-                        return List.of(new EvalTreeAnalysisProposal(proposalType, null, true));
+                        return List.of(new EvalTreeAnalysisProposal(proposalType, null, null, true));
                     }
                 } else {
                     return Collections.emptyList();
