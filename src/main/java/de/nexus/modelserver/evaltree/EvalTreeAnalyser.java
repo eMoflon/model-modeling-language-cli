@@ -47,7 +47,8 @@ public class EvalTreeAnalyser {
                 if (boolValue.getValue() != targetState) {
                     EvalTreeAnalysisProposalType proposalType = boolValue.getValue() ? EvalTreeAnalysisProposalType.DISABLE_PATTERN : EvalTreeAnalysisProposalType.ENABLE_PATTERN;
                     if (((EvalTreeLeaf) node).getExpression() instanceof PatternPrimaryExpressionEntity patternExpr) {
-                        Pattern pattern = this.patternRegistry.getPattern(patternExpr.getPatternName());
+                        String patternName = this.constraint.getPatternDeclarations().get(patternExpr.getPatternName()).getPatternName();
+                        Pattern pattern = this.patternRegistry.getPattern(patternName);
                         return List.of(new EvalTreeAnalysisProposal(proposalType, pattern, false));
                     } else {
                         return List.of(new EvalTreeAnalysisProposal(proposalType, null, true));
