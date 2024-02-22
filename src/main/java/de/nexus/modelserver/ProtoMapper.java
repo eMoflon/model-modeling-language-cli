@@ -28,7 +28,7 @@ public class ProtoMapper {
                 .setName(constraint.getName())
                 .setViolated(constraint.isViolated())
                 .addAllAssertions(constraint.getEvalTrees().stream().map(ProtoMapper::mapEvalTree).toList())
-                .addAllProposals(constraint.getProposals().stream().map(ProtoMapper::mapProposals).toList())
+                .addAllProposals(constraint.getProposals().stream().filter(x -> !x.isUnresolvable()).map(ProtoMapper::mapProposals).toList())
                 .build();
     }
 

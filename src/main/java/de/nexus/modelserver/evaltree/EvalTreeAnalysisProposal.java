@@ -26,4 +26,8 @@ public class EvalTreeAnalysisProposal {
     public Pattern getPattern() {
         return pattern;
     }
+
+    public boolean isUnresolvable() {
+        return unresolvable;
+    }
 }
