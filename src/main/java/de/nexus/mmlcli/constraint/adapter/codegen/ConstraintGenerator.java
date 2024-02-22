@@ -18,7 +18,7 @@ public class ConstraintGenerator extends TemporaryFileObject {
             import de.nexus.modelserver.EnablingFixContainer;
             import de.nexus.modelserver.DisablingFixContainer;
             import de.nexus.expr.*;
-            
+                        
             import java.util.List;
                         
             public class %s extends AbstractConstraint {

@@ -15,11 +15,11 @@ public class FixContainerEntity {
         return statements;
     }
 
-    public String toJavaCode(){
-        if (this.isEnableContainer){
-            return String.format("new EnablingFixContainer(List.of(%s))",this.statements.stream().map(IFixStatementEntity::toJavaCode).collect(Collectors.joining(", ")));
-        }else {
-            return String.format("new DisablingFixContainer(List.of(%s))",this.statements.stream().map(IFixStatementEntity::toJavaCode).collect(Collectors.joining(", ")));
+    public String toJavaCode() {
+        if (this.isEnableContainer) {
+            return String.format("new EnablingFixContainer(List.of(%s))", this.statements.stream().map(IFixStatementEntity::toJavaCode).collect(Collectors.joining(", ")));
+        } else {
+            return String.format("new DisablingFixContainer(List.of(%s))", this.statements.stream().map(IFixStatementEntity::toJavaCode).collect(Collectors.joining(", ")));
         }
     }
 }

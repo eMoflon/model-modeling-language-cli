@@ -1,8 +1,8 @@
 package de.nexus.mmlcli.constraint.adapter;
 
 import de.nexus.emfutils.SmartEMFLoader;
-import de.nexus.mmlcli.constraint.entity.PatternNodeEntity;
 import de.nexus.expr.AttributePrimaryExpressionEntity;
+import de.nexus.mmlcli.constraint.entity.PatternNodeEntity;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 
