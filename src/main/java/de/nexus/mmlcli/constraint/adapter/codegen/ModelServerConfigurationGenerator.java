@@ -12,7 +12,7 @@ public class ModelServerConfigurationGenerator extends TemporaryFileObject {
             import de.nexus.modelserver.IModelServerConfiguration;
             import de.nexus.modelserver.patterns.PatternInitializer;
             import de.nexus.modelserver.AbstractConstraint;
-            import de.nexus.modelserver.constraints.*;
+            %s
                         
             import java.util.List;
                                 
@@ -40,9 +40,10 @@ public class ModelServerConfigurationGenerator extends TemporaryFileObject {
     }
 
     public static ModelServerConfigurationGenerator build(String projectName, String modelPath, ConstraintDocumentEntity cDoc) {
+        String constraintImport = cDoc.getConstraints().isEmpty() ? "" : "import de.nexus.modelserver.constraints.*;";
         String normalizedModelPath = modelPath.replace("\\", "\\\\");
         String constraintClasses = cDoc.getConstraints().stream().map(x -> x.getCapitalizedName() + "Constraint.class").collect(Collectors.joining(", "));
-        String fullSource = String.format(CODE_TEMPLATE, projectName, normalizedModelPath, constraintClasses);
+        String fullSource = String.format(CODE_TEMPLATE, constraintImport,projectName, normalizedModelPath, constraintClasses);
         return new ModelServerConfigurationGenerator(fullSource);
     }
 
