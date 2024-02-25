@@ -1,7 +1,7 @@
 package de.nexus.modelserver;
 
 import de.nexus.emfutils.EMFExtenderUtils;
-import de.nexus.emfutils.EMFLoader;
+import de.nexus.emfutils.SmartEMFLoader;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -14,13 +14,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Optional;
 
-public class IndexedEMFLoader extends EMFLoader {
+public class IndexedEMFLoader extends SmartEMFLoader {
     private HashMap<Integer, SmartObject> idIndex = new HashMap<>();
 
     private EStructuralFeature idStrucuralFeature = null;
     private int currentId = -1;
 
-    public IndexedEMFLoader() {
+    public IndexedEMFLoader(Path workspace) {
+        super(workspace);
     }
 
     private void initializeIndices(Resource resource) {

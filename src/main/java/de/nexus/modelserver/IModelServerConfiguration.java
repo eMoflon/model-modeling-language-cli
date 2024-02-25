@@ -7,6 +7,8 @@ public interface IModelServerConfiguration {
 
     String getModelPath();
 
+    String getWorkspacePath();
+
     List<Pattern> getPattern();
 
     List<Class<? extends AbstractConstraint>> getConstraintClasses();

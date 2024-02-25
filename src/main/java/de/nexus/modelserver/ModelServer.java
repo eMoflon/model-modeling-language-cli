@@ -27,7 +27,7 @@ public class ModelServer {
 
 
         System.out.println("[ModelServer] Loading model...");
-        IndexedEMFLoader emfLoader = new IndexedEMFLoader();
+        IndexedEMFLoader emfLoader = new IndexedEMFLoader(Path.of(configuration.getWorkspacePath()));
         emfLoader.loadResource(Path.of(configuration.getModelPath()));
 
         System.out.println("[ModelServer] Creating ContentAdapter...");
