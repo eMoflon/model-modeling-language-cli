@@ -1,0 +1,48 @@
+syntax = "proto3";
+package de.nexus.modelserver.proto;
+
+message EditRequest {
+  oneof request{
+    EditCreateEdgeRequest createEdgeRequest = 1;
+    EditCreateNodeRequest createNodeRequest = 2;
+    EditDeleteEdgeRequest deleteEdgeRequest = 3;
+    EditDeleteNodeRequest deleteNodeRequest = 4;
+  }
+}
+
+message EditCreateEdgeRequest {
+  Node startNode = 1;
+  Node targetNode = 2;
+  string referenceName = 3;
+}
+
+message EditCreateNodeAttributeAssignment {
+  string attributeName = 1;
+  oneof value {
+    bool boolValue = 2;
+    int32 intValue = 3;
+    double doubleValue = 4;
+    string stringValue = 5;
+  }
+}
+
+message EditCreateNodeRequest {
+  string nodeType = 1;
+  string tempId = 2;
+  repeated EditCreateNodeAttributeAssignment assignments = 3;
+}
+
+message EditDeleteEdgeRequest {
+  Node startNode = 1;
+  Node targetNode = 2;
+  string referenceName = 3;
+}
+
+message EditDeleteNodeRequest {
+  Node node = 1;
+}
+
+message Node {
+  int32 nodeId = 1;
+  string tempId = 2;
+}

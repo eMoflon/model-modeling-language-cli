@@ -4,6 +4,7 @@ import de.nexus.modelserver.evaltree.EvalTree;
 import de.nexus.modelserver.evaltree.EvalTreeAnalysisProposal;
 import de.nexus.modelserver.proto.ModelServerConstraints;
 import de.nexus.modelserver.proto.ModelServerPatterns;
+import de.nexus.modelserver.runtime.IMatch;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,27 +52,34 @@ public class ProtoMapper {
             case DISABLE_PATTERN -> constraint.getDisablingFixesForPatternVariable(proposal.getPatternVariable());
         };
 
-        List<ModelServerConstraints.FixVariant> variants = fixContainers.stream().map(ProtoMapper::map).toList();
+        List<ModelServerConstraints.FixMatch> matches = proposal.getPattern().getMatches().stream().map(x -> ProtoMapper.map(x, fixContainers)).toList();
 
         return ModelServerConstraints.FixProposal.newBuilder()
                 .setType(type)
                 .setPatternName(proposal.getPattern().getName())
-                .addAllVariants(variants)
+                .addAllMatches(matches)
                 .build();
     }
 
-    public static ModelServerConstraints.FixVariant map(FixContainer fixContainer) {
-        List<ModelServerConstraints.FixStatement> statements = fixContainer.getStatements().stream().map(ProtoMapper::map).toList();
+    public static ModelServerConstraints.FixMatch map(IMatch match, List<FixContainer> variants) {
+        List<ModelServerConstraints.FixVariant> protoVariants = variants.stream().map(x -> ProtoMapper.map(match, x)).toList();
+
+        return ModelServerConstraints.FixMatch.newBuilder()
+                .addAllVariants(protoVariants)
+                .build();
+    }
+
+    public static ModelServerConstraints.FixVariant map(IMatch match, FixContainer fixContainer) {
+        List<ModelServerConstraints.FixStatement> statements = fixContainer.getStatements().stream().map(x -> ProtoMapper.map(match, x)).toList();
 
         return ModelServerConstraints.FixVariant.newBuilder()
                 .addAllStatements(statements)
                 .build();
     }
 
-    public static ModelServerConstraints.FixStatement map(FixStatement fixStatement) {
+    public static ModelServerConstraints.FixStatement map(IMatch match, FixStatement fixStatement) {
         if (fixStatement instanceof FixInfoStatement infoStatement) {
             return ModelServerConstraints.FixStatement.newBuilder()
-                    .setType(ModelServerConstraints.FixStatementType.INFO)
                     .setInfoStatement(
                             ModelServerConstraints.FixInfoStatement.newBuilder()
                                     .setMsg(infoStatement.getMsg())

@@ -1,6 +1,8 @@
 syntax = "proto3";
 package de.nexus.modelserver.proto;
 
+import "de/nexus/modelserver/ModelServerEditStatements.proto";
+
 message GetConstraintsRequest{
 }
 
@@ -40,7 +42,11 @@ message ConstraintAssertion {
 message FixProposal {
   FixProposalType type = 1;
   string patternName = 2;
-  repeated FixVariant variants = 3;
+  repeated FixMatch matches = 3;
+}
+
+message FixMatch {
+  repeated FixVariant variants = 1;
 }
 
 message FixVariant {
@@ -48,9 +54,9 @@ message FixVariant {
 }
 
 message FixStatement {
-  FixStatementType type = 1;
-  oneof payload {
-    FixInfoStatement infoStatement = 2;
+  oneof stmt {
+    FixInfoStatement infoStatement = 1;
+    EditRequest edit = 2;
   }
 }
 
@@ -62,12 +68,4 @@ enum FixProposalType {
   UNKNOWN = 0;
   ENABLE_PATTERN = 1;
   DISABLE_PATTERN = 2;
-}
-
-enum FixStatementType {
-  INFO = 0;
-  DELETE_EDGE = 1;
-  DELETE_NODE = 2;
-  CREATE_EDGE = 3;
-  CREATE_NODE = 4;
 }
