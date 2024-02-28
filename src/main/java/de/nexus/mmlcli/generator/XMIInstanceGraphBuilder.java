@@ -1,5 +1,6 @@
 package de.nexus.mmlcli.generator;
 
+import de.nexus.emfutils.EMFValueUtils;
 import de.nexus.emfutils.IEMFLoader;
 import de.nexus.mmlcli.entities.instance.AttributeEntry;
 import de.nexus.mmlcli.entities.instance.ObjectInstance;
@@ -68,7 +69,7 @@ public class XMIInstanceGraphBuilder {
         if (attr.isEnumType()) {
             obj.eSet(eattr, typeResolver.resolveAttributeEnum(attr));
         } else {
-            obj.eSet(eattr, EmfGraphBuilderUtils.mapVals(eattr.getEAttributeType(), attr.getValue()));
+            obj.eSet(eattr, EMFValueUtils.mapVals(eattr.getEAttributeType(), attr.getValue()));
         }
 
     }

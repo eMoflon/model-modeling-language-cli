@@ -1,5 +1,6 @@
 package de.nexus.mmlcli.generator;
 
+import de.nexus.emfutils.EMFValueUtils;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EcorePackage;
 
@@ -30,18 +31,6 @@ public class EmfGraphBuilderUtils {
     }
 
     public static <T, R> R mapVals(String mmlType, T value) {
-        return mapVals(mapETypes(mmlType), value);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T, R> R mapVals(EDataType type, T value) {
-        return switch (type.getClassifierID()) {
-            case EcorePackage.ESTRING -> (R) value;
-            case EcorePackage.EFLOAT -> (R) Float.valueOf(value.toString());
-            case EcorePackage.EDOUBLE -> (R) Double.valueOf(value.toString());
-            case EcorePackage.EINT -> (R) Integer.valueOf(Double.valueOf(value.toString()).intValue());
-            case EcorePackage.EBOOLEAN -> (R) Boolean.valueOf(value.toString());
-            default -> (R) value.toString();
-        };
+        return EMFValueUtils.mapVals(mapETypes(mmlType), value);
     }
 }
