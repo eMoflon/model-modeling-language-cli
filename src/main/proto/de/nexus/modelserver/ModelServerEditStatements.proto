@@ -19,12 +19,7 @@ message EditCreateEdgeRequest {
 
 message EditCreateNodeAttributeAssignment {
   string attributeName = 1;
-  oneof value {
-    bool boolValue = 2;
-    int32 intValue = 3;
-    double doubleValue = 4;
-    string stringValue = 5;
-  }
+  string attributeValue = 2;
 }
 
 message EditCreateNodeRequest {
