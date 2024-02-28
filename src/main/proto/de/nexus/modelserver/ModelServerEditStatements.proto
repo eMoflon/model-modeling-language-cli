@@ -45,6 +45,8 @@ message EditSetAttributeRequest {
 }
 
 message Node {
-  int32 nodeId = 1;
-  string tempId = 2;
+  oneof nodeType {
+    int32 nodeId = 1;
+    string tempId = 2;
+  }
 }
