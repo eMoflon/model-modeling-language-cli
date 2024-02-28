@@ -8,6 +8,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.emoflon.smartemf.runtime.SmartObject;
 
+import java.util.List;
+
 public class ModelEditProcessor {
     private final IndexedEMFLoader emfLoader;
 
@@ -32,9 +34,18 @@ public class ModelEditProcessor {
 
     public void process(ModelServerEditStatements.EditChainRequest editChain) {
         ModelEditVariableRegistry variableRegistry = new ModelEditVariableRegistry();
-        for (ModelServerEditStatements.EditRequest editRequest : editChain.getEditsList()) {
-            this.process(editRequest, variableRegistry);
-        }
+
+        List<ModelServerEditStatements.EditRequest> deleteEdgeRequests = editChain.getEditsList().stream().filter(x -> x.getRequestCase().equals(ModelServerEditStatements.EditRequest.RequestCase.DELETEEDGEREQUEST)).toList();
+        List<ModelServerEditStatements.EditRequest> deleteNodeRequests = editChain.getEditsList().stream().filter(x -> x.getRequestCase().equals(ModelServerEditStatements.EditRequest.RequestCase.DELETENODEREQUEST)).toList();
+        List<ModelServerEditStatements.EditRequest> createNodeRequests = editChain.getEditsList().stream().filter(x -> x.getRequestCase().equals(ModelServerEditStatements.EditRequest.RequestCase.CREATENODEREQUEST)).toList();
+        List<ModelServerEditStatements.EditRequest> createEdgeRequests = editChain.getEditsList().stream().filter(x -> x.getRequestCase().equals(ModelServerEditStatements.EditRequest.RequestCase.CREATEEDGEREQUEST)).toList();
+        List<ModelServerEditStatements.EditRequest> setAttributeRequests = editChain.getEditsList().stream().filter(x -> x.getRequestCase().equals(ModelServerEditStatements.EditRequest.RequestCase.SETATTRIBUTEREQUEST)).toList();
+
+        deleteEdgeRequests.forEach(x -> this.process(x, variableRegistry));
+        deleteNodeRequests.forEach(x -> this.process(x, variableRegistry));
+        createNodeRequests.forEach(x -> this.process(x, variableRegistry));
+        createEdgeRequests.forEach(x -> this.process(x, variableRegistry));
+        setAttributeRequests.forEach(x -> this.process(x, variableRegistry));
     }
 
     private void process(ModelServerEditStatements.EditCreateEdgeRequest request, ModelEditVariableRegistry variableRegistry) {
