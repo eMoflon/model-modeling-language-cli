@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class ModelServer {
     private final IHiPEEngine engine;
+    private final IndexedEMFLoader emfLoader;
     private final IModelServerConfiguration configuration;
     private final PatternRegistry patternRegistry;
     private final ConstraintRegistry constraintRegistry;
@@ -27,8 +28,8 @@ public class ModelServer {
 
 
         System.out.println("[ModelServer] Loading model...");
-        IndexedEMFLoader emfLoader = new IndexedEMFLoader(Path.of(configuration.getWorkspacePath()));
-        emfLoader.loadResource(Path.of(configuration.getModelPath()));
+        this.emfLoader = new IndexedEMFLoader(Path.of(configuration.getWorkspacePath()));
+        this.emfLoader.loadResource(Path.of(configuration.getModelPath()));
 
         System.out.println("[ModelServer] Creating ContentAdapter...");
         new HiPEContentAdapter(emfLoader.getResources(), this.engine);
@@ -82,6 +83,10 @@ public class ModelServer {
 
     public ConstraintRegistry getConstraintRegistry() {
         return constraintRegistry;
+    }
+
+    public IndexedEMFLoader getEmfLoader() {
+        return emfLoader;
     }
 
     public static void main(String[] args) {
