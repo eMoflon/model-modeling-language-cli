@@ -11,10 +11,16 @@ public class ConstraintGenerator extends TemporaryFileObject {
             package de.nexus.modelserver.constraints;
                         
             import de.nexus.modelserver.AbstractConstraint;
+            import de.nexus.modelserver.AttributeAssignment;
             import de.nexus.modelserver.PatternDeclaration;
             import de.nexus.modelserver.FixStatement;
             import de.nexus.modelserver.FixContainer;
             import de.nexus.modelserver.FixInfoStatement;
+            import de.nexus.modelserver.FixSetStatement;
+            import de.nexus.modelserver.FixCreateEdgeStatement;
+            import de.nexus.modelserver.FixCreateNodeStatement;
+            import de.nexus.modelserver.FixDeleteEdgeStatement;
+            import de.nexus.modelserver.FixDeleteNodeStatement;
             import de.nexus.modelserver.EnablingFixContainer;
             import de.nexus.modelserver.DisablingFixContainer;
             import de.nexus.expr.*;
