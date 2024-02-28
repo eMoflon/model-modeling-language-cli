@@ -132,7 +132,7 @@ public class ModelServerGrpc {
                 constraint.computeProposals(grpcHandler.modelServer.getPatternRegistry());
             });
 
-            List<de.nexus.modelserver.proto.ModelServerConstraints.Constraint> constraints = grpcHandler.modelServer.getConstraintRegistry().getConstraints().values().stream().map(ProtoMapper::map).toList();
+            List<de.nexus.modelserver.proto.ModelServerConstraints.Constraint> constraints = grpcHandler.modelServer.getConstraintRegistry().getConstraints().values().stream().map(x -> ProtoMapper.map(x, this.grpcHandler.modelServer.getEmfLoader())).toList();
 
             responseObserver.onNext(de.nexus.modelserver.proto.ModelServerConstraints.GetConstraintsResponse.newBuilder().addAllConstraints(constraints).build());
             responseObserver.onCompleted();
@@ -147,7 +147,7 @@ public class ModelServerGrpc {
             constraint.evaluate(grpcHandler.modelServer.getPatternRegistry());
             constraint.computeProposals(grpcHandler.modelServer.getPatternRegistry());
 
-            de.nexus.modelserver.proto.ModelServerConstraints.Constraint protoConstraint = ProtoMapper.map(constraint);
+            de.nexus.modelserver.proto.ModelServerConstraints.Constraint protoConstraint = ProtoMapper.map(constraint, this.grpcHandler.modelServer.getEmfLoader());
 
             responseObserver.onNext(de.nexus.modelserver.proto.ModelServerConstraints.GetConstraintResponse.newBuilder().setConstraint(protoConstraint).build());
             responseObserver.onCompleted();
