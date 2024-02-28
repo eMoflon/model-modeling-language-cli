@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 public class IndexedEMFLoader extends SmartEMFLoader {
-    private HashMap<Integer, SmartObject> idIndex = new HashMap<>();
+    private final HashMap<Integer, SmartObject> idIndex = new HashMap<>();
 
     private EStructuralFeature idStrucuralFeature = null;
     private int currentId = -1;
@@ -46,6 +46,14 @@ public class IndexedEMFLoader extends SmartEMFLoader {
         }
 
         this.currentId = Collections.max(this.idIndex.keySet()) + 1;
+    }
+
+    public int getNodeId(SmartObject object) {
+        return (int) object.eGet(this.idStrucuralFeature);
+    }
+
+    public SmartObject getNode(int id) {
+        return this.idIndex.get(id);
     }
 
     @Override
