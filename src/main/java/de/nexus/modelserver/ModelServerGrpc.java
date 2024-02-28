@@ -1,9 +1,6 @@
 package de.nexus.modelserver;
 
-import de.nexus.modelserver.proto.ModelServerConstraintsGrpc;
-import de.nexus.modelserver.proto.ModelServerManagementGrpc;
-import de.nexus.modelserver.proto.ModelServerPatternGrpc;
-import de.nexus.modelserver.proto.ModelServerPatterns;
+import de.nexus.modelserver.proto.*;
 import hipe.engine.message.production.ProductionResult;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -26,6 +23,7 @@ public class ModelServerGrpc {
                 .addService(new ModelServerManagement(this))
                 .addService(new ModelServerPattern(this))
                 .addService(new ModelServerConstraints(this))
+                .addService(new ModelServerEdits(this))
                 .build();
     }
 
@@ -156,6 +154,26 @@ public class ModelServerGrpc {
         @Override
         public void listConstraints(de.nexus.modelserver.proto.ModelServerConstraints.ListConstraintsRequest request, StreamObserver<de.nexus.modelserver.proto.ModelServerConstraints.ListConstraintsResponse> responseObserver) {
             responseObserver.onNext(de.nexus.modelserver.proto.ModelServerConstraints.ListConstraintsResponse.newBuilder().addAllConstraints(this.grpcHandler.modelServer.getConstraintRegistry().getConstraints().keySet()).build());
+            responseObserver.onCompleted();
+        }
+    }
+
+    private static class ModelServerEdits extends ModelServerEditsGrpc.ModelServerEditsImplBase {
+        private final ModelServerGrpc grpcHandler;
+
+        public ModelServerEdits(ModelServerGrpc handler) {
+            this.grpcHandler = handler;
+        }
+
+        @Override
+        public void requestEdit(de.nexus.modelserver.proto.ModelServerEdits.PostEditRequest request, StreamObserver<de.nexus.modelserver.proto.ModelServerEdits.PostEditResponse> responseObserver) {
+            switch (request.getRequestCase()) {
+                case EDIT -> this.grpcHandler.modelServer.getEditProcessor().process(request.getEdit());
+                case EDITCHAIN -> this.grpcHandler.modelServer.getEditProcessor().process(request.getEditChain());
+                case REQUEST_NOT_SET -> throw new IllegalArgumentException("Request not set!");
+            }
+
+            responseObserver.onNext(de.nexus.modelserver.proto.ModelServerEdits.PostEditResponse.getDefaultInstance());
             responseObserver.onCompleted();
         }
     }
