@@ -1,6 +1,10 @@
 syntax = "proto3";
 package de.nexus.modelserver.proto;
 
+message EditChainRequest {
+  repeated EditRequest edits = 1;
+}
+
 message EditRequest {
   oneof request{
     EditCreateEdgeRequest createEdgeRequest = 1;

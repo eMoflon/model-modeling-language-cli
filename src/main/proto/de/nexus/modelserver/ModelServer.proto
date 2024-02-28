@@ -10,6 +10,7 @@ option objc_class_prefix = "MS";
 import "de/nexus/modelserver/ModelServerManagement.proto";
 import "de/nexus/modelserver/ModelServerPatterns.proto";
 import "de/nexus/modelserver/ModelServerConstraints.proto";
+import "de/nexus/modelserver/ModelServerEdits.proto";
 
 service ModelServerManagement {
   rpc GetState(GetStateRequest) returns (GetStateResponse);
@@ -27,4 +28,8 @@ service ModelServerConstraints {
   rpc GetConstraints(GetConstraintsRequest) returns (GetConstraintsResponse);
   rpc GetConstraint(GetConstraintRequest) returns (GetConstraintResponse);
   rpc ListConstraints(ListConstraintsRequest) returns (ListConstraintsResponse);
+}
+
+service ModelServerEdits {
+  rpc RequestEdit(PostEditRequest) returns (PostEditResponse);
 }
