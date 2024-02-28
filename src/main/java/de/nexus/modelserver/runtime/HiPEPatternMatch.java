@@ -65,6 +65,7 @@ public class HiPEPatternMatch implements IMatch {
         return parameters.get(name);
     }
 
+    @Override
     public Set<Map.Entry<String, Object>> getParameters() {
         return this.parameters.entrySet();
     }
