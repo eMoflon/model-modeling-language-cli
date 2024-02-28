@@ -7,6 +7,7 @@ message EditRequest {
     EditCreateNodeRequest createNodeRequest = 2;
     EditDeleteEdgeRequest deleteEdgeRequest = 3;
     EditDeleteNodeRequest deleteNodeRequest = 4;
+    EditSetAttributeRequest setAttributeRequest = 5;
   }
 }
 
@@ -40,6 +41,12 @@ message EditDeleteEdgeRequest {
 
 message EditDeleteNodeRequest {
   Node node = 1;
+}
+
+message EditSetAttributeRequest {
+  Node node = 1;
+  string attributeName = 2;
+  string attributeValue = 3;
 }
 
 message Node {
