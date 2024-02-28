@@ -16,6 +16,8 @@ public class ModelServer {
     private final PatternRegistry patternRegistry;
     private final ConstraintRegistry constraintRegistry;
 
+    private final ModelEditProcessor editProcessor;
+
     public ModelServer(IModelServerConfiguration configuration, IHiPEEngine engine) {
         this.engine = engine;
         this.configuration = configuration;
@@ -30,6 +32,9 @@ public class ModelServer {
         System.out.println("[ModelServer] Loading model...");
         this.emfLoader = new IndexedEMFLoader(Path.of(configuration.getWorkspacePath()));
         this.emfLoader.loadResource(Path.of(configuration.getModelPath()));
+
+        System.out.println("[ModelServer] Creating ModelEditProcessor...");
+        this.editProcessor = new ModelEditProcessor(this.emfLoader);
 
         System.out.println("[ModelServer] Creating ContentAdapter...");
         new HiPEContentAdapter(emfLoader.getResources(), this.engine);
@@ -87,6 +92,10 @@ public class ModelServer {
 
     public IndexedEMFLoader getEmfLoader() {
         return emfLoader;
+    }
+
+    public ModelEditProcessor getEditProcessor() {
+        return this.editProcessor;
     }
 
     public static void main(String[] args) {
