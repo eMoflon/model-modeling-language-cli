@@ -1,0 +1,16 @@
+@targetService = {{host}}/{{editService}}
+
+### Request all constraints
+GRPC {{targetService}}/RequestEdit
+
+{
+  "edit": {
+    "setAttributeRequest": {
+      "node": {
+        "nodeId": 3
+      },
+      "attributeName": "alter",
+      "attributeValue": "17"
+    }
+  }
+}
