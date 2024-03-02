@@ -66,6 +66,7 @@ message EditCreateNodeRequest {
 message EditCreateNodeResponse {
   EditState state = 1;
   string message = 2;
+  int32 createdNodeId = 3;
 }
 
 message EditDeleteEdgeRequest {

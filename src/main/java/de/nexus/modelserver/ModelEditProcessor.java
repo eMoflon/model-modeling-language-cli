@@ -110,14 +110,16 @@ public class ModelEditProcessor {
                     Object attrValue = EMFValueUtils.mapVals(attr.getEAttributeType(), assignment.getAttributeValue());
                     newNode.eSet(attr, attrValue);
                 });
+
+                return ModelServerEditStatements.EditResponse.newBuilder()
+                        .setCreateNodeResponse(
+                                ModelServerEditStatements.EditCreateNodeResponse.newBuilder()
+                                        .setState(ModelServerEditStatements.EditState.SUCCESS)
+                                        .setCreatedNodeId(nodeId)
+                                        .build()
+                        )
+                        .build();
             }
-            return ModelServerEditStatements.EditResponse.newBuilder()
-                    .setCreateNodeResponse(
-                            ModelServerEditStatements.EditCreateNodeResponse.newBuilder()
-                                    .setState(ModelServerEditStatements.EditState.SUCCESS)
-                                    .build()
-                    )
-                    .build();
         } catch (IllegalArgumentException ex) {
             return ModelServerEditStatements.EditResponse.newBuilder()
                     .setCreateNodeResponse(
