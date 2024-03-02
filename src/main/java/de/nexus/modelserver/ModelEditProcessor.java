@@ -89,11 +89,19 @@ public class ModelEditProcessor {
                 EPackage currentPackage = ePackage;
                 for (int i = 0; i < splittedQNameArr.size() - 1; i++) {
                     String currentName = splittedQNameArr.get(i);
-                    Optional<EPackage> newCurrentPackage = currentPackage.getESubpackages().stream().filter(x -> x.getName().equals(currentName)).findFirst();
-                    if (newCurrentPackage.isEmpty()) {
+
+                    if (!currentPackage.getName().equals(currentName)) {
                         throw new IllegalArgumentException("Invalid qualified class name - could not resolve packages!");
-                    } else {
-                        currentPackage = newCurrentPackage.get();
+                    }
+
+                    if (i < splittedQNameArr.size() - 2) {
+                        String nextName = splittedQNameArr.get(i + 1);
+                        Optional<EPackage> newCurrentPackage = currentPackage.getESubpackages().stream().filter(x -> x.getName().equals(nextName)).findFirst();
+                        if (newCurrentPackage.isEmpty()) {
+                            throw new IllegalArgumentException("Invalid qualified class name - could not resolve packages!");
+                        } else {
+                            currentPackage = newCurrentPackage.get();
+                        }
                     }
                 }
                 String className = splittedQNameArr.get(splittedQNameArr.size() - 1);
