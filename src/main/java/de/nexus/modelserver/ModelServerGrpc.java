@@ -168,12 +168,17 @@ public class ModelServerGrpc {
         @Override
         public void requestEdit(de.nexus.modelserver.proto.ModelServerEdits.PostEditRequest request, StreamObserver<de.nexus.modelserver.proto.ModelServerEdits.PostEditResponse> responseObserver) {
             switch (request.getRequestCase()) {
-                case EDIT -> this.grpcHandler.modelServer.getEditProcessor().process(request.getEdit());
-                case EDITCHAIN -> this.grpcHandler.modelServer.getEditProcessor().process(request.getEditChain());
+                case EDIT -> {
+                    ModelServerEditStatements.EditResponse response = this.grpcHandler.modelServer.getEditProcessor().process(request.getEdit());
+                    responseObserver.onNext(de.nexus.modelserver.proto.ModelServerEdits.PostEditResponse.newBuilder().setEdit(response).build());
+                }
+                case EDITCHAIN -> {
+                    ModelServerEditStatements.EditChainResponse chainResponse = this.grpcHandler.modelServer.getEditProcessor().process(request.getEditChain());
+                    responseObserver.onNext(de.nexus.modelserver.proto.ModelServerEdits.PostEditResponse.newBuilder().setEditChain(chainResponse).build());
+                }
                 case REQUEST_NOT_SET -> throw new IllegalArgumentException("Request not set!");
             }
-
-            responseObserver.onNext(de.nexus.modelserver.proto.ModelServerEdits.PostEditResponse.getDefaultInstance());
+            ;
             responseObserver.onCompleted();
         }
     }

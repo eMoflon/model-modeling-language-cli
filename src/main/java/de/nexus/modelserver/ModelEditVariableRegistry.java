@@ -15,7 +15,7 @@ public class ModelEditVariableRegistry {
         this.temporaryVariableMap.put(key, id);
     }
 
-    public int getNodeId(ModelServerEditStatements.Node node) {
+    public int getNodeId(ModelServerEditStatements.Node node) throws IllegalArgumentException{
         return switch (node.getNodeTypeCase()) {
             case NODEID -> node.getNodeId();
             case TEMPID -> {

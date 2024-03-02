@@ -4,8 +4,10 @@ import de.nexus.emfutils.EMFExtenderUtils;
 import de.nexus.emfutils.SmartEMFLoader;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.emoflon.smartemf.runtime.SmartObject;
 
 import java.io.File;
@@ -48,12 +50,37 @@ public class IndexedEMFLoader extends SmartEMFLoader {
         this.currentId = Collections.max(this.idIndex.keySet()) + 1;
     }
 
+    public int initializeNode(SmartObject object) {
+        int objectId = this.currentId++;
+        object.eSet(this.idStrucuralFeature, objectId);
+        this.idIndex.put(objectId, object);
+        return objectId;
+    }
+
+    public void unregisterNode(SmartObject object) {
+        int nodeId = this.getNodeId(object);
+        this.idIndex.remove(nodeId);
+    }
+
     public int getNodeId(SmartObject object) {
         return (int) object.eGet(this.idStrucuralFeature);
     }
 
     public SmartObject getNode(int id) {
         return this.idIndex.get(id);
+    }
+
+    public EPackage getEPackage() {
+        if (this.idIndex.isEmpty()) {
+            return null;
+        }
+        Optional<SmartObject> firstObj = this.idIndex.values().stream().findFirst();
+        EPackage ePackage = firstObj.get().eClass().getEPackage();
+        return (EPackage) EcoreUtil.getRootContainer(ePackage);
+    }
+
+    public Resource getResource() {
+        return this.getResources().get(0);
     }
 
     @Override

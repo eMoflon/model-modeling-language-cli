@@ -11,5 +11,8 @@ message PostEditRequest {
 }
 
 message PostEditResponse {
-
+  oneof response {
+    EditResponse edit = 1;
+    EditChainResponse editChain = 2;
+  }
 }

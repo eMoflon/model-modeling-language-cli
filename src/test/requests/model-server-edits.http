@@ -1,6 +1,6 @@
 @targetService = {{host}}/{{editService}}
 
-### Request all constraints
+### Request edit
 GRPC {{targetService}}/RequestEdit
 
 {
