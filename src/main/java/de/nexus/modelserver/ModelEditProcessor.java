@@ -4,8 +4,6 @@ import de.nexus.emfutils.EMFValueUtils;
 import de.nexus.modelserver.proto.ModelServerEditStatements;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.emoflon.smartemf.runtime.SmartObject;
 
@@ -174,101 +172,11 @@ public class ModelEditProcessor {
     private ModelServerEditStatements.EditResponse process(ModelServerEditStatements.EditDeleteNodeRequest request, ModelEditVariableRegistry variableRegistry) {
         try {
             SmartObject node = this.getNode(request.getNode(), variableRegistry);
-            int nodeId = this.emfLoader.getNodeId(node);
 
-            List<ModelServerEditStatements.ImplicitlyRemovedEdge> implicitlyRemovedEdges = new ArrayList<>();
-
-            // Modified version of EcoreUtil.delete()
-            EObject rootEObject = EcoreUtil.getRootContainer(node);
-            Resource resource = rootEObject.eResource();
-
-            Collection<EStructuralFeature.Setting> usages;
-            if (resource == null) {
-                usages = EcoreUtil.UsageCrossReferencer.find(node, rootEObject);
-            } else {
-                ResourceSet resourceSet = resource.getResourceSet();
-                if (resourceSet == null) {
-                    usages = EcoreUtil.UsageCrossReferencer.find(node, resource);
-                } else {
-                    usages = EcoreUtil.UsageCrossReferencer.find(node, resourceSet);
-                }
-            }
-
-            for (EStructuralFeature.Setting setting : usages) {
-                if (setting.getEStructuralFeature().isChangeable()) {
-                    EcoreUtil.remove(setting, node);
-
-                    // TODO: Add response for implicitly removed incoming edges
-
-                    /*ModelServerEditStatements.ImplicitlyRemovedEdge removedEdge = ModelServerEditStatements.ImplicitlyRemovedEdge.newBuilder()
-                            .setType(ModelServerEditStatements.ImplicitlyRemovedEdgeType.INCOMING_EDGE)
-                            .setFromNode(
-                                    ModelServerEditStatements.Node.newBuilder()
-                                            .setNodeId()
-                                            .build()
-                            )
-                            .setToNode(
-                                    ModelServerEditStatements.Node.newBuilder()
-                                            .setNodeId()
-                                            .build()
-                            )
-                            .setReference(setting.getEStructuralFeature().getName())
-                            .build();
-
-                    implicitlyRemovedEdges.add(removedEdge);*/
-                }
-            }
-
-
-            for (EReference outgoingReference : node.eClass().getEAllReferences()) {
-                if (!outgoingReference.isContainment()) {
-                    if (outgoingReference.isMany()) {
-                        for (Object nodeObject : (EList<Object>) node.eGet(outgoingReference)) {
-                            SmartObject outgoingTargetNode = (SmartObject) nodeObject;
-
-                            ModelServerEditStatements.ImplicitlyRemovedEdge removedEdge = ModelServerEditStatements.ImplicitlyRemovedEdge.newBuilder()
-                                    .setType(ModelServerEditStatements.ImplicitlyRemovedEdgeType.OUTGOING_EDGE)
-                                    .setFromNode(
-                                            ModelServerEditStatements.Node.newBuilder()
-                                                    .setNodeId(nodeId)
-                                                    .build()
-                                    )
-                                    .setToNode(
-                                            ModelServerEditStatements.Node.newBuilder()
-                                                    .setNodeId(this.emfLoader.getNodeId(outgoingTargetNode))
-                                                    .build()
-                                    )
-                                    .setReference(outgoingReference.getName())
-                                    .build();
-
-                            implicitlyRemovedEdges.add(removedEdge);
-                        }
-                    } else {
-                        SmartObject value = (SmartObject) node.eGet(outgoingReference);
-                        if (value != null) {
-                            ModelServerEditStatements.ImplicitlyRemovedEdge removedEdge = ModelServerEditStatements.ImplicitlyRemovedEdge.newBuilder()
-                                    .setType(ModelServerEditStatements.ImplicitlyRemovedEdgeType.OUTGOING_EDGE)
-                                    .setFromNode(
-                                            ModelServerEditStatements.Node.newBuilder()
-                                                    .setNodeId(nodeId)
-                                                    .build()
-                                    )
-                                    .setToNode(
-                                            ModelServerEditStatements.Node.newBuilder()
-                                                    .setNodeId(this.emfLoader.getNodeId(value))
-                                                    .build()
-                                    )
-                                    .setReference(outgoingReference.getName())
-                                    .build();
-
-                            implicitlyRemovedEdges.add(removedEdge);
-                        }
-                    }
-                }
-            }
+            List<ModelServerEditStatements.ImplicitlyRemovedEdge> implicitlyRemovedEdges = deleteNode_internal(node);
+            node.resetContainment();
 
             this.emfLoader.unregisterNode(node);
-            EcoreUtil.remove(node);
 
             return ModelServerEditStatements.EditResponse.newBuilder()
                     .setDeleteNodeResponse(
@@ -289,6 +197,76 @@ public class ModelEditProcessor {
                     .build();
         }
 
+    }
+
+    private List<ModelServerEditStatements.ImplicitlyRemovedEdge> deleteNode_internal(SmartObject node) {
+        List<ModelServerEditStatements.ImplicitlyRemovedEdge> removedEdges = new ArrayList<>();
+
+        for (EReference ref : node.eClass().getEAllReferences()) {
+            Object value = node.eGet(ref);
+
+            if (ref.isContainment()) {
+                if (value != null) {
+                    if (value instanceof EObject) {
+                        List<ModelServerEditStatements.ImplicitlyRemovedEdge> recursiveRemovedEdges = deleteNode_internal((SmartObject) value);
+                        removedEdges.addAll(recursiveRemovedEdges);
+                    } else if (value instanceof Collection) {
+                        //noinspection unchecked
+                        ((Collection<SmartObject>) value).forEach(o -> {
+                            List<ModelServerEditStatements.ImplicitlyRemovedEdge> recursiveRemovedEdges = deleteNode_internal((SmartObject) o);
+                            removedEdges.addAll(recursiveRemovedEdges);
+                        });
+                    }
+                }
+            } else {
+                int nodeId = this.emfLoader.getNodeId(node);
+                if (ref.isMany()) {
+                    for (Object nodeObject : (EList<Object>) node.eGet(ref)) {
+                        SmartObject targetNode = (SmartObject) nodeObject;
+
+                        int targetNodeId = this.emfLoader.getNodeId(targetNode);
+                        ModelServerEditStatements.ImplicitlyRemovedEdge removedEdge = getRemovedEdge(nodeId, targetNodeId, ref);
+
+                        removedEdges.add(removedEdge);
+                    }
+                } else {
+                    SmartObject targetNode = (SmartObject) node.eGet(ref);
+                    if (targetNode != null) {
+                        int targetNodeId = this.emfLoader.getNodeId(targetNode);
+                        ModelServerEditStatements.ImplicitlyRemovedEdge removedEdge = getRemovedEdge(nodeId, targetNodeId, ref);
+
+                        removedEdges.add(removedEdge);
+                    }
+                }
+
+                node.eUnset(ref);
+            }
+        }
+        return removedEdges;
+    }
+
+    private ModelServerEditStatements.ImplicitlyRemovedEdge getRemovedEdge(int node1, int node2, EReference ref) {
+        boolean reversed = ref.getName().contains("_inverseTo_");
+
+        ModelServerEditStatements.ImplicitlyRemovedEdgeType edgeType = !reversed ? ModelServerEditStatements.ImplicitlyRemovedEdgeType.OUTGOING_EDGE : ModelServerEditStatements.ImplicitlyRemovedEdgeType.INCOMING_EDGE;
+
+        int fromNode = !reversed ? node1 : node2;
+        int toNode = !reversed ? node2 : node1;
+
+        return ModelServerEditStatements.ImplicitlyRemovedEdge.newBuilder()
+                .setType(edgeType)
+                .setFromNode(
+                        ModelServerEditStatements.Node.newBuilder()
+                                .setNodeId(fromNode)
+                                .build()
+                )
+                .setToNode(
+                        ModelServerEditStatements.Node.newBuilder()
+                                .setNodeId(toNode)
+                                .build()
+                )
+                .setReference(ref.getName())
+                .build();
     }
 
     private ModelServerEditStatements.EditResponse process(ModelServerEditStatements.EditSetAttributeRequest request, ModelEditVariableRegistry variableRegistry) {
