@@ -1,5 +1,6 @@
 package de.nexus.modelserver;
 
+import de.nexus.emfutils.EMFResolverUtils;
 import de.nexus.emfutils.EMFValueUtils;
 import de.nexus.modelserver.proto.ModelServerEditStatements;
 import org.eclipse.emf.common.util.EList;
@@ -7,7 +8,10 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.emoflon.smartemf.runtime.SmartObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 public class ModelEditProcessor {
     private final IndexedEMFLoader emfLoader;
@@ -80,52 +84,28 @@ public class ModelEditProcessor {
     private ModelServerEditStatements.EditResponse process(ModelServerEditStatements.EditCreateNodeRequest request, ModelEditVariableRegistry variableRegistry) {
         try {
             EPackage ePackage = this.emfLoader.getEPackage();
-            ArrayList<String> splittedQNameArr = new ArrayList<>(Arrays.asList(request.getNodeType().split("\\.")));
-            if (splittedQNameArr.size() <= 1) {
-                throw new IllegalArgumentException("Invalid qualified class name structure!");
-            } else {
-                EPackage currentPackage = ePackage;
-                for (int i = 0; i < splittedQNameArr.size() - 1; i++) {
-                    String currentName = splittedQNameArr.get(i);
+            EClass targetClass = EMFResolverUtils.getEClassByQualifiedName(ePackage, request.getNodeType());
+            SmartObject newNode = (SmartObject) EcoreUtil.create(targetClass);
+            int nodeId = this.emfLoader.initializeNode(newNode);
 
-                    if (!currentPackage.getName().equals(currentName)) {
-                        throw new IllegalArgumentException("Invalid qualified class name - could not resolve packages!");
-                    }
+            variableRegistry.registerTemporaryVariable(request.getTempId(), nodeId);
 
-                    if (i < splittedQNameArr.size() - 2) {
-                        String nextName = splittedQNameArr.get(i + 1);
-                        Optional<EPackage> newCurrentPackage = currentPackage.getESubpackages().stream().filter(x -> x.getName().equals(nextName)).findFirst();
-                        if (newCurrentPackage.isEmpty()) {
-                            throw new IllegalArgumentException("Invalid qualified class name - could not resolve packages!");
-                        } else {
-                            currentPackage = newCurrentPackage.get();
-                        }
-                    }
-                }
-                String className = splittedQNameArr.get(splittedQNameArr.size() - 1);
-                EClass targetClass = (EClass) currentPackage.getEClassifier(className);
-                SmartObject newNode = (SmartObject) EcoreUtil.create(targetClass);
-                int nodeId = this.emfLoader.initializeNode(newNode);
+            this.emfLoader.getResource().getContents().add(newNode);
 
-                variableRegistry.registerTemporaryVariable(request.getTempId(), nodeId);
+            request.getAssignmentsList().forEach(assignment -> {
+                EAttribute attr = (EAttribute) targetClass.getEStructuralFeature(assignment.getAttributeName());
+                Object attrValue = EMFValueUtils.mapVals(attr.getEAttributeType(), assignment.getAttributeValue());
+                newNode.eSet(attr, attrValue);
+            });
 
-                this.emfLoader.getResource().getContents().add(newNode);
-
-                request.getAssignmentsList().forEach(assignment -> {
-                    EAttribute attr = (EAttribute) targetClass.getEStructuralFeature(assignment.getAttributeName());
-                    Object attrValue = EMFValueUtils.mapVals(attr.getEAttributeType(), assignment.getAttributeValue());
-                    newNode.eSet(attr, attrValue);
-                });
-
-                return ModelServerEditStatements.EditResponse.newBuilder()
-                        .setCreateNodeResponse(
-                                ModelServerEditStatements.EditCreateNodeResponse.newBuilder()
-                                        .setState(ModelServerEditStatements.EditState.SUCCESS)
-                                        .setCreatedNodeId(nodeId)
-                                        .build()
-                        )
-                        .build();
-            }
+            return ModelServerEditStatements.EditResponse.newBuilder()
+                    .setCreateNodeResponse(
+                            ModelServerEditStatements.EditCreateNodeResponse.newBuilder()
+                                    .setState(ModelServerEditStatements.EditState.SUCCESS)
+                                    .setCreatedNodeId(nodeId)
+                                    .build()
+                    )
+                    .build();
         } catch (IllegalArgumentException ex) {
             return ModelServerEditStatements.EditResponse.newBuilder()
                     .setCreateNodeResponse(
