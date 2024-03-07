@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 public class FixContainerEntity {
     private boolean isEnableContainer;
+    private String fixTitle;
     private List<IFixStatementEntity> statements;
 
     public boolean isEnableContainer() {
@@ -17,9 +18,9 @@ public class FixContainerEntity {
 
     public String toJavaCode() {
         if (this.isEnableContainer) {
-            return String.format("new EnablingFixContainer(List.of(%s))", this.statements.stream().map(IFixStatementEntity::toJavaCode).collect(Collectors.joining(", ")));
+            return String.format("new EnablingFixContainer(\"%s\", List.of(%s))", fixTitle, this.statements.stream().map(IFixStatementEntity::toJavaCode).collect(Collectors.joining(", ")));
         } else {
-            return String.format("new DisablingFixContainer(List.of(%s))", this.statements.stream().map(IFixStatementEntity::toJavaCode).collect(Collectors.joining(", ")));
+            return String.format("new DisablingFixContainer(\"%s\", List.of(%s))", fixTitle, this.statements.stream().map(IFixStatementEntity::toJavaCode).collect(Collectors.joining(", ")));
         }
     }
 }
