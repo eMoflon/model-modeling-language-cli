@@ -1,8 +1,8 @@
 package de.nexus.mmlcli.constraint.entity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import org.eclipse.emf.ecore.EClass;
+
+import java.util.*;
 
 public class PatternEntity {
     private String name;
@@ -52,19 +52,40 @@ public class PatternEntity {
     }
 
     private ArrayList<NodeConstraintEntity> getDefaultNodeConstraints() {
-        HashMap<String, HashSet<PatternNodeEntity>> lookupTable = new HashMap<>();
+        HashMap<EClass, HashSet<PatternNodeEntity>> lookupTable = new HashMap<>();
+        HashMap<EClass, HashSet<PatternNodeEntity>> superTypeUsages = new HashMap<>();
         this.nodes.forEach(node -> {
-            lookupTable.putIfAbsent(node.getFQName(), new HashSet<>());
-            lookupTable.get(node.getFQName()).add(node);
+            EClass nodeClass = node.getEClass();
+            lookupTable.putIfAbsent(nodeClass, new HashSet<>());
+            lookupTable.get(nodeClass).add(node);
+
+            for (EClass superType : nodeClass.getEAllSuperTypes()) {
+                superTypeUsages.putIfAbsent(superType, new HashSet<>());
+                superTypeUsages.get(superType).add(node);
+            }
         });
 
         ArrayList<NodeConstraintEntity> nodeConstraints = new ArrayList<>();
 
-        for (HashSet<PatternNodeEntity> group : lookupTable.values()) {
-            ArrayList<PatternNodeEntity> groupNodes = new ArrayList<>(group);
+        for (Map.Entry<EClass, HashSet<PatternNodeEntity>> group : lookupTable.entrySet()) {
+            ArrayList<PatternNodeEntity> groupNodes = new ArrayList<>(group.getValue());
             for (int i = 0; i < groupNodes.size(); i++) {
                 for (int j = i + 1; j < groupNodes.size(); j++) {
                     nodeConstraints.add(new NodeConstraintEntity(groupNodes.get(i), groupNodes.get(j), NodeConstraintOperator.UNEQUAL));
+                }
+            }
+
+            List<EClass> superTypeClasses = lookupTable.keySet().stream().filter(superTypeUsages::containsKey).toList();
+            for (EClass superTypeClass : superTypeClasses) {
+                ArrayList<PatternNodeEntity> superTypeClassNodes = new ArrayList<>(lookupTable.get(superTypeClass));
+                ArrayList<PatternNodeEntity> superTypeExtendingNodes = new ArrayList<>(superTypeUsages.get(superTypeClass));
+                for (PatternNodeEntity superTypeClassNode : superTypeClassNodes) {
+                    for (PatternNodeEntity superTypeExtendingNode : superTypeExtendingNodes) {
+                        if (superTypeClassNode == superTypeExtendingNode) {
+                            continue;
+                        }
+                        nodeConstraints.add(new NodeConstraintEntity(superTypeClassNode, superTypeExtendingNode, NodeConstraintOperator.UNEQUAL));
+                    }
                 }
             }
         }
