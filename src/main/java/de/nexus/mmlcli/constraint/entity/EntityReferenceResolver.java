@@ -1,5 +1,9 @@
 package de.nexus.mmlcli.constraint.entity;
 
+import de.nexus.emfutils.EMFResolverUtils;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EPackage;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,12 +15,17 @@ public class EntityReferenceResolver {
     private final HashSet<PatternNodeEntity> localNodes = new HashSet<>();
     private final HashSet<PatternEntity> directlyCalledPatterns = new HashSet<>();
 
-    EntityReferenceResolver(ConstraintDocumentEntity cDoc) {
+    EntityReferenceResolver(ConstraintDocumentEntity cDoc, EPackage rootPackage) {
         cDoc.getPatterns().forEach(patternEntity -> {
             this.patternIdToPatternMap.put(patternEntity.getPatternId(), patternEntity);
             patternEntity.getPac().forEach(inv -> this.unresolvedObjects.add(new UnresolvedObject<>(inv)));
             patternEntity.getNac().forEach(inv -> this.unresolvedObjects.add(new UnresolvedObject<>(inv)));
-            patternEntity.getNodes().forEach(node -> this.nodeIdToNodeMap.put(node.getNodeId(), node));
+            patternEntity.getNodes().forEach(node -> {
+                this.nodeIdToNodeMap.put(node.getNodeId(), node);
+
+                EClass nodeClass = EMFResolverUtils.getEClassByQualifiedName(rootPackage, node.getFQName());
+                node.setEClass(nodeClass);
+            });
             patternEntity.getEdges().forEach(edge -> this.unresolvedObjects.add(new UnresolvedObject<>(edge)));
             patternEntity.getNodeConstraints().forEach(nodeConstraint -> this.unresolvedObjects.add(new UnresolvedObject<>(nodeConstraint)));
         });
@@ -40,8 +49,8 @@ public class EntityReferenceResolver {
         cDoc.setId2PatternNode(this.nodeIdToNodeMap);
     }
 
-    public static EntityReferenceResolver resolve(ConstraintDocumentEntity cDoc) {
-        return new EntityReferenceResolver(cDoc);
+    public static EntityReferenceResolver resolve(ConstraintDocumentEntity cDoc, EPackage rootPackage) {
+        return new EntityReferenceResolver(cDoc, rootPackage);
     }
 
     public PatternEntity resolvePatternId(String id) {

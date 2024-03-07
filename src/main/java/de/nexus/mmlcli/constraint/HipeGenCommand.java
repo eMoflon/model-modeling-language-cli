@@ -5,6 +5,7 @@ import de.nexus.mmlcli.constraint.adapter.*;
 import de.nexus.mmlcli.constraint.entity.ConstraintDocumentEntity;
 import de.nexus.mmlcli.constraint.entity.EntityReferenceResolver;
 import de.nexus.modelserver.ModelServer;
+import org.eclipse.emf.ecore.EPackage;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -47,8 +48,6 @@ public class HipeGenCommand implements Callable<Integer> {
 
         ConstraintDocumentEntity cDoc = ConstraintDocumentEntity.build(sConstraintDoc);
 
-        EntityReferenceResolver.resolve(cDoc);
-
         System.out.println("[ModelServerGeneration] Starting ModelServer generation...");
         double tic = System.currentTimeMillis();
 
@@ -60,7 +59,9 @@ public class HipeGenCommand implements Callable<Integer> {
         locations.createGeneratorDirectories();
 
         EmfMetamodelSource metamodelSource = new EmfMetamodelSource(workspacePath.toPath());
-        metamodelSource.loadResourceAsPackage(this.ecorePath);
+        EPackage rootPackage = metamodelSource.loadResourceAsPackage(this.ecorePath);
+
+        EntityReferenceResolver.resolve(cDoc, rootPackage);
 
         String projectName = metamodelSource.getEPackage(0).getName();
         GenModelBuilder.createGenModel(metamodelSource.getEPackage(0), locations, projectName);
