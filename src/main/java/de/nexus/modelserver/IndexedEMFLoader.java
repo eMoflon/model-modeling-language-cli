@@ -26,7 +26,7 @@ public class IndexedEMFLoader extends SmartEMFLoader {
         super(workspace);
     }
 
-    private void initializeIndices(Resource resource) {
+    private void initializeIndices(Resource resource) throws IllegalStateException {
         this.idIndex.clear();
         this.idStrucuralFeature = null;
         this.currentId = -1;

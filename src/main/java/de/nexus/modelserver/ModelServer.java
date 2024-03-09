@@ -18,7 +18,7 @@ public class ModelServer {
 
     private final ModelEditProcessor editProcessor;
 
-    public ModelServer(IModelServerConfiguration configuration, IHiPEEngine engine) {
+    public ModelServer(IModelServerConfiguration configuration, IHiPEEngine engine) throws IllegalStateException {
         this.engine = engine;
         this.configuration = configuration;
 
@@ -108,11 +108,14 @@ public class ModelServer {
             System.out.println("[ModelServer] This is the modelserver for: " + configuration.getProjectName());
         } catch (ClassNotFoundException e) {
             System.err.println("[ModelServer] Could not find configuration!");
+            System.exit(1);
             throw new RuntimeException(e);
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            System.exit(2);
             throw new RuntimeException(e);
         } catch (NoSuchMethodException e) {
             System.err.println("[ModelServer] Could not find constructor!");
+            System.exit(3);
             throw new RuntimeException(e);
         }
 
@@ -126,11 +129,21 @@ public class ModelServer {
             new ModelServer(configuration, engine);
         } catch (ClassNotFoundException e) {
             System.err.println("[ModelServer] Could not find engine!");
+            e.printStackTrace();
+            System.exit(4);
             throw new RuntimeException(e);
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            e.printStackTrace();
+            System.exit(5);
             throw new RuntimeException(e);
         } catch (NoSuchMethodException e) {
             System.err.println("[ModelServer] Could not find constructor!");
+            e.printStackTrace();
+            System.exit(6);
+            throw new RuntimeException(e);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            System.exit(7);
             throw new RuntimeException(e);
         }
     }

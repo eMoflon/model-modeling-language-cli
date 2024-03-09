@@ -78,14 +78,14 @@ public class HipeGenCommand implements Callable<Integer> {
         System.out.println("[ModelServerGeneration] ModelServer generation completed in " + (toc - tic) / 1000.0 + " seconds.");
 
         if (runModelServer) {
-            startModelServer(locations);
+            return startModelServer(locations);
         }
 
         return 0;
     }
 
 
-    private void startModelServer(LocationRegistry locations) {
+    private int startModelServer(LocationRegistry locations) {
         String separator = FileSystems.getDefault().getSeparator();
         String classpath = System.getProperty("java.class.path");
         String path = System.getProperty("java.home")
@@ -100,9 +100,10 @@ public class HipeGenCommand implements Callable<Integer> {
                             ModelServer.class.getName());
             Process process = processBuilder.inheritIO().start();
 
-            //process.waitFor();
-        } catch (IOException ex) {
+            return process.waitFor();
+        } catch (IOException | InterruptedException ex) {
             ex.printStackTrace();
+            throw new RuntimeException(ex);
         }
     }
 }
