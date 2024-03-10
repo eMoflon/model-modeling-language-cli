@@ -273,7 +273,7 @@
                 <filter>
                   <artifact>io.grpc:*</artifact>
                   <excludes>
-                    <exclude>META-INF/**</exclude>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
                   </excludes>
                 </filter>
                 <filter>
@@ -299,6 +299,7 @@
                 <transformer>
                   <resource>reference.conf</resource>
                 </transformer>
+                <transformer />
               </transformers>
               <artifactSet>
                 <excludes>
