@@ -1,5 +1,7 @@
 package de.nexus.mmlcli.constraint;
 
+import de.nexus.emfutils.EMFExtenderResult;
+import de.nexus.emfutils.EMFExtenderUtils;
 import de.nexus.mmlcli.CommandUtils;
 import de.nexus.mmlcli.constraint.adapter.*;
 import de.nexus.mmlcli.constraint.entity.ConstraintDocumentEntity;
@@ -34,6 +36,10 @@ public class HipeGenCommand implements Callable<Integer> {
 
     @CommandLine.Option(names = {"-r", "--run-model-server"}, arity = "0..1", defaultValue = "false", negatable = true, description = "Run ModelServer after generation.")
     boolean runModelServer;
+
+    @CommandLine.Option(names = {"-e", "--run-model-extender"}, arity = "0..1", defaultValue = "false", negatable = true, description = "Run Extender before generation.")
+    boolean runExtender;
+
     @CommandLine.Option(names = {"-v", "--verbose"}, arity = "0..1", defaultValue = "false", description = "Print additional compiler notifications.")
     boolean verbose;
 
@@ -51,15 +57,30 @@ public class HipeGenCommand implements Callable<Integer> {
         System.out.println("[ModelServerGeneration] Starting ModelServer generation...");
         double tic = System.currentTimeMillis();
 
+        LocationRegistry locations;
 
-        LocationRegistry locations = new LocationRegistry(this.workspacePath.toPath(), this.ecorePath.toPath(), this.modelPath.toPath());
+        if (runExtender) {
+            System.out.println("[EMFExtender] Extending Model and Metamodel...");
+            double extenderTic = System.currentTimeMillis();
+            EMFExtenderResult extenderResult = EMFExtenderUtils.extendFromFileToFile(this.ecorePath, this.modelPath);
+            if (!extenderResult.isSuccess()) {
+                System.out.println("[EMFExtender] Failed to extend Model and Metamodel!");
+                return 3;
+            }
+            double extenderToc = System.currentTimeMillis();
+            System.out.println("[EMFExtender] Extended Model and Metamodel successfully in " + (extenderToc - extenderTic) / 1000.0 + " seconds!");
+            locations = new LocationRegistry(this.workspacePath.toPath(), extenderResult.getEcoreFile().toPath(), extenderResult.getModelFile().toPath());
+        } else {
+            locations = new LocationRegistry(this.workspacePath.toPath(), this.ecorePath.toPath(), this.modelPath.toPath());
+        }
+
 
         locations.cleanupGeneratorDirectories();
 
         locations.createGeneratorDirectories();
 
-        EmfMetamodelSource metamodelSource = new EmfMetamodelSource(workspacePath.toPath());
-        EPackage rootPackage = metamodelSource.loadResourceAsPackage(this.ecorePath);
+        EmfMetamodelSource metamodelSource = new EmfMetamodelSource(locations.getWorkspaceDirectoryPath());
+        EPackage rootPackage = metamodelSource.loadResourceAsPackage(locations.getEcorePath());
 
         EntityReferenceResolver.resolve(cDoc, rootPackage);
 
