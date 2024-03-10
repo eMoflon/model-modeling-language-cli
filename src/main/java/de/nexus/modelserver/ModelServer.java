@@ -145,6 +145,10 @@ public class ModelServer {
             e.printStackTrace();
             System.exit(7);
             throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            System.exit(8);
+            throw new RuntimeException(e);
         }
     }
 }
