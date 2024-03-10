@@ -1,5 +1,6 @@
 package de.nexus.mmlcli.extender;
 
+import de.nexus.emfutils.EMFExtenderResult;
 import de.nexus.emfutils.EMFExtenderUtils;
 import picocli.CommandLine;
 
@@ -17,10 +18,17 @@ public class ExtenderCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
+        EMFExtenderResult extenderResult;
         if (this.inverted) {
-            EMFExtenderUtils.unextendFromFileToFile(ecoreFile, modelFile);
+            extenderResult = EMFExtenderUtils.unextendFromFileToFile(ecoreFile, modelFile);
         } else {
-            EMFExtenderUtils.extendFromFileToFile(ecoreFile, modelFile);
+            extenderResult = EMFExtenderUtils.extendFromFileToFile(ecoreFile, modelFile);
+        }
+
+        if (extenderResult.isSuccess()) {
+            System.out.println("Extended successfully!");
+        } else {
+            System.out.println("Model-Extension failed!");
         }
         return 0;
     }

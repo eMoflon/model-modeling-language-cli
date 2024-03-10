@@ -90,18 +90,19 @@ public class EMFExtenderUtils {
         ePackage.getEClassifiers().remove(identifierClass);
     }
 
-    public static boolean writeFiles(IEMFLoader emfLoader, EPackage metamodel, Resource model, File ecoreFile, File modelFile) {
+    public static EMFExtenderResult writeFiles(IEMFLoader emfLoader, EPackage metamodel, Resource model, File ecoreFile, File modelFile) {
         Resource ecoreResource = emfLoader.copyResource(metamodel, ecoreFile);
 
         Resource xmiResource = emfLoader.copyResource(model, modelFile);
 
         if (!emfLoader.saveResource(ecoreResource)) {
-            return false;
+            return new EMFExtenderResult(false, ecoreFile, modelFile);
         }
-        return emfLoader.saveResource(xmiResource);
+        boolean result = emfLoader.saveResource(xmiResource);
+        return new EMFExtenderResult(result, ecoreFile, modelFile);
     }
 
-    public static boolean extendToFile(IEMFLoader emfLoader, EPackage metamodel, File ecoreFile, File modelFile) {
+    public static EMFExtenderResult extendToFile(IEMFLoader emfLoader, EPackage metamodel, File ecoreFile, File modelFile) {
         File extEcoreFile = createExtendedFilePath(ecoreFile);
         File extModelFile = createExtendedFilePath(modelFile);
 
@@ -114,7 +115,7 @@ public class EMFExtenderUtils {
         return writeFiles(emfLoader, metamodel, model, extEcoreFile, extModelFile);
     }
 
-    public static boolean unextendToFile(IEMFLoader emfLoader, EPackage metamodel, File ecoreFile, File modelFile) {
+    public static EMFExtenderResult unextendToFile(IEMFLoader emfLoader, EPackage metamodel, File ecoreFile, File modelFile) {
         File unextEcoreFile = createUnextendedFilePath(ecoreFile);
         File unextModelFile = createUnextendedFilePath(modelFile);
 
@@ -153,7 +154,7 @@ public class EMFExtenderUtils {
         throw new IllegalArgumentException("Passed file must be ecore or xmi: " + file.getAbsolutePath());
     }
 
-    public static boolean extendFromFileToFile(File ecoreFile, File modelFile) {
+    public static EMFExtenderResult extendFromFileToFile(File ecoreFile, File modelFile) {
         EMFLoader emfLoader = new EMFLoader();
         EPackage metaModel = emfLoader.loadResourceAsPackage(ecoreFile);
         if (metaModel == null) {
@@ -162,7 +163,7 @@ public class EMFExtenderUtils {
         return extendToFile(emfLoader, metaModel, ecoreFile, modelFile);
     }
 
-    public static boolean unextendFromFileToFile(File ecoreFile, File modelFile) {
+    public static EMFExtenderResult unextendFromFileToFile(File ecoreFile, File modelFile) {
         EMFLoader emfLoader = new EMFLoader();
         EPackage metaModel = emfLoader.loadResourceAsPackage(ecoreFile);
         if (metaModel == null) {
@@ -171,3 +172,4 @@ public class EMFExtenderUtils {
         return unextendToFile(emfLoader, metaModel, ecoreFile, modelFile);
     }
 }
+
