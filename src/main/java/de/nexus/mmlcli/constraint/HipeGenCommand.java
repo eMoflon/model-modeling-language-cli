@@ -121,6 +121,8 @@ public class HipeGenCommand implements Callable<Integer> {
                             ModelServer.class.getName());
             Process process = processBuilder.inheritIO().start();
 
+            Runtime.getRuntime().addShutdownHook(new Thread(process::destroy));
+
             return process.waitFor();
         } catch (IOException | InterruptedException ex) {
             ex.printStackTrace();
