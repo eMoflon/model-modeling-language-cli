@@ -123,6 +123,10 @@ public class ModelServerBuilder {
             if (!others.isEmpty() && this.verbose) {
                 System.out.println(others);
             }
+
+            if (!error.isEmpty()) {
+                throw new RuntimeException("Failed to compile ModelServer!");
+            }
         }
 
     }
