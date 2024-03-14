@@ -1,4 +1,4 @@
-package serializer;
+package de.nexus.mmlcli.serializer;
 
 import org.apache.commons.io.FilenameUtils;
 

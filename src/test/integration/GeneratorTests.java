@@ -1,4 +1,4 @@
-package serializer;
+package de.nexus.mmlcli.serializer;
 
 import de.nexus.mmlcli.generator.EmfResourceBuilder;
 import de.nexus.mmlcli.generator.SerializedDocument;

@@ -1,4 +1,4 @@
-package serializer;
+package de.nexus.mmlcli.serializer;
 
 import java.io.File;
 

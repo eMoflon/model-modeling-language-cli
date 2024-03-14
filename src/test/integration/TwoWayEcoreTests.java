@@ -1,10 +1,9 @@
-package serializer;
+package de.nexus.mmlcli.serializer;
 
 import de.nexus.emfutils.EMFLoader;
 import de.nexus.mmlcli.entities.model.PackageEntity;
 import de.nexus.mmlcli.generator.EmfResourceBuilder;
 import de.nexus.mmlcli.generator.SerializedDocument;
-import de.nexus.mmlcli.serializer.MmlSerializedGenerator;
 import org.eclipse.emf.ecore.EPackage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.io.TempDir;
