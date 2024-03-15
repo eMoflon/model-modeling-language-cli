@@ -2,8 +2,8 @@ package de.nexus.modelserver;
 
 import de.nexus.expr.ExpressionEntity;
 import de.nexus.modelserver.evaltree.EvalTree;
-import de.nexus.modelserver.evaltree.EvalTreeAnalysisProposal;
-import de.nexus.modelserver.evaltree.EvalTreeAnalyzer;
+import de.nexus.modelserver.evaltree.EvalTreeFixProposer;
+import de.nexus.modelserver.proto.ModelServerConstraints;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,7 +13,7 @@ public abstract class AbstractConstraint {
     private final Map<String, PatternDeclaration> patternDeclarations = new HashMap<>();
     private boolean violated = false;
     private List<EvalTree> evalTrees;
-    private List<EvalTreeAnalysisProposal> proposals = Collections.emptyList();
+    private List<Optional<ModelServerConstraints.FixProposalContainer>> computedProposals = null;
 
     public abstract String getName();
 
@@ -48,20 +48,20 @@ public abstract class AbstractConstraint {
     public void evaluate(PatternRegistry patternRegistry) {
         this.evalTrees = this.assertions.stream().map(expr -> EvalTree.build(expr, patternRegistry, this)).collect(Collectors.toList());
         this.violated = !this.evalTrees.stream().allMatch(EvalTree::getState);
-        this.proposals = Collections.emptyList();
+        this.computedProposals = null;
     }
 
-    public void computeProposals(PatternRegistry patternRegistry) {
-        ArrayList<EvalTreeAnalysisProposal> allProposals = new ArrayList<>();
+    public void computeProposals(IndexedEMFLoader emfLoader) {
+        EvalTreeFixProposer proposer = new EvalTreeFixProposer(this, emfLoader);
+        this.computedProposals = new ArrayList<>();
         for (EvalTree evalTree : this.evalTrees) {
-            EvalTreeAnalyzer analyzer = new EvalTreeAnalyzer(evalTree, this);
-            allProposals.addAll(analyzer.analyze());
+            Optional<ModelServerConstraints.FixProposalContainer> proposal = proposer.getProposals(evalTree.getRoot(), true);
+            computedProposals.add(proposal);
         }
-        this.proposals = allProposals;
     }
 
-    public List<EvalTreeAnalysisProposal> getProposals() {
-        return proposals;
+    public List<Optional<ModelServerConstraints.FixProposalContainer>> getProposals() {
+        return this.computedProposals;
     }
 
     public boolean isViolated() {
