@@ -52,7 +52,7 @@ public class ModelEditProcessor {
         try {
             SmartObject fromNode = this.getNode(request.getStartNode(), variableRegistry);
             SmartObject toNode = this.getNode(request.getTargetNode(), variableRegistry);
-            EReference reference = (EReference) fromNode.eClass().getEStructuralFeature(request.getReferenceName());
+            EReference reference = getEReference(fromNode, request.getReferenceName());
             if (reference.isMany()) {
                 @SuppressWarnings("unchecked")
                 EList<EObject> oldVals = (EList<EObject>) fromNode.eGet(reference);
@@ -122,7 +122,7 @@ public class ModelEditProcessor {
         try {
             SmartObject fromNode = this.getNode(request.getStartNode(), variableRegistry);
             SmartObject toNode = this.getNode(request.getTargetNode(), variableRegistry);
-            EReference reference = (EReference) fromNode.eClass().getEStructuralFeature(request.getReferenceName());
+            EReference reference = getEReference(fromNode, request.getReferenceName());
             if (reference.isMany()) {
                 @SuppressWarnings("unchecked")
                 EList<EObject> oldVals = (EList<EObject>) fromNode.eGet(reference);
@@ -252,7 +252,7 @@ public class ModelEditProcessor {
     private ModelServerEditStatements.EditResponse process(ModelServerEditStatements.EditSetAttributeRequest request, ModelEditVariableRegistry variableRegistry) {
         try {
             SmartObject node = this.getNode(request.getNode(), variableRegistry);
-            EAttribute attribute = (EAttribute) node.eClass().getEStructuralFeature(request.getAttributeName());
+            EAttribute attribute = getEAttribute(node, request.getAttributeName());
             Object newValue = EMFValueUtils.mapVals(attribute.getEType(), request.getAttributeValue());
             node.eSet(attribute, newValue);
 
@@ -283,6 +283,28 @@ public class ModelEditProcessor {
             throw ex;
         } catch (NullPointerException ex) {
             throw new IllegalArgumentException("Unable to locate SmartObject in IndexedEMFLoader!");
+        }
+    }
+
+    private EReference getEReference(SmartObject obj, String referenceName) {
+        EStructuralFeature structuralFeature = obj.eClass().getEStructuralFeature(referenceName);
+        if (structuralFeature == null) {
+            throw new IllegalArgumentException(String.format("Could not find reference called \"%s\"", referenceName));
+        } else if (structuralFeature instanceof EReference ref) {
+            return ref;
+        } else {
+            throw new IllegalArgumentException("Structural Feature is no Reference!");
+        }
+    }
+
+    private EAttribute getEAttribute(SmartObject obj, String attriuteName) {
+        EStructuralFeature structuralFeature = obj.eClass().getEStructuralFeature(attriuteName);
+        if (structuralFeature == null) {
+            throw new IllegalArgumentException(String.format("Could not find attribute called \"%s\"", attriuteName));
+        } else if (structuralFeature instanceof EAttribute attr) {
+            return attr;
+        } else {
+            throw new IllegalArgumentException("Structural Feature is no Attribute!");
         }
     }
 }
