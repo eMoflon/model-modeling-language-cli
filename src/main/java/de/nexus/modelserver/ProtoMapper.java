@@ -7,7 +7,6 @@ import de.nexus.modelserver.proto.ModelServerPatterns;
 import de.nexus.modelserver.runtime.IMatch;
 import org.emoflon.smartemf.runtime.SmartObject;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,49 +70,56 @@ public class ProtoMapper {
     }
 
     public static ModelServerConstraints.FixVariant map(IMatch match, FixContainer fixContainer, IndexedEMFLoader emfLoader) {
-        List<ModelServerConstraints.FixInfoStatement> infoStatements = new ArrayList<>();
-        List<ModelServerEditStatements.EditRequest> editStatements = new ArrayList<>();
-        fixContainer.getStatements().forEach(x -> {
-            if (x instanceof FixInfoStatement infoStatement) {
-                infoStatements.add(map(match, infoStatement, emfLoader));
-            } else {
-                editStatements.add(map(match, x, emfLoader));
-            }
-        });
+        List<ModelServerConstraints.FixStatement> statements = fixContainer.getStatements().stream().map(x -> ProtoMapper.map(match, x, emfLoader)).toList();
 
         return ModelServerConstraints.FixVariant.newBuilder()
-                .addAllInfoStatements(infoStatements)
-                .addAllEdits(editStatements)
+                .addAllStatements(statements)
                 .build();
     }
 
-    public static ModelServerConstraints.FixInfoStatement map(IMatch match, FixInfoStatement fixStatement, IndexedEMFLoader emfLoader) {
-        return
-                ModelServerConstraints.FixInfoStatement.newBuilder()
-                        .setMsg(fixStatement.getMsg())
-                        .build();
-    }
-
-    public static ModelServerEditStatements.EditRequest map(IMatch match, FixStatement fixStatement, IndexedEMFLoader emfLoader) {
-        if (fixStatement instanceof FixDeleteEdgeStatement deleteEdgeStatement) {
-            return ModelServerEditStatements.EditRequest.newBuilder()
-                    .setDeleteEdgeRequest(ProtoMapper.map(match, deleteEdgeStatement, emfLoader))
+    public static ModelServerConstraints.FixStatement map(IMatch match, FixStatement fixStatement, IndexedEMFLoader emfLoader) {
+        if (fixStatement instanceof FixInfoStatement infoStatement) {
+            return ModelServerConstraints.FixStatement.newBuilder()
+                    .setInfoStatement(
+                            ModelServerConstraints.FixInfoStatement.newBuilder()
+                                    .setMsg(infoStatement.getMsg())
+                                    .build()
+                    )
+                    .build();
+        } else if (fixStatement instanceof FixDeleteEdgeStatement deleteEdgeStatement) {
+            return ModelServerConstraints.FixStatement.newBuilder()
+                    .setEdit(ModelServerEditStatements.EditRequest.newBuilder()
+                            .setDeleteEdgeRequest(ProtoMapper.map(match, deleteEdgeStatement, emfLoader))
+                            .build()
+                    )
                     .build();
         } else if (fixStatement instanceof FixDeleteNodeStatement deleteNodeStatement) {
-            return ModelServerEditStatements.EditRequest.newBuilder()
-                    .setDeleteNodeRequest(ProtoMapper.map(match, deleteNodeStatement, emfLoader))
+            return ModelServerConstraints.FixStatement.newBuilder()
+                    .setEdit(ModelServerEditStatements.EditRequest.newBuilder()
+                            .setDeleteNodeRequest(ProtoMapper.map(match, deleteNodeStatement, emfLoader))
+                            .build()
+                    )
                     .build();
         } else if (fixStatement instanceof FixCreateEdgeStatement createEdgeStatement) {
-            return ModelServerEditStatements.EditRequest.newBuilder()
-                    .setCreateEdgeRequest(ProtoMapper.map(match, createEdgeStatement, emfLoader))
+            return ModelServerConstraints.FixStatement.newBuilder()
+                    .setEdit(ModelServerEditStatements.EditRequest.newBuilder()
+                            .setCreateEdgeRequest(ProtoMapper.map(match, createEdgeStatement, emfLoader))
+                            .build()
+                    )
                     .build();
         } else if (fixStatement instanceof FixCreateNodeStatement createNodeStatement) {
-            return ModelServerEditStatements.EditRequest.newBuilder()
-                    .setCreateNodeRequest(ProtoMapper.map(createNodeStatement))
+            return ModelServerConstraints.FixStatement.newBuilder()
+                    .setEdit(ModelServerEditStatements.EditRequest.newBuilder()
+                            .setCreateNodeRequest(ProtoMapper.map(createNodeStatement))
+                            .build()
+                    )
                     .build();
         } else if (fixStatement instanceof FixSetStatement setStatement) {
-            return ModelServerEditStatements.EditRequest.newBuilder()
-                    .setSetAttributeRequest(ProtoMapper.map(match, setStatement, emfLoader))
+            return ModelServerConstraints.FixStatement.newBuilder()
+                    .setEdit(ModelServerEditStatements.EditRequest.newBuilder()
+                            .setSetAttributeRequest(ProtoMapper.map(match, setStatement, emfLoader))
+                            .build()
+                    )
                     .build();
         }
         throw new UnsupportedOperationException("Could not map unsupported FixStatement to proto: " + fixStatement.getClass().getName());
