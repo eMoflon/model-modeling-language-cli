@@ -73,6 +73,7 @@ public class ProtoMapper {
         List<ModelServerConstraints.FixStatement> statements = fixContainer.getStatements().stream().map(x -> ProtoMapper.map(match, x, emfLoader)).toList();
 
         return ModelServerConstraints.FixVariant.newBuilder()
+                .setVariantTitle(fixContainer.getFixTitle())
                 .addAllStatements(statements)
                 .build();
     }
