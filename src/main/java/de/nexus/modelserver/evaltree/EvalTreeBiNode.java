@@ -6,13 +6,13 @@ import de.nexus.modelserver.AbstractConstraint;
 import de.nexus.modelserver.PatternRegistry;
 
 public class EvalTreeBiNode implements IEvalTreeNode {
-    private final BinaryExpressionEntity expr;
+    private final BinaryExpressionEntity expression;
     private final IEvalTreeNode leftChild;
     private final IEvalTreeNode rightChild;
     private final EvalTreeValue value;
 
     private EvalTreeBiNode(BinaryExpressionEntity expr, IEvalTreeNode leftChild, IEvalTreeNode rightChild, EvalTreeValue value) {
-        this.expr = expr;
+        this.expression = expr;
         this.leftChild = leftChild;
         this.rightChild = rightChild;
         this.value = value;
@@ -69,8 +69,9 @@ public class EvalTreeBiNode implements IEvalTreeNode {
         };
     }
 
-    public BinaryExpressionEntity getExpr() {
-        return expr;
+    @Override
+    public BinaryExpressionEntity getExpression() {
+        return expression;
     }
 
     public IEvalTreeNode getLeftChild() {
@@ -84,7 +85,7 @@ public class EvalTreeBiNode implements IEvalTreeNode {
     @Override
     public String toFormattedString(int indent) {
         String indentString = "    ".repeat(indent);
-        return indentString + String.format("%s -> %s", this.expr.toString(), this.value.toString()) + "\n" + indentString + this.leftChild.toFormattedString(indent + 1) + "\n" + indentString + this.rightChild.toFormattedString(indent + 1);
+        return indentString + String.format("%s -> %s", this.expression.toString(), this.value.toString()) + "\n" + indentString + this.leftChild.toFormattedString(indent + 1) + "\n" + indentString + this.rightChild.toFormattedString(indent + 1);
     }
 
     @Override

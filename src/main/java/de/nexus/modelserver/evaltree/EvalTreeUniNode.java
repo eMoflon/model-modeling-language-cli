@@ -20,6 +20,7 @@ public class EvalTreeUniNode implements IEvalTreeNode {
         }
     }
 
+    @Override
     public UnaryExpressionEntity getExpression() {
         return expression;
     }

@@ -46,7 +46,7 @@ public class EvalTreeFixProposer {
             Optional<ModelServerConstraints.FixProposalContainer> leftContainer = getProposals(biNode.getLeftChild(), targetValue);
             Optional<ModelServerConstraints.FixProposalContainer> rightContainer = getProposals(biNode.getRightChild(), targetValue);
 
-            if (biNode.getExpr().getOperator().equals(BinaryOperator.LOGICAL_AND)) {
+            if (biNode.getExpression().getOperator().equals(BinaryOperator.LOGICAL_AND)) {
                 if (leftContainer.isEmpty() && rightContainer.isPresent()) {
                     return rightContainer;
                 } else if (leftContainer.isPresent() && rightContainer.isEmpty()) {
@@ -56,14 +56,14 @@ public class EvalTreeFixProposer {
                 } else {
                     throw new RuntimeException("Trying to generate ProposalContainer although both children are empty!");
                 }
-            } else if (biNode.getExpr().getOperator().equals(BinaryOperator.LOGICAL_OR)) {
+            } else if (biNode.getExpression().getOperator().equals(BinaryOperator.LOGICAL_OR)) {
                 if (leftContainer.isPresent() && rightContainer.isPresent()) {
                     return Optional.of(mergeProposalContainers(ModelServerConstraints.FixProposalContainerType.FIX_ONE, leftContainer.get(), rightContainer.get()));
                 } else {
                     throw new RuntimeException("Trying to generate ProposalContainer although both children are empty!");
                 }
             } else {
-                throw new RuntimeException(String.format("EvalTreeFixProposer does currently not support EvalTreeUniNodes with operator: %s!", biNode.getExpr().getOperator().name()));
+                throw new RuntimeException(String.format("EvalTreeFixProposer does currently not support EvalTreeUniNodes with operator: %s!", biNode.getExpression().getOperator().name()));
             }
         } else {
             throw new RuntimeException("EvalTreeFixProposer does currently not support non-boolean EvalTreeValues!");
