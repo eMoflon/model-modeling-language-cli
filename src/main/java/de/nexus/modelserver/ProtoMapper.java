@@ -48,7 +48,7 @@ public class ProtoMapper {
 
     public static ModelServerConstraints.ConstraintAssertion map(EvalTree evalTree) {
         return ModelServerConstraints.ConstraintAssertion.newBuilder()
-                .setExpression(evalTree.getRoot().toFormattedString(0))
+                .setExpression(evalTree.getRoot().getExpression().toSimpleString())
                 .setViolated(!evalTree.getState())
                 .build();
     }
