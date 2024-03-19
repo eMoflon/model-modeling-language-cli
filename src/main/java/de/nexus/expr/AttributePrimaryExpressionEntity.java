@@ -37,4 +37,9 @@ public class AttributePrimaryExpressionEntity implements PrimaryExpressionEntity
     public String toString() {
         return String.format("{(AttributeValue) %s -> %s}", this.className, this.elementName);
     }
+
+    @Override
+    public String toSimpleString() {
+        return String.format("%s.%s", this.className, this.elementName);
+    }
 }

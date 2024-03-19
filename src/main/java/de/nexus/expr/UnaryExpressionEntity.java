@@ -26,4 +26,11 @@ public class UnaryExpressionEntity implements ExpressionEntity {
     public String toString() {
         return String.format("{[%s] %s}", this.operator.name(), this.expr.toString());
     }
+
+    @Override
+    public String toSimpleString() {
+        return switch (this.operator) {
+            case NEGATION -> "!" + this.expr.toSimpleString();
+        };
+    }
 }

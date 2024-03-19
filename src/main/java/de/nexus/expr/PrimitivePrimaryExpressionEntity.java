@@ -35,4 +35,9 @@ public class PrimitivePrimaryExpressionEntity<T> implements PrimaryExpressionEnt
     public String toString() {
         return String.format("{(PrimitiveValue) %s}", this.value);
     }
+
+    @Override
+    public String toSimpleString() {
+        return this.getAsString();
+    }
 }

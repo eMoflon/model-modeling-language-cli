@@ -25,4 +25,9 @@ public class EnumValuePrimaryExpressionEntity implements PrimaryExpressionEntity
     public String toString() {
         return String.format("{(EnumValue) %s}", this.value);
     }
+
+    @Override
+    public String toSimpleString() {
+        return this.value;
+    }
 }

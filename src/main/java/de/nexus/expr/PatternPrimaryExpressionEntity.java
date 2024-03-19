@@ -28,6 +28,11 @@ public class PatternPrimaryExpressionEntity implements PrimaryExpressionEntity {
     }
 
     @Override
+    public String toSimpleString() {
+        return this.patternName;
+    }
+
+    @Override
     public String toString() {
         return String.format("{(PatternExistanceValue) %s}", this.patternName);
     }
