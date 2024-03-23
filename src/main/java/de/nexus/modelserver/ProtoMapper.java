@@ -5,9 +5,11 @@ import de.nexus.modelserver.proto.ModelServerConstraints;
 import de.nexus.modelserver.proto.ModelServerEditStatements;
 import de.nexus.modelserver.proto.ModelServerPatterns;
 import de.nexus.modelserver.runtime.IMatch;
+import org.eclipse.emf.ecore.EAttribute;
 import org.emoflon.smartemf.runtime.SmartObject;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -63,9 +65,33 @@ public class ProtoMapper {
 
     public static ModelServerConstraints.FixMatch map(IMatch match, List<FixContainer> variants, IndexedEMFLoader emfLoader) {
         List<ModelServerConstraints.FixVariant> protoVariants = variants.stream().map(x -> ProtoMapper.map(match, x, emfLoader)).toList();
+        List<ModelServerConstraints.MatchNode> matchNodes = match.getParameters().stream().map(x -> ProtoMapper.map(x, emfLoader)).toList();
 
         return ModelServerConstraints.FixMatch.newBuilder()
                 .addAllVariants(protoVariants)
+                .addAllNodes(matchNodes)
+                .build();
+    }
+
+    public static ModelServerConstraints.MatchNode map(Map.Entry<String, Object> nodeEntry, IndexedEMFLoader emfLoader) {
+        SmartObject nodeObj = (SmartObject) nodeEntry.getValue();
+
+        List<ModelServerConstraints.MatchNodeAttribute> attributes = nodeObj.eClass().getEAllAttributes().stream().map(x -> ProtoMapper.map(nodeObj, x)).toList();
+
+        return ModelServerConstraints.MatchNode.newBuilder()
+                .setNodeId(emfLoader.getNodeId(nodeObj))
+                .setNodeName(nodeEntry.getKey())
+                .setNodeType(nodeObj.eClass().getName())
+                .addAllNodeAttributes(attributes)
+                .build();
+    }
+
+    public static ModelServerConstraints.MatchNodeAttribute map(SmartObject nodeObj, EAttribute attribute) {
+        String attrValue = nodeObj.eGet(attribute).toString();
+
+        return ModelServerConstraints.MatchNodeAttribute.newBuilder()
+                .setAttributeName(attribute.getName())
+                .setAttributeValue(attrValue)
                 .build();
     }
 
