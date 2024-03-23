@@ -7,6 +7,8 @@ import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -73,6 +75,50 @@ public class ModelServerGrpc {
                 y.getDeleteMatches().forEach(System.out::println);
             });
             responseObserver.onNext(de.nexus.modelserver.proto.ModelServerManagement.GetStateResponse.getDefaultInstance());
+            responseObserver.onCompleted();
+        }
+
+        @Override
+        public void exportModel(de.nexus.modelserver.proto.ModelServerManagement.ExportModelRequest request, StreamObserver<de.nexus.modelserver.proto.ModelServerManagement.ExportModelResponse> responseObserver) {
+            Path modelPath = Path.of(this.grpcHandler.modelServer.getConfiguration().getModelPath());
+            Path basePath = modelPath.getParent();
+
+            if (request.hasExportPath()) {
+                try {
+                    basePath = Path.of(request.getExportPath().getValue());
+                } catch (InvalidPathException ex) {
+                    responseObserver.onNext(de.nexus.modelserver.proto.ModelServerManagement.ExportModelResponse.newBuilder().setSuccess(false).setMessage("Unable to resolve given path: " + request.getExportPath().getValue()).build());
+                    responseObserver.onCompleted();
+                    return;
+                }
+            }
+
+            if (!basePath.toFile().exists()) {
+                responseObserver.onNext(de.nexus.modelserver.proto.ModelServerManagement.ExportModelResponse.newBuilder().setSuccess(false).setMessage("Unable to locate: " + basePath).build());
+                responseObserver.onCompleted();
+                return;
+            }
+            if (!basePath.toFile().canWrite()) {
+                responseObserver.onNext(de.nexus.modelserver.proto.ModelServerManagement.ExportModelResponse.newBuilder().setSuccess(false).setMessage("Unable to write into: " + basePath).build());
+                responseObserver.onCompleted();
+                return;
+            }
+
+            String modelName = modelPath.getFileName().toString();
+            String targetModelName = modelName.endsWith(".export.xmi") ? modelName : modelName.replace(".xmi", ".export.xmi");
+            Path targetPath = basePath.resolve(targetModelName);
+            if (request.hasExportName()) {
+                try {
+                    targetPath = basePath.resolve(request.getExportName().getValue());
+                } catch (InvalidPathException ex) {
+                    responseObserver.onNext(de.nexus.modelserver.proto.ModelServerManagement.ExportModelResponse.newBuilder().setSuccess(false).setMessage(String.format("Unable to resolve export target path: %s in base directory: %s", request.getExportName().getValue(), basePath)).build());
+                    responseObserver.onCompleted();
+                    return;
+                }
+            }
+
+            boolean res = this.grpcHandler.modelServer.getEmfLoader().exportModel(targetPath, request.getExportWithIds());
+            responseObserver.onNext(de.nexus.modelserver.proto.ModelServerManagement.ExportModelResponse.newBuilder().setSuccess(res).setMessage("").setExportedPath(targetPath.toString()).build());
             responseObserver.onCompleted();
         }
     }

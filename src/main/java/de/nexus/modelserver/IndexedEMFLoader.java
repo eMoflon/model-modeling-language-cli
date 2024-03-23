@@ -79,6 +79,22 @@ public class IndexedEMFLoader extends SmartEMFLoader {
         return (EPackage) EcoreUtil.getRootContainer(ePackage);
     }
 
+    public boolean exportModel(Path target, boolean exportWithIds) {
+        if (this.idIndex.isEmpty()) {
+            return false;
+        }
+        Optional<SmartObject> firstObj = this.idIndex.values().stream().findFirst();
+        Resource modelResource = firstObj.get().eResource();
+
+        Resource modelCopy = this.copyResource(modelResource, target);
+        if (!exportWithIds) {
+            EPackage ePackage = this.getEPackage();
+            EMFExtenderUtils.unextendModel(ePackage, modelCopy);
+        }
+
+        return this.saveResource(modelCopy);
+    }
+
     public Resource getResource() {
         return this.getResources().get(0);
     }

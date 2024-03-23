@@ -98,6 +98,10 @@ public class ModelServer {
         return this.editProcessor;
     }
 
+    public IModelServerConfiguration getConfiguration() {
+        return configuration;
+    }
+
     public static void main(String[] args) {
         IModelServerConfiguration configuration;
 
