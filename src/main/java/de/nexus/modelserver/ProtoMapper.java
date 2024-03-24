@@ -76,7 +76,7 @@ public class ProtoMapper {
     public static ModelServerConstraints.MatchNode map(Map.Entry<String, Object> nodeEntry, IndexedEMFLoader emfLoader) {
         SmartObject nodeObj = (SmartObject) nodeEntry.getValue();
 
-        List<ModelServerConstraints.MatchNodeAttribute> attributes = nodeObj.eClass().getEAllAttributes().stream().map(x -> ProtoMapper.map(nodeObj, x)).toList();
+        List<ModelServerConstraints.MatchNodeAttribute> attributes = nodeObj.eClass().getEAllAttributes().stream().filter(x -> !emfLoader.isFeatureNodeId(x)).map(x -> ProtoMapper.map(nodeObj, x)).toList();
 
         return ModelServerConstraints.MatchNode.newBuilder()
                 .setNodeId(emfLoader.getNodeId(nodeObj))
