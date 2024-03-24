@@ -66,6 +66,13 @@ public class IndexedEMFLoader extends SmartEMFLoader {
         return (int) object.eGet(this.idStrucuralFeature);
     }
 
+    public boolean isFeatureNodeId(EStructuralFeature structuralFeature) {
+        if (this.idStrucuralFeature == null) {
+            throw new NullPointerException("Trying to access idStructuralFeature, but it has not been initialized yet!");
+        }
+        return this.idStrucuralFeature == structuralFeature;
+    }
+
     public SmartObject getNode(int id) {
         return this.idIndex.get(id);
     }
