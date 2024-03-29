@@ -143,7 +143,7 @@ public class SmartEMFLoader implements IEMFLoader {
         return this.resourceSet;
     }
 
-    public static <T> Collection<T> copyAll(Collection<? extends T> eObjects) {
+    private static <T> Collection<T> copyAll(Collection<? extends T> eObjects) {
         SmartEMFCopier copier = new SmartEMFCopier();
         Collection<T> result = copier.copyAll(eObjects);
         copier.copyReferences();
