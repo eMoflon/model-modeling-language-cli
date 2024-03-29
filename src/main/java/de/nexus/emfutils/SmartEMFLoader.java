@@ -5,11 +5,11 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Collections;
 
 public class SmartEMFLoader implements IEMFLoader {
@@ -81,28 +81,28 @@ public class SmartEMFLoader implements IEMFLoader {
     @Override
     public Resource copyResource(Resource resource, String path) {
         Resource newResource = createNewResource(path);
-        newResource.getContents().addAll(EcoreUtil.copyAll(resource.getContents()));
+        newResource.getContents().addAll(copyAll(resource.getContents()));
         return newResource;
     }
 
     @Override
     public Resource copyResource(Resource resource, Path path) {
         Resource newResource = createNewResource(path);
-        newResource.getContents().addAll(EcoreUtil.copyAll(resource.getContents()));
+        newResource.getContents().addAll(copyAll(resource.getContents()));
         return newResource;
     }
 
     @Override
     public Resource copyResource(Resource resource, File file) {
         Resource newResource = createNewResource(file);
-        newResource.getContents().addAll(EcoreUtil.copyAll(resource.getContents()));
+        newResource.getContents().addAll(copyAll(resource.getContents()));
         return newResource;
     }
 
     @Override
     public Resource copyResource(Resource resource, URI path) {
         Resource newResource = createNewResource(path);
-        newResource.getContents().addAll(EcoreUtil.copyAll(resource.getContents()));
+        newResource.getContents().addAll(copyAll(resource.getContents()));
         return newResource;
     }
 
@@ -141,5 +141,12 @@ public class SmartEMFLoader implements IEMFLoader {
 
     protected ResourceSet getResourceSet() {
         return this.resourceSet;
+    }
+
+    public static <T> Collection<T> copyAll(Collection<? extends T> eObjects) {
+        SmartEMFCopier copier = new SmartEMFCopier();
+        Collection<T> result = copier.copyAll(eObjects);
+        copier.copyReferences();
+        return result;
     }
 }
