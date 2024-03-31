@@ -4,12 +4,14 @@ import de.nexus.modelserver.evaltree.EvalTree;
 import de.nexus.modelserver.proto.ModelServerConstraints;
 import de.nexus.modelserver.proto.ModelServerEditStatements;
 import de.nexus.modelserver.proto.ModelServerPatterns;
+import de.nexus.modelserver.runtime.EmptyMatch;
 import de.nexus.modelserver.runtime.IMatch;
 import org.eclipse.emf.ecore.EAttribute;
 import org.emoflon.smartemf.runtime.SmartObject;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -153,10 +155,8 @@ public class ProtoMapper {
     }
 
     public static ModelServerEditStatements.EditDeleteEdgeRequest map(IMatch match, FixDeleteEdgeStatement fixStatement, IndexedEMFLoader emfLoader) {
-        SmartObject fromNode = (SmartObject) match.get(fixStatement.getFromPatternNodeName());
-        SmartObject toNode = (SmartObject) match.get(fixStatement.getToPatternNodeName());
-        int fromNodeId = emfLoader.getNodeId(fromNode);
-        int toNodeId = emfLoader.getNodeId(toNode);
+        int fromNodeId = getNodeId(emfLoader, match, fixStatement.getFromPatternNodeName());
+        int toNodeId = getNodeId(emfLoader, match, fixStatement.getToPatternNodeName());
 
         return ModelServerEditStatements.EditDeleteEdgeRequest.newBuilder()
                 .setStartNode(ModelServerEditStatements.Node.newBuilder().setNodeId(fromNodeId).build())
@@ -166,8 +166,7 @@ public class ProtoMapper {
     }
 
     public static ModelServerEditStatements.EditDeleteNodeRequest map(IMatch match, FixDeleteNodeStatement fixStatement, IndexedEMFLoader emfLoader) {
-        SmartObject node = (SmartObject) match.get(fixStatement.getNodeName());
-        int nodeId = emfLoader.getNodeId(node);
+        int nodeId = getNodeId(emfLoader, match, fixStatement.getNodeName());
 
         return ModelServerEditStatements.EditDeleteNodeRequest.newBuilder()
                 .setNode(ModelServerEditStatements.Node.newBuilder()
@@ -184,16 +183,14 @@ public class ProtoMapper {
         if (fixStatement.isFromNameIsTemp()) {
             protoFromNode = ModelServerEditStatements.Node.newBuilder().setTempId(fixStatement.getFromPatternNodeName()).build();
         } else {
-            SmartObject fromNode = (SmartObject) match.get(fixStatement.getFromPatternNodeName());
-            int fromNodeId = emfLoader.getNodeId(fromNode);
+            int fromNodeId = getNodeId(emfLoader, match, fixStatement.getFromPatternNodeName());
             protoFromNode = ModelServerEditStatements.Node.newBuilder().setNodeId(fromNodeId).build();
         }
 
         if (fixStatement.isToNameIsTemp()) {
             protoToNode = ModelServerEditStatements.Node.newBuilder().setTempId(fixStatement.getToPatternNodeName()).build();
         } else {
-            SmartObject toNode = (SmartObject) match.get(fixStatement.getToPatternNodeName());
-            int toNodeId = emfLoader.getNodeId(toNode);
+            int toNodeId = getNodeId(emfLoader, match, fixStatement.getToPatternNodeName());
             protoToNode = ModelServerEditStatements.Node.newBuilder().setNodeId(toNodeId).build();
         }
 
@@ -223,8 +220,7 @@ public class ProtoMapper {
     }
 
     public static ModelServerEditStatements.EditSetAttributeRequest map(IMatch match, FixSetStatement fixStatement, IndexedEMFLoader emfLoader) {
-        SmartObject node = (SmartObject) match.get(fixStatement.getPatternNodeName());
-        int nodeId = emfLoader.getNodeId(node);
+        int nodeId = getNodeId(emfLoader, match, fixStatement.getPatternNodeName());
         ModelServerEditStatements.Node protoNode = ModelServerEditStatements.Node.newBuilder().setNodeId(nodeId).build();
 
         return ModelServerEditStatements.EditSetAttributeRequest.newBuilder()
@@ -232,5 +228,18 @@ public class ProtoMapper {
                 .setAttributeName(fixStatement.getAttributeName())
                 .setAttributeValue(fixStatement.getAttributeValue())
                 .build();
+    }
+
+    private static int getNodeId(IndexedEMFLoader emfLoader, IMatch match, String patternNodeName) {
+        if (match instanceof EmptyMatch) {
+            throw new RuntimeException("Unable to resolve node in empty match!");
+        } else {
+            try {
+                SmartObject node = (SmartObject) Objects.requireNonNull(match.get(patternNodeName));
+                return emfLoader.getNodeId(node);
+            } catch (NullPointerException ex) {
+                throw new RuntimeException("Unable to resolve nodeId!");
+            }
+        }
     }
 }
