@@ -66,12 +66,15 @@ public class ProtoMapper {
     }
 
     public static ModelServerConstraints.FixMatch map(IMatch match, List<FixContainer> variants, IndexedEMFLoader emfLoader) {
-        List<ModelServerConstraints.FixVariant> protoVariants = variants.stream().map(x -> ProtoMapper.map(match, x, emfLoader)).toList();
+        boolean isEmptyMatch = match instanceof EmptyMatch;
+
+        List<ModelServerConstraints.FixVariant> protoVariants = variants.stream().filter(x -> x.isEmptyMatchFix() == isEmptyMatch).map(x -> ProtoMapper.map(match, x, emfLoader)).toList();
         List<ModelServerConstraints.MatchNode> matchNodes = match.getParameters().stream().map(x -> ProtoMapper.map(x, emfLoader)).toList();
 
         return ModelServerConstraints.FixMatch.newBuilder()
                 .addAllVariants(protoVariants)
                 .addAllNodes(matchNodes)
+                .setEmptyMatch(isEmptyMatch)
                 .build();
     }
 
