@@ -5,10 +5,10 @@ import de.nexus.expr.PatternPrimaryExpressionEntity;
 import de.nexus.expr.UnaryOperator;
 import de.nexus.modelserver.*;
 import de.nexus.modelserver.proto.ModelServerConstraints;
+import de.nexus.modelserver.runtime.EmptyMatch;
+import de.nexus.modelserver.runtime.IMatch;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class EvalTreeFixProposer {
     private final AbstractConstraint constraint;
@@ -175,6 +175,12 @@ public class EvalTreeFixProposer {
 
         Pattern pattern = constraint.getPattern(patternVariable);
 
-        return pattern.getMatches().stream().map(x -> ProtoMapper.map(x, fixContainers, emfLoader)).toList();
+        Set<IMatch> matches = new HashSet<>(pattern.getMatches());
+
+        if (fixContainers.stream().anyMatch(FixContainer::isEmptyMatchFix)) {
+            matches.add(EmptyMatch.INSTANCE);
+        }
+
+        return matches.stream().map(x -> ProtoMapper.map(x, fixContainers, emfLoader)).toList();
     }
 }
