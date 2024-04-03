@@ -1,10 +1,16 @@
 package de.nexus.expr;
 
 public class EnumValuePrimaryExpressionEntity implements PrimaryExpressionEntity {
+    private final String enumName;
     private final String value;
 
-    public EnumValuePrimaryExpressionEntity(String value) {
+    public EnumValuePrimaryExpressionEntity(String enumName, String value) {
+        this.enumName = enumName;
         this.value = value;
+    }
+
+    public String getEnumName() {
+        return enumName;
     }
 
     public String getValue() {
@@ -23,7 +29,7 @@ public class EnumValuePrimaryExpressionEntity implements PrimaryExpressionEntity
 
     @Override
     public String toString() {
-        return String.format("{(EnumValue) %s}", this.value);
+        return String.format("{(EnumValue | %s) %s}", this.enumName,this.value);
     }
 
     @Override

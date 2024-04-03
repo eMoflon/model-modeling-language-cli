@@ -12,12 +12,17 @@ class EnumValuePrimaryExpressionEntityTest {
 
     @BeforeEach
     void setUp() {
-        enumValueExpr = new EnumValuePrimaryExpressionEntity("TestVal");
+        enumValueExpr = new EnumValuePrimaryExpressionEntity("TestEEnum", "TestVal");
     }
 
     @Test
     void getType() {
         assertEquals(PrimaryExpressionEntityType.ENUM_VALUE, this.enumValueExpr.getType());
+    }
+
+    @Test
+    void getEnumName() {
+        assertEquals("TestEEnum", this.enumValueExpr.getEnumName());
     }
 
     @Test
@@ -33,6 +38,6 @@ class EnumValuePrimaryExpressionEntityTest {
 
     @Test
     void testToString() {
-        assertEquals("{(EnumValue) TestVal}", this.enumValueExpr.toString());
+        assertEquals("{(EnumValue | TestEEnum) TestVal}", this.enumValueExpr.toString());
     }
 }

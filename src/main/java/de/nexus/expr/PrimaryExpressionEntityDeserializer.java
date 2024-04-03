@@ -44,7 +44,7 @@ public class PrimaryExpressionEntityDeserializer implements JsonDeserializer<Pri
             }
             case BOOLEAN -> new PrimitivePrimaryExpressionEntity<>(value.getAsBoolean(), primaryValueType);
             case STRING -> new PrimitivePrimaryExpressionEntity<>(value.getAsString(), primaryValueType);
-            case ENUM_VALUE -> new EnumValuePrimaryExpressionEntity(value.getAsString());
+            case ENUM_VALUE -> new EnumValuePrimaryExpressionEntity(className, value.getAsString());
             case ATTRIBUTE -> new AttributePrimaryExpressionEntity(className, elementName, nodeId);
             case PATTERN_INVOCATION -> new PatternPrimaryExpressionEntity(nodeId, value.getAsString());
             default -> throw new IllegalStateException("Unexpected value: " + primaryValueType);
