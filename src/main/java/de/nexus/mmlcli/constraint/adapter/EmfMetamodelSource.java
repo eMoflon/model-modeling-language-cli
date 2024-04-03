@@ -2,6 +2,7 @@ package de.nexus.mmlcli.constraint.adapter;
 
 import de.nexus.emfutils.SmartEMFLoader;
 import de.nexus.expr.AttributePrimaryExpressionEntity;
+import de.nexus.expr.EnumValuePrimaryExpressionEntity;
 import de.nexus.mmlcli.constraint.entity.PatternNodeEntity;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 public class EmfMetamodelSource extends SmartEMFLoader {
     private final Map<String, EClass> classMapping = new HashMap<>();
+    private final Map<String, EEnum> enumMapping = new HashMap<>();
 
     public EmfMetamodelSource(Path workspacePath) {
         super(workspacePath);
@@ -39,6 +41,7 @@ public class EmfMetamodelSource extends SmartEMFLoader {
         String finalNewPathPrefix = newPathPrefix;
 
         ePackage.getEClassifiers().stream().filter(x -> x instanceof EClass).forEach(clazz -> this.classMapping.put(finalNewPathPrefix + clazz.getName(), (EClass) clazz));
+        ePackage.getEClassifiers().stream().filter(x -> x instanceof EEnum).forEach(eenum -> this.enumMapping.put(finalNewPathPrefix + eenum.getName(), (EEnum) eenum));
 
         ePackage.getESubpackages().forEach(p -> loadMetaModelClasses(p, finalNewPathPrefix));
     }
@@ -60,6 +63,11 @@ public class EmfMetamodelSource extends SmartEMFLoader {
     public EAttribute resolveAttribute(AttributePrimaryExpressionEntity primaryExpression) {
         EClass clazz = this.classMapping.get(primaryExpression.getClassName());
         return (EAttribute) clazz.getEStructuralFeature(primaryExpression.getElementName());
+    }
+
+    public EEnumLiteral resolveEEnumLiteral(EnumValuePrimaryExpressionEntity primaryExpression) {
+        EEnum eEnum = this.enumMapping.get(primaryExpression.getEnumName());
+        return eEnum.getEEnumLiteral(primaryExpression.getValue());
     }
 
     public EPackage getEPackage(int idx) {
