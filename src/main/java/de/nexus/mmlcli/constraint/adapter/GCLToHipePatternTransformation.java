@@ -72,7 +72,7 @@ public class GCLToHipePatternTransformation {
             HiPEPatternInvocation invocation = factory.createHiPEPatternInvocation();
             HiPEPattern invoked = transform(metamodelSource, inv.getPattern());
             invocation.setInvokedPattern(invoked);
-            invocation.setPositive(true);
+            invocation.setPositive(false);
             hPattern.getPatternInvocations().add(invocation);
 
             inv.getBindings().forEach(binding -> {
