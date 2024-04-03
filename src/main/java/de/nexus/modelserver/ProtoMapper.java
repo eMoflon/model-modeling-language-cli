@@ -230,6 +230,7 @@ public class ProtoMapper {
                 .setNode(protoNode)
                 .setAttributeName(fixStatement.getAttributeName())
                 .setAttributeValue(fixStatement.getAttributeValue())
+                .setUnsetAttributeValue(fixStatement.isCustomizationRequired())
                 .build();
     }
 
