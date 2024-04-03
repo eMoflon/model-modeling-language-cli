@@ -251,6 +251,10 @@ public class ModelEditProcessor {
 
     private ModelServerEditStatements.EditResponse process(ModelServerEditStatements.EditSetAttributeRequest request, ModelEditVariableRegistry variableRegistry) {
         try {
+            if (request.getUnsetAttributeValue()) {
+                throw new IllegalArgumentException("Unable to process EditSetAttributeRequest with unset attribute value");
+            }
+
             SmartObject node = this.getNode(request.getNode(), variableRegistry);
             EAttribute attribute = getEAttribute(node, request.getAttributeName());
             Object newValue = EMFValueUtils.mapVals(attribute.getEType(), request.getAttributeValue());
