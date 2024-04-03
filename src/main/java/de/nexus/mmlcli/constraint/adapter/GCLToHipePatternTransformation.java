@@ -5,6 +5,7 @@ import de.nexus.mmlcli.constraint.entity.*;
 import hipe.pattern.*;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EReference;
 
 import java.util.*;
@@ -197,7 +198,8 @@ public class GCLToHipePatternTransformation {
         if (primaryExpression instanceof PrimitivePrimaryExpressionEntity<?> primitiveExpr) {
             attr.setValue(primitiveExpr.getValue());
         } else if (primaryExpression instanceof EnumValuePrimaryExpressionEntity enumExpr) {
-            attr.setValue(enumExpr.getValue());
+            EEnumLiteral literal = metamodelSource.resolveEEnumLiteral(enumExpr);
+            attr.setValue(literal);
         } else if (primaryExpression instanceof AttributePrimaryExpressionEntity attrExpr) {
             PatternNodeEntity nodeEntity = this.cDoc.getId2PatternNode().get(attrExpr.getNodeId());
             EAttribute targetAttribute = metamodelSource.resolveAttribute(attrExpr);
