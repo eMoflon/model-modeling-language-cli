@@ -146,10 +146,17 @@ public class ModelServerGrpc {
             Map<String, ProductionResult> extractData = this.grpcHandler.modelServer.extractData();
             grpcHandler.modelServer.getPatternRegistry().processHiPE(extractData);
 
-            ModelServerPatterns.Pattern pattern = ProtoMapper.map(grpcHandler.modelServer.getPatternRegistry().getPattern(request.getPatternName()));
+            Pattern targetPattern = grpcHandler.modelServer.getPatternRegistry().getPattern(request.getPatternName());
 
-            responseObserver.onNext(ModelServerPatterns.GetPatternResponse.newBuilder().setPattern(pattern).build());
-            responseObserver.onCompleted();
+            if (targetPattern != null) {
+                ModelServerPatterns.Pattern pattern = ProtoMapper.map(targetPattern);
+
+                responseObserver.onNext(ModelServerPatterns.GetPatternResponse.newBuilder().setPattern(pattern).build());
+                responseObserver.onCompleted();
+            } else {
+                responseObserver.onNext(ModelServerPatterns.GetPatternResponse.getDefaultInstance());
+                responseObserver.onCompleted();
+            }
         }
 
         @Override
