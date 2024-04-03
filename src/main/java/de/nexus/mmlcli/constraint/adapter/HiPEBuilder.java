@@ -44,6 +44,7 @@ public class HiPEBuilder {
 
         System.out.println("[HiPEBuilder] Generating code...");
         HiPEGeneratorConfig config = new HiPEGeneratorConfig();
+        config.setEnforcedBidirectionalRefs(true);
         HiPEGenerator.generateCode(this.constraintDocument.getPackageName() + ".", locationRegistry.getWorkspaceDirectoryPath().toString(), network, config);
 
         double toc = System.currentTimeMillis();
