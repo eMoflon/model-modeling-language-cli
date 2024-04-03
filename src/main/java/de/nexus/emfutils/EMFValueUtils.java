@@ -1,11 +1,16 @@
 package de.nexus.emfutils;
 
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EcorePackage;
 
 public class EMFValueUtils {
     @SuppressWarnings("unchecked")
     public static <T, R> R mapVals(EClassifier type, T value) {
+        if (type instanceof EEnum eEnum) {
+            return (R) eEnum.getEEnumLiteral(value.toString()).getInstance();
+        }
+
         return switch (type.getClassifierID()) {
             case EcorePackage.ESTRING -> (R) value;
             case EcorePackage.EFLOAT -> (R) Float.valueOf(value.toString());
