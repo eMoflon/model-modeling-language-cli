@@ -10,7 +10,7 @@
 
     <properties>
         <grpc.version>1.61.0</grpc.version>
-        <hipe.version>1.0.0.202401191543</hipe.version>
+        <hipe.version>1.0.0.202404031734</hipe.version>
         <smartemf.version>1.0.0.202401191551</smartemf.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
