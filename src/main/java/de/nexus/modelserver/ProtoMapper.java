@@ -114,7 +114,7 @@ public class ProtoMapper {
             return ModelServerConstraints.FixStatement.newBuilder()
                     .setInfoStatement(
                             ModelServerConstraints.FixInfoStatement.newBuilder()
-                                    .setMsg(infoStatement.getMsg())
+                                    .setMsg(infoStatement.getMsg(match))
                                     .build()
                     )
                     .build();

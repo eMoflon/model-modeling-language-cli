@@ -25,6 +25,10 @@ public class ConstraintGenerator extends TemporaryFileObject {
             import de.nexus.modelserver.DisablingFixContainer;
             import de.nexus.expr.*;
                         
+            import org.emoflon.smartemf.runtime.SmartObject;
+            import de.nexus.emfutils.EMFValueUtils;
+            import de.nexus.expr.ValueWrapper;
+                        
             import java.util.List;
                         
             public class %s extends AbstractConstraint {

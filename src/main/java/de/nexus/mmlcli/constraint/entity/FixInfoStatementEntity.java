@@ -1,18 +1,19 @@
 package de.nexus.mmlcli.constraint.entity;
 
 public class FixInfoStatementEntity implements IFixStatementEntity {
-    private final String msg;
+    private final TemplateStringEntity msg;
 
-    public FixInfoStatementEntity(String msg) {
+    public FixInfoStatementEntity(TemplateStringEntity msg) {
         this.msg = msg;
     }
 
-    public String getMsg() {
+    public TemplateStringEntity getMsg() {
         return msg;
     }
 
     @Override
     public String toJavaCode() {
-        return String.format("new FixInfoStatement(\"%s\")", this.msg);
+        String messageCode = this.msg.toJavaCode();
+        return String.format("new FixInfoStatement((match) -> %s)", messageCode);
     }
 }
