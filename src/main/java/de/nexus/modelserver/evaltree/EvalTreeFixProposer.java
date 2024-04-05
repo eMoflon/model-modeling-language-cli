@@ -20,11 +20,11 @@ public class EvalTreeFixProposer {
     }
 
     public Optional<ModelServerConstraints.FixProposalContainer> getProposals(EvalTreeLeaf leaf, boolean targetValue) {
-        if (leaf.getValue() instanceof EvalTreeValueBoolean booleanValue) {
-            if (booleanValue.getValue() == targetValue) {
+        if (leaf.getValue().isBoolean()) {
+            if (leaf.getValue().getAsBoolean() == targetValue) {
                 return Optional.empty();
             }
-            ModelServerConstraints.FixProposalType proposalType = booleanValue.getValue() ? ModelServerConstraints.FixProposalType.DISABLE_PATTERN : ModelServerConstraints.FixProposalType.ENABLE_PATTERN;
+            ModelServerConstraints.FixProposalType proposalType = leaf.getValue().getAsBoolean() ? ModelServerConstraints.FixProposalType.DISABLE_PATTERN : ModelServerConstraints.FixProposalType.ENABLE_PATTERN;
             if (leaf.getExpression() instanceof PatternPrimaryExpressionEntity patternExpr) {
                 List<ModelServerConstraints.FixMatch> matches = getFixMatches(proposalType, patternExpr.getPatternName());
                 ModelServerConstraints.FixProposal proposal = ModelServerConstraints.FixProposal.newBuilder().setType(proposalType).setPatternName(patternExpr.getPatternName()).addAllMatches(matches).build();
@@ -39,8 +39,8 @@ public class EvalTreeFixProposer {
     }
 
     public Optional<ModelServerConstraints.FixProposalContainer> getProposals(EvalTreeBiNode biNode, boolean targetValue) {
-        if (biNode.getValue() instanceof EvalTreeValueBoolean booleanValue) {
-            if (booleanValue.getValue() == targetValue) {
+        if (biNode.getValue().isBoolean()) {
+            if (biNode.getValue().getAsBoolean() == targetValue) {
                 return Optional.empty();
             }
             Optional<ModelServerConstraints.FixProposalContainer> leftContainer = getProposals(biNode.getLeftChild(), targetValue);
@@ -136,8 +136,8 @@ public class EvalTreeFixProposer {
     }
 
     public Optional<ModelServerConstraints.FixProposalContainer> getProposals(EvalTreeUniNode uniNode, boolean targetValue) {
-        if (uniNode.getValue() instanceof EvalTreeValueBoolean booleanValue) {
-            if (booleanValue.getValue() == targetValue) {
+        if (uniNode.getValue().isBoolean()) {
+            if (uniNode.getValue().getAsBoolean() == targetValue) {
                 return Optional.empty();
             }
             if (uniNode.getExpression().getOperator().equals(UnaryOperator.NEGATION)) {

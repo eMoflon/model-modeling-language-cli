@@ -3,317 +3,99 @@ package de.nexus.expr;
 import hipe.pattern.ComparatorType;
 
 public enum BinaryOperator {
-    EQUALS(ComparatorType.EQUAL, true) {
+    EQUALS(ComparatorType.EQUAL) {
         @Override
-        public boolean applyBool(int a, int b) {
-            return a == b;
-        }
-
-        @Override
-        public boolean applyBool(double a, double b) {
-            return a == b;
-        }
-
-        @Override
-        public boolean applyBool(int a, double b) {
-            return a == b;
-        }
-
-        @Override
-        public boolean applyBool(double a, int b) {
-            return a == b;
-        }
-
-        @Override
-        public boolean applyBool(boolean a, boolean b) {
-            return a == b;
-        }
-
-        @Override
-        public boolean applyBool(String a, String b) {
+        public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) {
             return a.equals(b);
         }
     },
-    NOT_EQUALS(ComparatorType.UNEQUAL, true) {
+    NOT_EQUALS(ComparatorType.UNEQUAL) {
         @Override
-        public boolean applyBool(int a, int b) {
-            return a != b;
-        }
-
-        @Override
-        public boolean applyBool(double a, double b) {
-            return a != b;
-        }
-
-        @Override
-        public boolean applyBool(int a, double b) {
-            return a != b;
-        }
-
-        @Override
-        public boolean applyBool(double a, int b) {
-            return a != b;
-        }
-
-        @Override
-        public boolean applyBool(boolean a, boolean b) {
-            return a != b;
-        }
-
-        @Override
-        public boolean applyBool(String a, String b) {
-            return !a.equals(b);
+        public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) {
+            return a.notEquals(b);
         }
     },
-    GREATER_THAN(ComparatorType.GREATER, false) {
+    GREATER_THAN(ComparatorType.GREATER) {
         @Override
-        public boolean applyBool(int a, int b) {
-            return a > b;
-        }
-
-        @Override
-        public boolean applyBool(double a, double b) {
-            return a > b;
-        }
-
-        @Override
-        public boolean applyBool(int a, double b) {
-            return a > b;
-        }
-
-        @Override
-        public boolean applyBool(double a, int b) {
-            return a > b;
+        public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) {
+            return a.greater(b);
         }
     },
-    LESS_THAN(ComparatorType.LESS, false) {
+    LESS_THAN(ComparatorType.LESS) {
         @Override
-        public boolean applyBool(int a, int b) {
-            return a < b;
-        }
-
-        @Override
-        public boolean applyBool(double a, double b) {
-            return a < b;
-        }
-
-        @Override
-        public boolean applyBool(int a, double b) {
-            return a < b;
-        }
-
-        @Override
-        public boolean applyBool(double a, int b) {
-            return a < b;
+        public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) {
+            return a.less(b);
         }
     },
-    GREATER_EQUAL_THAN(ComparatorType.GREATER_OR_EQUAL, false) {
+    GREATER_EQUAL_THAN(ComparatorType.GREATER_OR_EQUAL) {
         @Override
-        public boolean applyBool(int a, int b) {
-            return a >= b;
-        }
-
-        @Override
-        public boolean applyBool(double a, double b) {
-            return a >= b;
-        }
-
-        @Override
-        public boolean applyBool(int a, double b) {
-            return a >= b;
-        }
-
-        @Override
-        public boolean applyBool(double a, int b) {
-            return a >= b;
+        public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) {
+            return a.greaterEq(b);
         }
     },
-    LESS_EQUAL_THAN(ComparatorType.LESS_OR_EQUAL, false) {
+    LESS_EQUAL_THAN(ComparatorType.LESS_OR_EQUAL) {
         @Override
-        public boolean applyBool(int a, int b) {
-            return a <= b;
-        }
-
-        @Override
-        public boolean applyBool(double a, double b) {
-            return a <= b;
-        }
-
-        @Override
-        public boolean applyBool(int a, double b) {
-            return a <= b;
-        }
-
-        @Override
-        public boolean applyBool(double a, int b) {
-            return a <= b;
+        public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) {
+            return a.lessEq(b);
         }
     },
-    LOGICAL_AND(true) {
+    LOGICAL_AND() {
         @Override
-        public boolean applyBool(boolean a, boolean b) {
-            return a && b;
+        public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) {
+            return a.and(b);
         }
     },
-    LOGICAL_OR(true) {
+    LOGICAL_OR() {
         @Override
-        public boolean applyBool(boolean a, boolean b) {
-            return a || b;
+        public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) {
+            return a.or(b);
         }
     },
-    ADDITION(false) {
+    ADDITION() {
         @Override
-        public String applyString(String a, String b) {
-            return a + b;
-        }
-
-        @Override
-        public double applyDouble(int a, int b) {
-            return a + b;
-        }
-
-        @Override
-        public double applyDouble(double a, double b) {
-            return a + b;
-        }
-
-        @Override
-        public double applyDouble(int a, double b) {
-            return a + b;
-        }
-
-        @Override
-        public double applyDouble(double a, int b) {
-            return a + b;
+        public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) throws UnsupportedOperationException {
+            return a.add(b);
         }
     },
-    SUBTRACTION(false) {
+    SUBTRACTION() {
         @Override
-        public double applyDouble(int a, int b) {
-            return a - b;
-        }
-
-        @Override
-        public double applyDouble(double a, double b) {
-            return a - b;
-        }
-
-        @Override
-        public double applyDouble(int a, double b) {
-            return a - b;
-        }
-
-        @Override
-        public double applyDouble(double a, int b) {
-            return a - b;
+        public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) {
+            return a.sub(b);
         }
     },
-    MULTIPLICATION(false) {
+    MULTIPLICATION() {
         @Override
-        public double applyDouble(int a, int b) {
-            return a * b;
-        }
-
-        @Override
-        public double applyDouble(double a, double b) {
-            return a * b;
-        }
-
-        @Override
-        public double applyDouble(int a, double b) {
-            return a * b;
-        }
-
-        @Override
-        public double applyDouble(double a, int b) {
-            return a * b;
-        }
-
-        @Override
-        public String applyString(int a, String b) {
-            return b.repeat(a);
-        }
-
-        @Override
-        public String applyString(String a, int b) {
-            return a.repeat(b);
+        public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) {
+            return a.mult(b);
         }
     },
-    DIVISION(false) {
+    DIVISION() {
         @Override
-        public double applyDouble(int a, int b) {
-            return (double) a / b;
-        }
-
-        @Override
-        public double applyDouble(double a, double b) {
-            return a / b;
-        }
-
-        @Override
-        public double applyDouble(int a, double b) {
-            return a / b;
-        }
-
-        @Override
-        public double applyDouble(double a, int b) {
-            return a / b;
+        public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) {
+            return a.div(b);
         }
     },
-    EXPONENTIATION(false) {
+    EXPONENTIATION() {
         @Override
-        public double applyDouble(int a, int b) {
-            return Math.pow(a, b);
-        }
-
-        @Override
-        public double applyDouble(double a, double b) {
-            return Math.pow(a, b);
-        }
-
-        @Override
-        public double applyDouble(int a, double b) {
-            return Math.pow(a, b);
-        }
-
-        @Override
-        public double applyDouble(double a, int b) {
-            return Math.pow(a, b);
+        public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) {
+            return a.pow(b);
         }
     },
-    MODULO(false) {
+    MODULO() {
         @Override
-        public double applyDouble(int a, int b) {
-            return a % b;
-        }
-
-        @Override
-        public double applyDouble(double a, double b) {
-            return a % b;
-        }
-
-        @Override
-        public double applyDouble(int a, double b) {
-            return a % b;
-        }
-
-        @Override
-        public double applyDouble(double a, int b) {
-            return a % b;
+        public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) {
+            return a.mod(b);
         }
     },
     ;
 
     private final ComparatorType hipeType;
-    private final boolean isBooleanOperator;
 
-    BinaryOperator(ComparatorType hipeType, boolean isBooleanOperator) {
+    BinaryOperator(ComparatorType hipeType) {
         this.hipeType = hipeType;
-        this.isBooleanOperator = isBooleanOperator;
     }
 
-    BinaryOperator(boolean isBooleanOperator) {
-        this.isBooleanOperator = isBooleanOperator;
+    BinaryOperator() {
         this.hipeType = null;
     }
 
@@ -321,91 +103,11 @@ public enum BinaryOperator {
         return this.hipeType;
     }
 
-    public boolean isBooleanOperator() {
-        return isBooleanOperator;
-    }
-
     public boolean isHiPEComparator() {
         return this.hipeType != null;
     }
 
-    public boolean applyBool(int a, int b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public boolean applyBool(double a, double b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public boolean applyBool(int a, double b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public boolean applyBool(double a, int b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public boolean applyBool(boolean a, boolean b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public boolean applyBool(String a, String b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public String applyString(int a, int b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public String applyString(double a, double b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public String applyString(int a, double b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public String applyString(double a, int b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public String applyString(boolean a, boolean b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public String applyString(int a, String b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public String applyString(String a, int b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public String applyString(String a, String b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public double applyDouble(int a, int b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public double applyDouble(double a, double b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public double applyDouble(int a, double b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public double applyDouble(double a, int b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public double applyDouble(boolean a, boolean b) {
-        throw new UnsupportedOperationException("");
-    }
-
-    public double applyDouble(String a, String b) {
-        throw new UnsupportedOperationException("");
+    public ValueWrapper<?> apply(ValueWrapper<?> a, ValueWrapper<?> b) {
+        throw new UnsupportedOperationException(String.format("BinaryOperation not implemented for Operator: %s", this.name()));
     }
 }
