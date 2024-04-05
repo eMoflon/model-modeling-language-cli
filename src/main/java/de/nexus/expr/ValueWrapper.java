@@ -164,6 +164,10 @@ public class ValueWrapper<T> {
                 default -> throw new UnsupportedOperationException("Unable to add with other of type " + other.type);
             };
             case STRING -> ValueWrapper.create(this.getAsString() + other.getAsString());
+            case BOOLEAN -> switch (other.type) {
+                case STRING -> ValueWrapper.create(this.getAsString() + other.getAsString());
+                default -> throw new UnsupportedOperationException("Unable to add with other of type " + other.type);
+            };
             default -> throw new UnsupportedOperationException("Unable to add with this of type " + this.type);
         };
     }
