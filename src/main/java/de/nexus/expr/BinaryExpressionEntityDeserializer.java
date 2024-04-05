@@ -18,6 +18,12 @@ public class BinaryExpressionEntityDeserializer implements JsonDeserializer<Bina
             case ">=" -> BinaryOperator.GREATER_EQUAL_THAN;
             case "&&" -> BinaryOperator.LOGICAL_AND;
             case "||" -> BinaryOperator.LOGICAL_OR;
+            case "+" -> BinaryOperator.ADDITION;
+            case "-" -> BinaryOperator.SUBTRACTION;
+            case "*" -> BinaryOperator.MULTIPLICATION;
+            case "/" -> BinaryOperator.DIVISION;
+            case "%" -> BinaryOperator.MODULO;
+            case "^" -> BinaryOperator.EXPONENTIATION;
             default -> throw new RuntimeException("Unknown binary operator: " + operator);
         };
 

@@ -32,6 +32,19 @@ public class PrimitivePrimaryExpressionEntity<T> implements PrimaryExpressionEnt
     }
 
     @Override
+    public String toInterpretableJavaCode() {
+        return switch (this.type) {
+            case STRING -> String.format("ValueWrapper.create(%s)", this.getAsString());
+            case BOOLEAN -> String.format("ValueWrapper.create((boolean) %b)", this.value);
+            case INTEGER -> String.format("ValueWrapper.create((int) %d)", (int) this.value);
+            case DOUBLE -> String.format("ValueWrapper.create((double) %f)", (double) this.value);
+            case NUMBER -> String.format("ValueWrapper.create((double) %f)", Double.parseDouble(this.value.toString()));
+            default ->
+                    throw new IllegalArgumentException("Unable to create ValueWrapper from PrimitivePrimaryExpression for " + this.type);
+        };
+    }
+
+    @Override
     public String toString() {
         return String.format("{(PrimitiveValue) %s}", this.value);
     }

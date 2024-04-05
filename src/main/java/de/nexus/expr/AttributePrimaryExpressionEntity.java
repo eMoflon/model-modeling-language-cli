@@ -34,6 +34,11 @@ public class AttributePrimaryExpressionEntity implements PrimaryExpressionEntity
     }
 
     @Override
+    public String toInterpretableJavaCode() {
+        return String.format("EMFValueUtils.requestValue((SmartObject)match.get(\"%s\"),\"%s\")", this.nodeId, this.elementName);
+    }
+
+    @Override
     public String toString() {
         return String.format("{(AttributeValue) %s -> %s}", this.className, this.elementName);
     }

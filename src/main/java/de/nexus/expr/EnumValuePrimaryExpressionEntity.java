@@ -28,8 +28,13 @@ public class EnumValuePrimaryExpressionEntity implements PrimaryExpressionEntity
     }
 
     @Override
+    public String toInterpretableJavaCode() {
+        throw new UnsupportedOperationException("EnumValuePrimaryExpressions cannot be translated to interpretable Java code!");
+    }
+
+    @Override
     public String toString() {
-        return String.format("{(EnumValue | %s) %s}", this.enumName,this.value);
+        return String.format("{(EnumValue | %s) %s}", this.enumName, this.value);
     }
 
     @Override

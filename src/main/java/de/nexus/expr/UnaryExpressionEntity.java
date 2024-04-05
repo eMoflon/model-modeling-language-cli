@@ -23,6 +23,13 @@ public class UnaryExpressionEntity implements ExpressionEntity {
     }
 
     @Override
+    public String toInterpretableJavaCode() {
+        return switch (this.operator) {
+            case NEGATION -> String.format("%s.neg()", this.expr.toInterpretableJavaCode());
+        };
+    }
+
+    @Override
     public String toString() {
         return String.format("{[%s] %s}", this.operator.name(), this.expr.toString());
     }

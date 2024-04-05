@@ -28,6 +28,11 @@ public class PatternPrimaryExpressionEntity implements PrimaryExpressionEntity {
     }
 
     @Override
+    public String toInterpretableJavaCode() {
+        throw new UnsupportedOperationException("PatternPrimaryExpressions cannot be translated to interpretable Java code!");
+    }
+
+    @Override
     public String toSimpleString() {
         return this.patternName;
     }
