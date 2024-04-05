@@ -34,8 +34,8 @@ public class EvalTree {
     }
 
     public boolean getState() {
-        if (this.root.getValue() instanceof EvalTreeValueBoolean boolValueNode) {
-            return boolValueNode.getValue();
+        if (this.root.getValue().isBoolean()) {
+            return this.root.getValue().getAsBoolean();
         }
         throw new IllegalStateException("EvalTree root does not yield boolean value!");
     }

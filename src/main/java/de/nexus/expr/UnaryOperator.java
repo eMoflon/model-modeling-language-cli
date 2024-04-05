@@ -3,12 +3,12 @@ package de.nexus.expr;
 public enum UnaryOperator {
     NEGATION {
         @Override
-        public boolean applyBool(boolean a) {
-            return !a;
+        public ValueWrapper<?> apply(ValueWrapper<?> a) {
+            return a.neg();
         }
     };
 
-    public boolean applyBool(boolean a) {
-        throw new UnsupportedOperationException("");
+    public ValueWrapper<?> apply(ValueWrapper<?> a) {
+        throw new UnsupportedOperationException(String.format("UnaryOperation not implemented for Operator: %s", this.name()));
     }
 }
