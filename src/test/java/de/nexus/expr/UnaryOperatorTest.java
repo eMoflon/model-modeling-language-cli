@@ -8,8 +8,8 @@ class UnaryOperatorTest {
     @Test
     void applyBool() {
         assertAll(
-                () -> assertTrue(UnaryOperator.NEGATION.applyBool(false)),
-                () -> assertFalse(UnaryOperator.NEGATION.applyBool(true))
+                () -> assertTrue(UnaryOperator.NEGATION.apply(ValueWrapper.create(false)).getAsBoolean()),
+                () -> assertFalse(UnaryOperator.NEGATION.apply(ValueWrapper.create(true)).getAsBoolean())
         );
     }
 }

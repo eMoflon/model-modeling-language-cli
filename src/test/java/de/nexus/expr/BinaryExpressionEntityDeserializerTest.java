@@ -31,7 +31,13 @@ class BinaryExpressionEntityDeserializerTest {
                 Arguments.of(">", BinaryOperator.GREATER_THAN),
                 Arguments.of(">=", BinaryOperator.GREATER_EQUAL_THAN),
                 Arguments.of("&&", BinaryOperator.LOGICAL_AND),
-                Arguments.of("||", BinaryOperator.LOGICAL_OR)
+                Arguments.of("||", BinaryOperator.LOGICAL_OR),
+                Arguments.of("+", BinaryOperator.ADDITION),
+                Arguments.of("-", BinaryOperator.SUBTRACTION),
+                Arguments.of("*", BinaryOperator.MULTIPLICATION),
+                Arguments.of("/", BinaryOperator.DIVISION),
+                Arguments.of("%", BinaryOperator.MODULO),
+                Arguments.of("^", BinaryOperator.EXPONENTIATION)
         );
     }
 
