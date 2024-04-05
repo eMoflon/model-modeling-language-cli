@@ -5,6 +5,8 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EcorePackage;
 
+import java.util.Objects;
+
 public class ValueWrapper<T> {
     private final ValueWrapperType type;
     private final T value;
@@ -56,6 +58,30 @@ public class ValueWrapper<T> {
         } else {
             throw new UnsupportedOperationException("Unable to convert " + this.type + " to enum enumerator");
         }
+    }
+
+    public boolean isString() {
+        return this.type == ValueWrapperType.STRING;
+    }
+
+    public boolean isInteger() {
+        return this.type == ValueWrapperType.INTEGER;
+    }
+
+    public boolean isDouble() {
+        return this.type == ValueWrapperType.DOUBLE;
+    }
+
+    public boolean isFloat() {
+        return this.type == ValueWrapperType.FLOAT;
+    }
+
+    public boolean isBoolean() {
+        return this.type == ValueWrapperType.BOOLEAN;
+    }
+
+    public boolean isEEnumEnumerator() {
+        return this.type == ValueWrapperType.EENUM_ENUMERATOR;
     }
 
 
@@ -315,5 +341,26 @@ public class ValueWrapper<T> {
 
     public static ValueWrapper<Enumerator> create(Enumerator value) {
         return new ValueWrapper<>(ValueWrapperType.EENUM_ENUMERATOR, value);
+    }
+
+    @Override
+    public String toString() {
+        return "ValueWrapper{" +
+                "type=" + type +
+                ", value=" + value +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ValueWrapper<?> that = (ValueWrapper<?>) o;
+        return type == that.type && Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, value);
     }
 }
