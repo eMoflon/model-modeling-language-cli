@@ -388,7 +388,7 @@
     </dependency>
   </dependencies>
   <properties>
-    <hipe.version>1.0.0.202404031734</hipe.version>
+    <hipe.version>1.0.0.202404061310</hipe.version>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
