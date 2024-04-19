@@ -29,7 +29,7 @@ public class EnumValuePrimaryExpressionEntity implements PrimaryExpressionEntity
 
     @Override
     public String toInterpretableJavaCode() {
-        throw new UnsupportedOperationException("EnumValuePrimaryExpressions cannot be translated to interpretable Java code!");
+        return String.format("ValueWrapper.create(\"%s\")", this.value);
     }
 
     @Override

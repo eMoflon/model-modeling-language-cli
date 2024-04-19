@@ -4,13 +4,13 @@ public class FixSetStatement implements FixStatement {
     private final String patternNodeName;
     private final String attributeName;
     private final boolean customizationRequired;
-    private final String attributeValue;
+    private final MatchBasedStringInterpreter attributeValueInterpreter;
 
-    public FixSetStatement(String patternNodeName, String attributeName, boolean customizationRequired, String attributeValue) {
+    public FixSetStatement(String patternNodeName, String attributeName, boolean customizationRequired, MatchBasedStringInterpreter attributeValue) {
         this.patternNodeName = patternNodeName;
         this.attributeName = attributeName;
         this.customizationRequired = customizationRequired;
-        this.attributeValue = attributeValue;
+        this.attributeValueInterpreter = attributeValue;
     }
 
     public String getPatternNodeName() {
@@ -25,7 +25,7 @@ public class FixSetStatement implements FixStatement {
         return customizationRequired;
     }
 
-    public String getAttributeValue() {
-        return attributeValue;
+    public MatchBasedStringInterpreter getAttributeValueInterpreter() {
+        return attributeValueInterpreter;
     }
 }

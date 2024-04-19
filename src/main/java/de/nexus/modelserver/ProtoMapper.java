@@ -229,7 +229,7 @@ public class ProtoMapper {
         return ModelServerEditStatements.EditSetAttributeRequest.newBuilder()
                 .setNode(protoNode)
                 .setAttributeName(fixStatement.getAttributeName())
-                .setAttributeValue(fixStatement.getAttributeValue())
+                .setAttributeValue(fixStatement.getAttributeValueInterpreter().interpret(match))
                 .setUnsetAttributeValue(fixStatement.isCustomizationRequired())
                 .build();
     }
