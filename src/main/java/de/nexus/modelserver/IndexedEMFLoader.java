@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.Set;
 
 public class IndexedEMFLoader extends SmartEMFLoader {
     private final HashMap<Integer, SmartObject> idIndex = new HashMap<>();
@@ -80,6 +81,10 @@ public class IndexedEMFLoader extends SmartEMFLoader {
 
     public SmartObject getNode(int id) {
         return this.idIndex.get(id);
+    }
+
+    public Set<Integer> getAllNodeIds() {
+        return this.idIndex.keySet();
     }
 
     public EPackage getEPackage() {
