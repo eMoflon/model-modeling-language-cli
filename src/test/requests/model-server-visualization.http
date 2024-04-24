@@ -1,0 +1,33 @@
+@targetService = {{host}}/{{visualService}}
+
+### Request total visualization
+GRPC {{targetService}}/GetVisualization
+
+{
+  "options": {
+    "filterNodes": [],
+    "highlightNodes": []
+  }
+}
+
+
+### Request filtered visualization
+GRPC {{targetService}}/GetVisualization
+
+{
+  "options": {
+    "filterNodes": [1,2,3],
+    "highlightNodes": []
+  }
+}
+
+
+### Request filtered visualization with highlighting
+GRPC {{targetService}}/GetVisualization
+
+{
+  "options": {
+    "filterNodes": [1,2,3],
+    "highlightNodes": [1,2]
+  }
+}
