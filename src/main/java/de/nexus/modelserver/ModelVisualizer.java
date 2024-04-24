@@ -42,6 +42,7 @@ public class ModelVisualizer {
 
             EList<EAttribute> eAttributes = node.eClass().getEAllAttributes();
             List<ModelServerVisualization.VisualizationNodeAttribute> attributes = eAttributes.stream()
+                    .filter(eAttribute -> !this.emfLoader.isFeatureNodeId(eAttribute))
                     .map(eAttribute ->
                             ModelServerVisualization.VisualizationNodeAttribute.newBuilder()
                                     .setAttributeName(eAttribute.getName())
