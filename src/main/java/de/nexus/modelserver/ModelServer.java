@@ -16,6 +16,7 @@ public class ModelServer {
     private final IModelServerConfiguration configuration;
     private final PatternRegistry patternRegistry;
     private final ConstraintRegistry constraintRegistry;
+    private final ModelVisualizer visualizer;
 
     private final ModelEditProcessor editProcessor;
 
@@ -36,6 +37,9 @@ public class ModelServer {
 
         System.out.println("[ModelServer] Creating ModelEditProcessor...");
         this.editProcessor = new ModelEditProcessor(this.emfLoader);
+
+        System.out.println("[ModelServer] Creating ModelVisualizer...");
+        this.visualizer = new ModelVisualizer(this.emfLoader);
 
         System.out.println("[ModelServer] Creating ContentAdapter...");
         new HiPEContentAdapter(emfLoader.getResources(), this.engine);
@@ -101,6 +105,10 @@ public class ModelServer {
 
     public IModelServerConfiguration getConfiguration() {
         return configuration;
+    }
+
+    public ModelVisualizer getVisualizer() {
+        return visualizer;
     }
 
     public static void main(String[] args) {
