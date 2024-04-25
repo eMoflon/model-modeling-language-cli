@@ -41,7 +41,8 @@ public class IndexedEMFLoader extends SmartEMFLoader {
             if (idStrucuralFeature == null) {
                 Optional<EClass> mmlExtenderClass = eObject.eClass().getEAllSuperTypes().stream().filter(x -> x.getName().equals(EMFExtenderUtils.IDENTIFIER_CLASS_NAME)).findFirst();
                 if (mmlExtenderClass.isEmpty()) {
-                    throw new IllegalStateException("Could not find extender class: " + EMFExtenderUtils.IDENTIFIER_CLASS_NAME);
+                    continue;
+                    //throw new IllegalStateException("Could not find extender class: " + EMFExtenderUtils.IDENTIFIER_CLASS_NAME);
                 } else {
                     idStrucuralFeature = mmlExtenderClass.get().getEStructuralFeature(EMFExtenderUtils.IDENTIFIER_ATTRIBUTE_NAME);
 
