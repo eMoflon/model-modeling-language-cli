@@ -37,7 +37,8 @@ public class ModelServerEngineGenerator extends TemporaryFileObject {
 
     public static ModelServerEngineGenerator build(String projectName, String hipeNetworkPath) {
         String normalizedNetworkPath = hipeNetworkPath.replace("\\", "\\\\");
-        String fullSource = String.format(CODE_TEMPLATE, projectName, projectName, projectName, normalizedNetworkPath, projectName);
+        String capitalizedProjectName = projectName.substring(0, 1).toUpperCase() + projectName.substring(1);
+        String fullSource = String.format(CODE_TEMPLATE, projectName, projectName, capitalizedProjectName, normalizedNetworkPath, capitalizedProjectName);
         return new ModelServerEngineGenerator(fullSource);
     }
 
