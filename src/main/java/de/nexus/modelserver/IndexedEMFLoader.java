@@ -2,12 +2,14 @@ package de.nexus.modelserver;
 
 import de.nexus.emfutils.EMFExtenderUtils;
 import de.nexus.emfutils.SmartEMFLoader;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.emoflon.smartemf.persistence.SmartEMFResource;
 import org.emoflon.smartemf.runtime.SmartObject;
 
 import java.io.File;
@@ -26,12 +28,15 @@ public class IndexedEMFLoader extends SmartEMFLoader {
         super(workspace);
     }
 
-    private void initializeIndices(Resource resource) throws IllegalStateException {
+    private void initializeIndices(SmartEMFResource resource) throws IllegalStateException {
         this.idIndex.clear();
         this.idStrucuralFeature = null;
         this.currentId = -1;
 
-        for (EObject eObject : resource.getContents()) {
+        TreeIterator<EObject> nodeIterator = resource.getAllContents();
+
+        while (nodeIterator.hasNext()) {
+            EObject eObject = nodeIterator.next();
             if (idStrucuralFeature == null) {
                 Optional<EClass> mmlExtenderClass = eObject.eClass().getEAllSuperTypes().stream().filter(x -> x.getName().equals(EMFExtenderUtils.IDENTIFIER_CLASS_NAME)).findFirst();
                 if (mmlExtenderClass.isEmpty()) {
@@ -109,14 +114,14 @@ public class IndexedEMFLoader extends SmartEMFLoader {
     @Override
     public Resource loadResource(File file) {
         Resource resource = super.loadResource(file);
-        initializeIndices(resource);
+        initializeIndices((SmartEMFResource) resource);
         return resource;
     }
 
     @Override
     public Resource loadResource(Path file) {
         Resource resource = super.loadResource(file);
-        initializeIndices(resource);
+        initializeIndices((SmartEMFResource) resource);
         return resource;
     }
 }
