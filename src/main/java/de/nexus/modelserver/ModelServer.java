@@ -147,6 +147,24 @@ public class ModelServer {
             throw new RuntimeException(e);
         }
 
+        if (args != null && args.length == 4) {
+            try {
+                Path customModelPath = Path.of(args[3]);
+                if (!customModelPath.toFile().exists()) {
+                    System.err.printf("[ModelServer] Could not resolve custom model: %s!%n", args[0]);
+                    throw new IllegalArgumentException("File not found");
+                } else {
+                    configuration = new MutableModelServerConfiguration(configuration);
+                    ((MutableModelServerConfiguration) configuration).setModelPath(customModelPath.toAbsolutePath().toString());
+                    System.out.printf("[ModelServer] Override ModelPath: %s%n", configuration.getModelPath());
+                }
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                System.exit(9);
+                throw new RuntimeException(e);
+            }
+        }
+
         IHiPEEngine engine;
 
         try {
