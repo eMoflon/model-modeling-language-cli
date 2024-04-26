@@ -147,16 +147,34 @@ public class ModelServer {
             throw new RuntimeException(e);
         }
 
-        if (args != null && args.length == 4) {
+        if (args != null && args.length == 3) {
             try {
-                Path customModelPath = Path.of(args[3]);
+                configuration = new MutableModelServerConfiguration(configuration);
+                Path customWorkspacePath = Path.of(args[0]);
+                if (!customWorkspacePath.toFile().exists()) {
+                    System.err.printf("[ModelServer] Could not resolve custom workspace: %s!%n", args[0]);
+                    throw new IllegalArgumentException("File not found");
+                } else {
+                    ((MutableModelServerConfiguration) configuration).setWorkspacePath(customWorkspacePath.toAbsolutePath().toString());
+                    System.out.printf("[ModelServer] Override WorkspacePath: %s%n", configuration.getWorkspacePath());
+                }
+
+                Path customModelPath = Path.of(args[1]);
                 if (!customModelPath.toFile().exists()) {
                     System.err.printf("[ModelServer] Could not resolve custom model: %s!%n", args[0]);
                     throw new IllegalArgumentException("File not found");
                 } else {
-                    configuration = new MutableModelServerConfiguration(configuration);
                     ((MutableModelServerConfiguration) configuration).setModelPath(customModelPath.toAbsolutePath().toString());
                     System.out.printf("[ModelServer] Override ModelPath: %s%n", configuration.getModelPath());
+                }
+
+                Path customHipeNetworkPath = Path.of(args[2]);
+                if (!customHipeNetworkPath.toFile().exists()) {
+                    System.err.printf("[ModelServer] Could not resolve custom hipe network: %s!%n", args[0]);
+                    throw new IllegalArgumentException("File not found");
+                } else {
+                    ((MutableModelServerConfiguration) configuration).setNetworkPath(customHipeNetworkPath.toAbsolutePath().toString());
+                    System.out.printf("[ModelServer] Override HipeNetwork: %s%n", configuration.getNetworkPath());
                 }
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
