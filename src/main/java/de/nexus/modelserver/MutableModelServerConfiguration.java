@@ -5,7 +5,8 @@ import java.util.List;
 public class MutableModelServerConfiguration implements IModelServerConfiguration {
     private final String projectName;
     private String modelPath;
-    private final String workspacePath;
+    private String workspacePath;
+    private String networkPath;
     private final List<Pattern> pattern;
     private final List<Class<? extends AbstractConstraint>> constraintClasses;
 
@@ -13,6 +14,7 @@ public class MutableModelServerConfiguration implements IModelServerConfiguratio
         this.projectName = configuration.getProjectName();
         this.modelPath = configuration.getModelPath();
         this.workspacePath = configuration.getWorkspacePath();
+        this.networkPath = configuration.getNetworkPath();
         this.pattern = configuration.getPattern();
         this.constraintClasses = configuration.getConstraintClasses();
     }
@@ -33,6 +35,11 @@ public class MutableModelServerConfiguration implements IModelServerConfiguratio
     }
 
     @Override
+    public String getNetworkPath() {
+        return networkPath;
+    }
+
+    @Override
     public List<Pattern> getPattern() {
         return this.pattern;
     }
@@ -44,5 +51,13 @@ public class MutableModelServerConfiguration implements IModelServerConfiguratio
 
     public void setModelPath(String modelPath) {
         this.modelPath = modelPath;
+    }
+
+    public void setWorkspacePath(String workspacePath) {
+        this.workspacePath = workspacePath;
+    }
+
+    public void setNetworkPath(String networkPath) {
+        this.networkPath = networkPath;
     }
 }
