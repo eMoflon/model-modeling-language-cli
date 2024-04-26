@@ -29,6 +29,10 @@ public class ModelServerConfigurationGenerator extends TemporaryFileObject {
                     return "%s";
                 }
                 
+                public String getNetworkPath(){
+                    return "%s";
+                }
+                
                 public List<Pattern> getPattern(){
                     return PatternInitializer.PATTERNS;
                 }
@@ -43,12 +47,13 @@ public class ModelServerConfigurationGenerator extends TemporaryFileObject {
         super("ModelServerConfiguration", sourceCode);
     }
 
-    public static ModelServerConfigurationGenerator build(String projectName, String modelPath, String workspacePath, ConstraintDocumentEntity cDoc) {
+    public static ModelServerConfigurationGenerator build(String projectName, String modelPath, String workspacePath, String networkPath, ConstraintDocumentEntity cDoc) {
         String constraintImport = cDoc.getConstraints().isEmpty() ? "" : "import de.nexus.modelserver.constraints.*;";
         String normalizedModelPath = modelPath.replace("\\", "\\\\");
         String normalizedWorkspacePath = workspacePath.replace("\\", "\\\\");
+        String normalizedNetworkPath = networkPath.replace("\\", "\\\\");
         String constraintClasses = cDoc.getConstraints().stream().map(x -> x.getCapitalizedName() + "Constraint.class").collect(Collectors.joining(", "));
-        String fullSource = String.format(CODE_TEMPLATE, constraintImport, projectName, normalizedModelPath, normalizedWorkspacePath, constraintClasses);
+        String fullSource = String.format(CODE_TEMPLATE, constraintImport, projectName, normalizedModelPath, normalizedWorkspacePath, normalizedNetworkPath, constraintClasses);
         return new ModelServerConfigurationGenerator(fullSource);
     }
 

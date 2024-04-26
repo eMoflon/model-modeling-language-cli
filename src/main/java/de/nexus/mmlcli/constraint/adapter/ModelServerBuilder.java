@@ -134,8 +134,8 @@ public class ModelServerBuilder {
     private ArrayList<JavaFileObject> generateModelServerFiles() {
         String hipeNetworkPath = this.locationRegistry.getSrcGenPath().resolve(this.projectName).resolve("hipe/engine/hipe-network.xmi").toString();
         ArrayList<JavaFileObject> files = new ArrayList<>();
-        files.add(ModelServerConfigurationGenerator.build(this.projectName, this.locationRegistry.getModelPath().toString(), this.locationRegistry.getWorkspaceDirectoryPath().toString(), this.cDoc));
-        files.add(ModelServerEngineGenerator.build(this.projectName, hipeNetworkPath));
+        files.add(ModelServerConfigurationGenerator.build(this.projectName, this.locationRegistry.getModelPath().toString(), this.locationRegistry.getWorkspaceDirectoryPath().toString(), hipeNetworkPath, this.cDoc));
+        files.add(ModelServerEngineGenerator.build(this.projectName));
 
         this.cDoc.getConstraints().forEach(constraint -> files.add(ConstraintGenerator.build(constraint)));
 

@@ -6,6 +6,7 @@ import hipe.engine.message.production.ProductionResult;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -127,7 +128,9 @@ public class ModelServer {
 
         try {
             Class<?> engineClazz = Class.forName("de.nexus.modelserver.ModelServerEngine");
-            engine = (IHiPEEngine) engineClazz.getDeclaredConstructor().newInstance();
+            String networkPath = configuration.getNetworkPath();
+            Method engineBuildMethod = engineClazz.getMethod("build", String.class);
+            engine = (IHiPEEngine) engineBuildMethod.invoke(null, networkPath);
 
             System.out.println("[ModelServer] Got engine!");
             new ModelServer(configuration, engine);
@@ -136,7 +139,7 @@ public class ModelServer {
             e.printStackTrace();
             System.exit(4);
             throw new RuntimeException(e);
-        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             System.exit(5);
             throw new RuntimeException(e);
