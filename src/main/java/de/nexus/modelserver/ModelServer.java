@@ -161,7 +161,7 @@ public class ModelServer {
 
                 Path customModelPath = Path.of(args[1]);
                 if (!customModelPath.toFile().exists()) {
-                    System.err.printf("[ModelServer] Could not resolve custom model: %s!%n", args[0]);
+                    System.err.printf("[ModelServer] Could not resolve custom model: %s!%n", args[1]);
                     throw new IllegalArgumentException("File not found");
                 } else {
                     ((MutableModelServerConfiguration) configuration).setModelPath(customModelPath.toAbsolutePath().toString());
@@ -170,7 +170,7 @@ public class ModelServer {
 
                 Path customHipeNetworkPath = Path.of(args[2]);
                 if (!customHipeNetworkPath.toFile().exists()) {
-                    System.err.printf("[ModelServer] Could not resolve custom hipe network: %s!%n", args[0]);
+                    System.err.printf("[ModelServer] Could not resolve custom hipe network: %s!%n", args[2]);
                     throw new IllegalArgumentException("File not found");
                 } else {
                     ((MutableModelServerConfiguration) configuration).setNetworkPath(customHipeNetworkPath.toAbsolutePath().toString());
