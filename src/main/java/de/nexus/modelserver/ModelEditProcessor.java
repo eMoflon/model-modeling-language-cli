@@ -132,8 +132,8 @@ public class ModelEditProcessor {
                 fromNode.eUnset(reference);
             }
             return ModelServerEditStatements.EditResponse.newBuilder()
-                    .setDeleteNodeResponse(
-                            ModelServerEditStatements.EditDeleteNodeResponse.newBuilder()
+                    .setDeleteEdgeResponse(
+                            ModelServerEditStatements.EditDeleteEdgeResponse.newBuilder()
                                     .setState(ModelServerEditStatements.EditState.SUCCESS)
                                     .build()
                     )
