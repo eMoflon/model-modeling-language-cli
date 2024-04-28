@@ -27,6 +27,7 @@ public class ModelEditProcessor {
             case DELETEEDGEREQUEST -> this.process(edit.getDeleteEdgeRequest(), variableRegistry);
             case DELETENODEREQUEST -> this.process(edit.getDeleteNodeRequest(), variableRegistry);
             case SETATTRIBUTEREQUEST -> this.process(edit.getSetAttributeRequest(), variableRegistry);
+            case DELETEALLEDGESREQUEST -> this.process(edit.getDeleteAllEdgesRequest(), variableRegistry);
             case REQUEST_NOT_SET -> throw new IllegalArgumentException("EditRequest not set!");
         };
     }
@@ -141,6 +142,41 @@ public class ModelEditProcessor {
             return ModelServerEditStatements.EditResponse.newBuilder()
                     .setDeleteEdgeResponse(
                             ModelServerEditStatements.EditDeleteEdgeResponse.newBuilder()
+                                    .setState(ModelServerEditStatements.EditState.FAILURE)
+                                    .setMessage(ex.getMessage())
+                                    .build()
+                    )
+                    .build();
+        }
+    }
+
+    private ModelServerEditStatements.EditResponse process(ModelServerEditStatements.EditDeleteAllEdgesRequest request, ModelEditVariableRegistry variableRegistry) {
+        try {
+            SmartObject fromNode = this.getNode(request.getStartNode(), variableRegistry);
+            EReference reference = getEReference(fromNode, request.getReferenceName());
+            List<ModelServerEditStatements.Node> deletedTargets = new ArrayList<>();
+            if (reference.isMany()) {
+                @SuppressWarnings("unchecked")
+                EList<SmartObject> oldVals = (EList<SmartObject>) fromNode.eGet(reference);
+                deletedTargets.addAll(oldVals.stream().map(this::getNode).toList());
+                oldVals.clear();
+            } else {
+                SmartObject target = (SmartObject) fromNode.eGet(reference);
+                deletedTargets.add(this.getNode(target));
+                fromNode.eUnset(reference);
+            }
+            return ModelServerEditStatements.EditResponse.newBuilder()
+                    .setDeleteAllEdgesResponse(
+                            ModelServerEditStatements.EditDeleteAllEdgesResponse.newBuilder()
+                                    .setState(ModelServerEditStatements.EditState.SUCCESS)
+                                    .addAllRemovedTargets(deletedTargets)
+                                    .build()
+                    )
+                    .build();
+        } catch (IllegalArgumentException ex) {
+            return ModelServerEditStatements.EditResponse.newBuilder()
+                    .setDeleteAllEdgesResponse(
+                            ModelServerEditStatements.EditDeleteAllEdgesResponse.newBuilder()
                                     .setState(ModelServerEditStatements.EditState.FAILURE)
                                     .setMessage(ex.getMessage())
                                     .build()
@@ -288,6 +324,11 @@ public class ModelEditProcessor {
         } catch (NullPointerException ex) {
             throw new IllegalArgumentException("Unable to locate SmartObject in IndexedEMFLoader!");
         }
+    }
+
+    private ModelServerEditStatements.Node getNode(SmartObject node) {
+        int nodeId = this.emfLoader.getNodeId(node);
+        return ModelServerEditStatements.Node.newBuilder().setNodeId(nodeId).build();
     }
 
     private EReference getEReference(SmartObject obj, String referenceName) {
