@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
-@CommandLine.Command(name = "hipegen", mixinStandardHelpOptions = true, version = "v1.0.0", description = "Builds hipe network")
+@CommandLine.Command(name = "modelserver", mixinStandardHelpOptions = true, version = "v1.0.0", description = "Generate a ModelServer")
 public class HipeGenCommand implements Callable<Integer> {
     @CommandLine.Parameters(index = "0", description = "path to the working directory of the ModelServer")
     File workspacePath;
