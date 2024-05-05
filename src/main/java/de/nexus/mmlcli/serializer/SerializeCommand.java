@@ -9,9 +9,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.concurrent.Callable;
 
-@CommandLine.Command(name = "serialize", mixinStandardHelpOptions = true, version = "v1.0.0", description = "Serializes a given Ecore")
+@CommandLine.Command(name = "serialize", mixinStandardHelpOptions = true, version = "v1.0.0", description = "Serialize an Ecore metamodel")
 public class SerializeCommand implements Callable<Integer> {
-    @CommandLine.Option(names = {"-o", "--out"}, paramLabel = "SERIALIZED", description = "path where the serialized model should be stored", arity = "0..1")
+    @CommandLine.Option(names = {"-o", "--out"}, paramLabel = "path", description = "path where the serialized model should be stored", arity = "0..1")
     File serializedTarget;
 
     @CommandLine.Parameters(index = "0")

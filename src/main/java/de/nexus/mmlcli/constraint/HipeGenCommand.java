@@ -19,28 +19,28 @@ import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "hipegen", mixinStandardHelpOptions = true, version = "v1.0.0", description = "Builds hipe network")
 public class HipeGenCommand implements Callable<Integer> {
-    @CommandLine.Parameters(index = "0")
+    @CommandLine.Parameters(index = "0", description = "path to the working directory of the ModelServer")
     File workspacePath;
 
-    @CommandLine.Parameters(index = "1")
+    @CommandLine.Parameters(index = "1", description = "path to the Ecore file containing the metamodel")
     File ecorePath;
 
-    @CommandLine.Parameters(index = "2")
+    @CommandLine.Parameters(index = "2", description = "path to the XMI file containing the model")
     File modelPath;
 
-    @CommandLine.Option(names = {"-f", "--file"}, paramLabel = "SERIALIZED", description = "the serialized constraint document as json file", arity = "0..1")
+    @CommandLine.Option(names = {"-f", "--file"}, paramLabel = "path", description = "path to a serialized constraint document", arity = "0..1")
     File sConstraintDocPath;
 
-    @CommandLine.Option(names = {"-p", "--package-jar"}, arity = "0..1", defaultValue = "false", description = "Package ModelServer into jar file.")
+    @CommandLine.Option(names = {"-p", "--package-jar"}, paramLabel = "(true|false)", arity = "0..1", defaultValue = "false", description = "pack the ModelServer into a Jar file")
     boolean packageJar;
 
-    @CommandLine.Option(names = {"-r", "--run-model-server"}, arity = "0..1", defaultValue = "false", negatable = true, description = "Run ModelServer after generation.")
+    @CommandLine.Option(names = {"-r", "--run-model-server"}, paramLabel = "(true|false)", arity = "0..1", defaultValue = "false", negatable = true, description = "start the ModelServer after generation is complete")
     boolean runModelServer;
 
-    @CommandLine.Option(names = {"-e", "--run-model-extender"}, arity = "0..1", defaultValue = "false", negatable = true, description = "Run Extender before generation.")
+    @CommandLine.Option(names = {"-e", "--run-model-extender"}, paramLabel = "(true|false)", arity = "0..1", defaultValue = "false", negatable = true, description = "add unique identifiers to the metamodel and model before generating the ModelServer")
     boolean runExtender;
 
-    @CommandLine.Option(names = {"-v", "--verbose"}, arity = "0..1", defaultValue = "false", description = "Print additional compiler notifications.")
+    @CommandLine.Option(names = {"-v", "--verbose"}, paramLabel = "(true|false)", arity = "0..1", defaultValue = "false", description = "prints extended compiler output")
     boolean verbose;
 
     @Override
