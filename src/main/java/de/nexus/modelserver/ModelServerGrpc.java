@@ -26,6 +26,7 @@ public class ModelServerGrpc {
                 .addService(new ModelServerPattern(this))
                 .addService(new ModelServerConstraints(this))
                 .addService(new ModelServerEdits(this))
+                .addService(new ModelServerVisualization(this))
                 .build();
     }
 
@@ -232,6 +233,21 @@ public class ModelServerGrpc {
                 case REQUEST_NOT_SET -> throw new IllegalArgumentException("Request not set!");
             }
             ;
+            responseObserver.onCompleted();
+        }
+    }
+
+    private static class ModelServerVisualization extends ModelServerVisualizationGrpc.ModelServerVisualizationImplBase {
+        private final ModelVisualizer visualizer;
+
+        public ModelServerVisualization(ModelServerGrpc handler) {
+            this.visualizer = handler.modelServer.getVisualizer();
+        }
+
+        @Override
+        public void getVisualization(de.nexus.modelserver.proto.ModelServerVisualization.GetModelVisualizationRequest request, StreamObserver<de.nexus.modelserver.proto.ModelServerVisualization.GetModelVisualizationResponse> responseObserver) {
+            de.nexus.modelserver.proto.ModelServerVisualization.GetModelVisualizationResponse response = this.visualizer.getModelVisualization(request);
+            responseObserver.onNext(response);
             responseObserver.onCompleted();
         }
     }

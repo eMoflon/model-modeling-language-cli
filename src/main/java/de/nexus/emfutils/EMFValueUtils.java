@@ -24,11 +24,15 @@ public class EMFValueUtils {
         };
     }
 
+    public static ValueWrapper<?> requestValue(SmartObject obj, EAttribute attr) {
+        return ValueWrapper.fromEcoreValue(attr.getEAttributeType(), obj.eGet(attr));
+    }
+
     public static ValueWrapper<?> requestValue(SmartObject obj, String attrName) {
         EAttribute attr = (EAttribute) obj.eClass().getEStructuralFeature(attrName);
         if (attr == null) {
             throw new RuntimeException(String.format("Trying to access %s.%s but it does not exist!", obj.eClass().getName(), attrName));
         }
-        return ValueWrapper.fromEcoreValue(attr.getEAttributeType(), obj.eGet(attr));
+        return EMFValueUtils.requestValue(obj, attr);
     }
 }
