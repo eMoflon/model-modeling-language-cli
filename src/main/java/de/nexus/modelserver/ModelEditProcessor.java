@@ -96,6 +96,9 @@ public class ModelEditProcessor {
             request.getAssignmentsList().forEach(assignment -> {
                 EAttribute attr = (EAttribute) targetClass.getEStructuralFeature(assignment.getAttributeName());
                 Object attrValue = EMFValueUtils.mapVals(attr.getEAttributeType(), assignment.getAttributeValue());
+                if (attrValue == null) {
+                    throw new IllegalArgumentException("Could not convert the attribute value to the specified type!");
+                }
                 newNode.eSet(attr, attrValue);
             });
 
@@ -294,6 +297,9 @@ public class ModelEditProcessor {
             SmartObject node = this.getNode(request.getNode(), variableRegistry);
             EAttribute attribute = getEAttribute(node, request.getAttributeName());
             Object newValue = EMFValueUtils.mapVals(attribute.getEType(), request.getAttributeValue());
+            if (newValue == null) {
+                throw new IllegalArgumentException("Could not convert the attribute value to the specified type!");
+            }
             node.eSet(attribute, newValue);
 
             return ModelServerEditStatements.EditResponse.newBuilder()

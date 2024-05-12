@@ -1,17 +1,18 @@
 package de.nexus.emfutils;
 
 import de.nexus.expr.ValueWrapper;
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.*;
 import org.emoflon.smartemf.runtime.SmartObject;
 
 public class EMFValueUtils {
     @SuppressWarnings("unchecked")
     public static <T, R> R mapVals(EClassifier type, T value) {
         if (type instanceof EEnum eEnum) {
-            return (R) eEnum.getEEnumLiteral(value.toString()).getInstance();
+            EEnumLiteral literal = eEnum.getEEnumLiteral(value.toString());
+            if (literal == null) {
+                return null;
+            }
+            return (R) literal.getInstance();
         }
 
         return switch (type.getClassifierID()) {
