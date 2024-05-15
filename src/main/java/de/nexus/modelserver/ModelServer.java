@@ -32,8 +32,12 @@ public class ModelServer {
 
 
         System.out.println("[ModelServer] Loading model...");
+        double modelLoaderTic = System.currentTimeMillis();
         this.emfLoader = new IndexedEMFLoader(Path.of(configuration.getWorkspacePath()));
         this.emfLoader.loadResource(Path.of(configuration.getModelPath()));
+        double modelLoaderToc = System.currentTimeMillis();
+        double modelLoaderDuration = modelLoaderToc - modelLoaderTic;
+        System.out.printf("[ModelServer] Loaded model in %f (%f) seconds.%n", modelLoaderDuration / 1000.0, modelLoaderDuration);
 
         System.out.println("[ModelServer] Creating ModelEditProcessor...");
         this.editProcessor = new ModelEditProcessor(this.emfLoader);
