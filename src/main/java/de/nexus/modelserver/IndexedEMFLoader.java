@@ -2,7 +2,6 @@ package de.nexus.modelserver;
 
 import de.nexus.emfutils.EMFExtenderUtils;
 import de.nexus.emfutils.SmartEMFLoader;
-import gnu.trove.map.hash.TIntObjectHashMap;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -15,13 +14,13 @@ import org.emoflon.smartemf.runtime.SmartObject;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class IndexedEMFLoader extends SmartEMFLoader {
-    private final TIntObjectHashMap<SmartObject> idIndex = new TIntObjectHashMap<>();
+    private final HashMap<Integer, SmartObject> idIndex = new HashMap<>();
 
     private EStructuralFeature idStrucuralFeature = null;
     private int currentId = -1;
@@ -54,7 +53,7 @@ public class IndexedEMFLoader extends SmartEMFLoader {
             this.idIndex.put((int) eObject.eGet(idStrucuralFeature), (SmartObject) eObject);
         }
 
-        this.currentId = Arrays.stream(this.idIndex.keys()).max().orElse(0) + 1;
+        this.currentId = Collections.max(this.idIndex.keySet()) + 1;
     }
 
     public int initializeNode(SmartObject object) {
@@ -85,22 +84,15 @@ public class IndexedEMFLoader extends SmartEMFLoader {
     }
 
     public Set<Integer> getAllNodeIds() {
-        return Arrays.stream(this.idIndex.keys()).boxed().collect(Collectors.toSet());
-    }
-
-    private SmartObject getFirstNode() {
-        if (this.idIndex.isEmpty()) {
-            throw new IllegalStateException("Model is empty!");
-        }
-        return this.idIndex.valueCollection().stream().findFirst().get();
+        return this.idIndex.keySet();
     }
 
     public EPackage getEPackage() {
         if (this.idIndex.isEmpty()) {
             return null;
         }
-        SmartObject firstObj = getFirstNode();
-        EPackage ePackage = firstObj.eClass().getEPackage();
+        Optional<SmartObject> firstObj = this.idIndex.values().stream().findFirst();
+        EPackage ePackage = firstObj.get().eClass().getEPackage();
         return (EPackage) EcoreUtil.getRootContainer(ePackage);
     }
 
@@ -108,8 +100,8 @@ public class IndexedEMFLoader extends SmartEMFLoader {
         if (this.idIndex.isEmpty()) {
             return false;
         }
-        SmartObject firstObj = getFirstNode();
-        Resource modelResource = firstObj.eResource();
+        Optional<SmartObject> firstObj = this.idIndex.values().stream().findFirst();
+        Resource modelResource = firstObj.get().eResource();
 
         Resource modelCopy = this.copyResource(modelResource, target);
         if (!exportWithIds) {
