@@ -79,6 +79,21 @@ public class ModelServer {
         }
     }
 
+    public boolean updatePatternMatches() {
+        Map<String, ProductionResult> extractedData = this.extractData();
+        this.patternRegistry.processHiPE(extractedData);
+        return !extractData().isEmpty();
+    }
+
+    public void updateAllConstraintEvaluations() {
+        this.constraintRegistry.getConstraints().values().forEach(this::updateConstraintEvaluation);
+    }
+
+    public void updateConstraintEvaluation(AbstractConstraint constraint) {
+        constraint.evaluate(this.patternRegistry);
+        constraint.computeProposals(this.emfLoader);
+    }
+
     public void terminateEngine() {
         System.out.println("[Engine] Terminating...");
 

@@ -133,8 +133,7 @@ public class ModelServerGrpc {
 
         @Override
         public void getPatterns(ModelServerPatterns.GetPatternsRequest request, StreamObserver<ModelServerPatterns.GetPatternsResponse> responseObserver) {
-            Map<String, ProductionResult> extractData = this.grpcHandler.modelServer.extractData();
-            grpcHandler.modelServer.getPatternRegistry().processHiPE(extractData);
+            this.grpcHandler.modelServer.updatePatternMatches();
 
             List<ModelServerPatterns.Pattern> patterns = grpcHandler.modelServer.getPatternRegistry().getPatterns().values().stream().map(ProtoMapper::map).toList();
 
@@ -144,8 +143,7 @@ public class ModelServerGrpc {
 
         @Override
         public void getPattern(ModelServerPatterns.GetPatternRequest request, StreamObserver<ModelServerPatterns.GetPatternResponse> responseObserver) {
-            Map<String, ProductionResult> extractData = this.grpcHandler.modelServer.extractData();
-            grpcHandler.modelServer.getPatternRegistry().processHiPE(extractData);
+            this.grpcHandler.modelServer.updatePatternMatches();
 
             Pattern targetPattern = grpcHandler.modelServer.getPatternRegistry().getPattern(request.getPatternName());
 
@@ -176,13 +174,9 @@ public class ModelServerGrpc {
 
         @Override
         public void getConstraints(de.nexus.modelserver.proto.ModelServerConstraints.GetConstraintsRequest request, StreamObserver<de.nexus.modelserver.proto.ModelServerConstraints.GetConstraintsResponse> responseObserver) {
-            Map<String, ProductionResult> extractData = this.grpcHandler.modelServer.extractData();
-            grpcHandler.modelServer.getPatternRegistry().processHiPE(extractData);
+            this.grpcHandler.modelServer.updatePatternMatches();
 
-            grpcHandler.modelServer.getConstraintRegistry().getConstraints().values().forEach(constraint -> {
-                constraint.evaluate(grpcHandler.modelServer.getPatternRegistry());
-                constraint.computeProposals(grpcHandler.modelServer.getEmfLoader());
-            });
+            this.grpcHandler.modelServer.updateAllConstraintEvaluations();
 
             List<de.nexus.modelserver.proto.ModelServerConstraints.Constraint> constraints = grpcHandler.modelServer.getConstraintRegistry().getConstraints().values().stream().map(x -> ProtoMapper.map(x, this.grpcHandler.modelServer.getEmfLoader())).toList();
 
@@ -192,12 +186,10 @@ public class ModelServerGrpc {
 
         @Override
         public void getConstraint(de.nexus.modelserver.proto.ModelServerConstraints.GetConstraintRequest request, StreamObserver<de.nexus.modelserver.proto.ModelServerConstraints.GetConstraintResponse> responseObserver) {
-            Map<String, ProductionResult> extractData = this.grpcHandler.modelServer.extractData();
-            grpcHandler.modelServer.getPatternRegistry().processHiPE(extractData);
+            this.grpcHandler.modelServer.updatePatternMatches();
 
             AbstractConstraint constraint = grpcHandler.modelServer.getConstraintRegistry().getConstraint(request.getConstraintName());
-            constraint.evaluate(grpcHandler.modelServer.getPatternRegistry());
-            constraint.computeProposals(grpcHandler.modelServer.getEmfLoader());
+            this.grpcHandler.modelServer.updateConstraintEvaluation(constraint);
 
             de.nexus.modelserver.proto.ModelServerConstraints.Constraint protoConstraint = ProtoMapper.map(constraint, this.grpcHandler.modelServer.getEmfLoader());
 
