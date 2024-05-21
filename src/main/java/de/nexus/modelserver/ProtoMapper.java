@@ -9,10 +9,7 @@ import de.nexus.modelserver.runtime.IMatch;
 import org.eclipse.emf.ecore.EAttribute;
 import org.emoflon.smartemf.runtime.SmartObject;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -68,8 +65,15 @@ public class ProtoMapper {
     public static ModelServerConstraints.FixMatch map(IMatch match, List<FixContainer> variants, IndexedEMFLoader emfLoader) {
         boolean isEmptyMatch = match instanceof EmptyMatch;
 
-        List<ModelServerConstraints.FixVariant> protoVariants = variants.stream().filter(x -> x.isEmptyMatchFix() == isEmptyMatch).map(x -> ProtoMapper.map(match, x, emfLoader)).toList();
-        List<ModelServerConstraints.MatchNode> matchNodes = match.getParameters().stream().map(x -> ProtoMapper.map(x, emfLoader)).toList();
+        List<ModelServerConstraints.FixVariant> protoVariants = new ArrayList<>();
+        variants.forEach(variant -> {
+            if (variant.isEmptyMatchFix() == isEmptyMatch) {
+                protoVariants.add(ProtoMapper.map(match, variant, emfLoader));
+            }
+        });
+
+        List<ModelServerConstraints.MatchNode> matchNodes = new ArrayList<>();
+        match.getParameters().forEach(matchNode -> matchNodes.add(ProtoMapper.map(matchNode, emfLoader)));
 
         return ModelServerConstraints.FixMatch.newBuilder()
                 .addAllVariants(protoVariants)
@@ -81,7 +85,12 @@ public class ProtoMapper {
     public static ModelServerConstraints.MatchNode map(Map.Entry<String, Object> nodeEntry, IndexedEMFLoader emfLoader) {
         SmartObject nodeObj = (SmartObject) nodeEntry.getValue();
 
-        List<ModelServerConstraints.MatchNodeAttribute> attributes = nodeObj.eClass().getEAllAttributes().stream().filter(x -> !emfLoader.isFeatureNodeId(x)).map(x -> ProtoMapper.map(nodeObj, x)).toList();
+        List<ModelServerConstraints.MatchNodeAttribute> attributes = new ArrayList<>();
+        nodeObj.eClass().getEAllAttributes().forEach(eAttribute -> {
+            if (!emfLoader.isFeatureNodeId(eAttribute)) {
+                attributes.add(ProtoMapper.map(nodeObj, eAttribute));
+            }
+        });
 
         return ModelServerConstraints.MatchNode.newBuilder()
                 .setNodeId(emfLoader.getNodeId(nodeObj))
@@ -101,7 +110,8 @@ public class ProtoMapper {
     }
 
     public static ModelServerConstraints.FixVariant map(IMatch match, FixContainer fixContainer, IndexedEMFLoader emfLoader) {
-        List<ModelServerConstraints.FixStatement> statements = fixContainer.getStatements().stream().map(x -> ProtoMapper.map(match, x, emfLoader)).toList();
+        List<ModelServerConstraints.FixStatement> statements = new ArrayList<>();
+        fixContainer.getStatements().forEach(statement -> statements.add(ProtoMapper.map(match, statement, emfLoader)));
 
         return ModelServerConstraints.FixVariant.newBuilder()
                 .setVariantTitle(fixContainer.getFixTitle())

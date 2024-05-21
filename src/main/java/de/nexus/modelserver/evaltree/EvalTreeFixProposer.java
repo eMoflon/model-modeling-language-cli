@@ -181,6 +181,8 @@ public class EvalTreeFixProposer {
             matches.add(EmptyMatch.INSTANCE);
         }
 
-        return matches.stream().map(x -> ProtoMapper.map(x, fixContainers, emfLoader)).toList();
+        List<ModelServerConstraints.FixMatch> serializedMatches = new ArrayList<>();
+        matches.forEach(match -> serializedMatches.add(ProtoMapper.map(match, fixContainers, emfLoader)));
+        return serializedMatches;
     }
 }
