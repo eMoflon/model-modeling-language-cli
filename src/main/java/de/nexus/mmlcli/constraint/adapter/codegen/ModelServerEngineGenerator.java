@@ -32,7 +32,10 @@ public class ModelServerEngineGenerator extends TemporaryFileObject {
                     
                     HiPEOptions options = new HiPEOptions();
                     options.cascadingNotifications = true;
-                    options.lazyInitialization = false;
+                    //options.lazyInitialization = false;
+                    options.lazyInitialization = true;
+                    options.allowSearchplanOptimization = false;
+                    options.statelessDuplicationFactor = 1;
                     try {
                         this.initialize(options);
                     } catch (InterruptedException e) {
