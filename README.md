@@ -23,6 +23,12 @@ The CLI can be integrated directly in the VSCode plugin of MML in order to acces
    mvn package
    ```
 
+   **Note:** The first build may fail because local dependencies are not found. 
+   In this case, use:
+   ```shell
+   mvn clean validate package -U
+   ```
+
 ## Usage
 ### Usage with the MML VSCode plugin
 Install the MML VSCode plugin according to the corresponding instructions. 
@@ -63,7 +69,7 @@ Usage: mmlcli generate [-f[=SERIALIZED]] <projectName> <outputDirectory>
 ```
 
 #### Serialize
-The serialize command is used to serialize Ecore files into the MML format. The entry is made by specifying a path 
+The `serialize` command is used to serialize Ecore files into the MML format. The entry is made by specifying a path 
 to an Ecore file. The output is via STDOUT by default, but optionally a path to an output file can also be specified 
 in which the serialized model is to be saved.
 
@@ -73,3 +79,44 @@ Usage: mmlcli serialize [-o[=SERIALIZED]] <ecoreFile>
             -o, --out[=SERIALIZED]  Path to the output directory
 ```
 
+#### Extender
+The `extender` command is used to extend all metamodel classes in a metamodel by a common superclass. 
+This superclass adds a `nodeId` attribute to all classes, which is used to assign unique identifiers. 
+This attribute is initialized for all elements in the transferred model.
+
+```text
+Usage: mmlcli extender [-hV] [-i[=(true|false)]] <ecoreFile> <modelFile>
+Extend a metamodel and model with a unique node identifier
+      <ecoreFile>   path to the Ecore file containing the metamodel
+      <modelFile>   path to the XMI file containing the model
+  -h, --help        Show this help message and exit.
+  -i, --invert[=(true|false)]
+                    remove identifiers if present
+  -V, --version     Print version information and exit.
+```
+
+#### Modelserver
+The `modelserver` command is used to generate a ModelServer for constraint evaluation. 
+Both metamodel-specific and constraint-specific code is generated and compiled.
+
+```text
+Usage: mmlcli modelserver [-hV] [-e[=(true|false)]] [-f[=path]] [-p[=
+                          (true|false)]] [-r[=(true|false)]] [-v[=
+                          (true|false)]] <workspacePath> <ecorePath> <modelPath>
+Generate a ModelServer
+      <workspacePath>   path to the working directory of the ModelServer
+      <ecorePath>       path to the Ecore file containing the metamodel
+      <modelPath>       path to the XMI file containing the model
+  -e, --[no-]run-model-extender[=(true|false)]
+                        add unique identifiers to the metamodel and model
+                          before generating the ModelServer
+  -f, --file[=path]     path to a serialized constraint document
+  -h, --help            Show this help message and exit.
+  -p, --package-jar[=(true|false)]
+                        pack the ModelServer into a Jar file
+  -r, --[no-]run-model-server[=(true|false)]
+                        start the ModelServer after generation is complete
+  -v, --verbose[=(true|false)]
+                        prints extended compiler output
+  -V, --version         Print version information and exit.
+```
