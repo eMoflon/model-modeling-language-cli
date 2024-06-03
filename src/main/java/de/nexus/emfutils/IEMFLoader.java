@@ -8,6 +8,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 import java.io.File;
 import java.nio.file.Path;
 
+/**
+ * Interface that alle EMFLoaders must implement.
+ * Allows the usage of different EMF implementations like default EMF and SmartEMF.
+ */
 public interface IEMFLoader {
     Resource loadResource(File file);
 

@@ -19,6 +19,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 public class EMFLoaderUtils {
+    /**
+     * Create a new ResourceSet using the default EMF ResourceFactory
+     *
+     * @return ResourceSet
+     */
     public static ResourceSet getResourceSet() {
         // Create a resource set.
         ResourceSet resourceSet = new ResourceSetImpl();
@@ -38,6 +43,12 @@ public class EMFLoaderUtils {
         return resourceSet;
     }
 
+    /**
+     * Create a new ResourceSet using the SmartEMF ResourceFactory
+     *
+     * @param workspacePath path to the workspace
+     * @return ResourceSet
+     */
     public static ResourceSet getSmartEMFResourceSet(Path workspacePath) {
         // Create a resource set.
         ResourceSet resourceSet = new ResourceSetImpl();
@@ -64,6 +75,14 @@ public class EMFLoaderUtils {
         return resourceSet;
     }
 
+    /**
+     * Load a resource into a given ResourceSet, register the root package in the PackageRegistry
+     * and return the root package
+     *
+     * @param rSet ResourceSet
+     * @param file path to the metamodel
+     * @return EPackage
+     */
     public static EPackage loadResourceAsEPackage(ResourceSet rSet, File file) {
         Resource resource = loadResource(rSet, file);
 
@@ -76,6 +95,13 @@ public class EMFLoaderUtils {
         return null;
     }
 
+    /**
+     * Load a resource into a ResourceSet
+     *
+     * @param rSet ResourceSet
+     * @param file path to the metamodel
+     * @return the loaded resource
+     */
     public static Resource loadResource(ResourceSet rSet, File file) {
         // Get the URI of the model file.
         URI fileURI = URI.createFileURI(file.toString());

@@ -13,6 +13,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The ModelEditProcessor performs model manipulations via an IndexedEMFLoader
+ */
 public class ModelEditProcessor {
     private final IndexedEMFLoader emfLoader;
 
@@ -20,6 +23,14 @@ public class ModelEditProcessor {
         this.emfLoader = emfLoader;
     }
 
+    /**
+     * Perform a single EditRequest with a given ModelEditVariableRegistry
+     *
+     * @param edit             an EditRequest
+     * @param variableRegistry the scope for temporary nodeIds
+     * @return an EditResponse
+     * @throws IllegalArgumentException for unknown EditRequest cases
+     */
     public ModelServerEditStatements.EditResponse process(ModelServerEditStatements.EditRequest edit, ModelEditVariableRegistry variableRegistry) {
         return switch (edit.getRequestCase()) {
             case CREATEEDGEREQUEST -> this.process(edit.getCreateEdgeRequest(), variableRegistry);
@@ -32,10 +43,22 @@ public class ModelEditProcessor {
         };
     }
 
+    /**
+     * Perform a single EditRequest in a new scope
+     *
+     * @param edit an EditRequest
+     * @return an EditResponse
+     */
     public ModelServerEditStatements.EditResponse process(ModelServerEditStatements.EditRequest edit) {
         return this.process(edit, new ModelEditVariableRegistry());
     }
 
+    /**
+     * Perform multiple EditRequest given as a EditChainRequest in a new common scope
+     *
+     * @param editChain an EditChainRequest
+     * @return an EditChainResponse
+     */
     public ModelServerEditStatements.EditChainResponse process(ModelServerEditStatements.EditChainRequest editChain) {
         ModelEditVariableRegistry variableRegistry = new ModelEditVariableRegistry();
 
@@ -49,6 +72,15 @@ public class ModelEditProcessor {
         return ModelServerEditStatements.EditChainResponse.newBuilder().addAllEdits(responses).build();
     }
 
+    /**
+     * Perform an EditCreateEdgeRequest in a given scope.
+     * <p>
+     * Request the start and target node for the requested edge from the registry and create a new edge.
+     *
+     * @param request          an EditCreateEdgeRequest
+     * @param variableRegistry the scope for temporary nodeIds
+     * @return an EditResponse
+     */
     private ModelServerEditStatements.EditResponse process(ModelServerEditStatements.EditCreateEdgeRequest request, ModelEditVariableRegistry variableRegistry) {
         try {
             SmartObject fromNode = this.getNode(request.getStartNode(), variableRegistry);
@@ -82,6 +114,17 @@ public class ModelEditProcessor {
         }
     }
 
+    /**
+     * Perform an EditCreateNodeRequest in a given scope.
+     * <p>
+     * Creates a new node of the requested type, registers it in the IndexedEMFLoader and stores the temporary
+     * nodeId in the ModelEditVariableRegistry.
+     * The EditResponse contains the newly created permanent nodeId.
+     *
+     * @param request          an EditCreateEdgeRequest
+     * @param variableRegistry the scope for temporary nodeIds
+     * @return an EditResponse
+     */
     private ModelServerEditStatements.EditResponse process(ModelServerEditStatements.EditCreateNodeRequest request, ModelEditVariableRegistry variableRegistry) {
         try {
             EPackage ePackage = this.emfLoader.getEPackage();
@@ -122,6 +165,15 @@ public class ModelEditProcessor {
         }
     }
 
+    /**
+     * Perform an EditDeleteEdgeRequest in a given scope.
+     * <p>
+     * Request the start and target node for the requested edge from the registry and removes the edge.
+     *
+     * @param request          an EditDeleteEdgeRequest
+     * @param variableRegistry the scope for temporary nodeIds
+     * @return an EditResponse
+     */
     private ModelServerEditStatements.EditResponse process(ModelServerEditStatements.EditDeleteEdgeRequest request, ModelEditVariableRegistry variableRegistry) {
         try {
             SmartObject fromNode = this.getNode(request.getStartNode(), variableRegistry);
@@ -153,6 +205,15 @@ public class ModelEditProcessor {
         }
     }
 
+    /**
+     * Perform an EditDeleteAllEdgesRequest in a given scope.
+     * <p>
+     * Request the start node and delete all edges of a given type.
+     *
+     * @param request          an EditDeleteallEdgesRequest
+     * @param variableRegistry the scope for temporary nodeIds
+     * @return an EditResponse
+     */
     private ModelServerEditStatements.EditResponse process(ModelServerEditStatements.EditDeleteAllEdgesRequest request, ModelEditVariableRegistry variableRegistry) {
         try {
             SmartObject fromNode = this.getNode(request.getStartNode(), variableRegistry);
@@ -188,6 +249,16 @@ public class ModelEditProcessor {
         }
     }
 
+    /**
+     * Perform an EditDeleteNodeRequest in a given scope.
+     * <p>
+     * Request a node and delete it from the model and the IndexedEMFLoader.
+     * The EditResponse contains a list of all implicitly removed edges.
+     *
+     * @param request          an EditDeleteNodeRequest
+     * @param variableRegistry the scope for temporary nodeIds
+     * @return an EditResponse
+     */
     private ModelServerEditStatements.EditResponse process(ModelServerEditStatements.EditDeleteNodeRequest request, ModelEditVariableRegistry variableRegistry) {
         try {
             SmartObject node = this.getNode(request.getNode(), variableRegistry);
@@ -218,6 +289,12 @@ public class ModelEditProcessor {
 
     }
 
+    /**
+     * Delete all outgoing edges for a given node.
+     *
+     * @param node a node
+     * @return a list if all deleted edges
+     */
     private List<ModelServerEditStatements.ImplicitlyRemovedEdge> deleteNode_internal(SmartObject node) {
         List<ModelServerEditStatements.ImplicitlyRemovedEdge> removedEdges = new ArrayList<>();
 
@@ -264,6 +341,14 @@ public class ModelEditProcessor {
         return removedEdges;
     }
 
+    /**
+     * Generate a ImplicitlyRemovedEdge proto object for an edge of a given type between two nodes
+     *
+     * @param node1 start node
+     * @param node2 target node
+     * @param ref   edge type
+     * @return an ImplicitlyRemovedEdge object
+     */
     private ModelServerEditStatements.ImplicitlyRemovedEdge getRemovedEdge(int node1, int node2, EReference ref) {
         boolean reversed = ref.getName().contains("_inverseTo_");
 
@@ -288,6 +373,16 @@ public class ModelEditProcessor {
                 .build();
     }
 
+    /**
+     * Perform an EditSetAttributeRequest in a given scope.
+     * <p>
+     * Request the node and update the requested attribute
+     *
+     * @param request          an EditSetAttributeRequest
+     * @param variableRegistry the scope for temporary nodeIds
+     * @return an EditResponse
+     * @throws IllegalArgumentException if no value is provided or its type is incorrect
+     */
     private ModelServerEditStatements.EditResponse process(ModelServerEditStatements.EditSetAttributeRequest request, ModelEditVariableRegistry variableRegistry) {
         try {
             if (request.getUnsetAttributeValue()) {
@@ -321,6 +416,14 @@ public class ModelEditProcessor {
         }
     }
 
+    /**
+     * Request a node from the IndexedEMFLoader based on a Node proto object
+     *
+     * @param node             a proto Node object
+     * @param variableRegistry the scope for temporary nodeIds
+     * @return the requested node
+     * @throws IllegalArgumentException if the nodeId could not be extracted or the nodeId is unknown
+     */
     private SmartObject getNode(ModelServerEditStatements.Node node, ModelEditVariableRegistry variableRegistry) throws IllegalArgumentException {
         try {
             int nodeId = variableRegistry.getNodeId(node);
@@ -332,11 +435,25 @@ public class ModelEditProcessor {
         }
     }
 
+    /**
+     * Get a proto Node object for a SmartObject
+     *
+     * @param node a SmartObject
+     * @return the Node object
+     */
     private ModelServerEditStatements.Node getNode(SmartObject node) {
         int nodeId = this.emfLoader.getNodeId(node);
         return ModelServerEditStatements.Node.newBuilder().setNodeId(nodeId).build();
     }
 
+    /**
+     * Get a EReference by name
+     *
+     * @param obj           an object
+     * @param referenceName the reference name
+     * @return the requested EReference
+     * @throws IllegalArgumentException if the reference could not be found
+     */
     private EReference getEReference(SmartObject obj, String referenceName) {
         EStructuralFeature structuralFeature = obj.eClass().getEStructuralFeature(referenceName);
         if (structuralFeature == null) {
@@ -348,6 +465,14 @@ public class ModelEditProcessor {
         }
     }
 
+    /**
+     * Get a EAttribute by name
+     *
+     * @param obj          an object
+     * @param attriuteName the attribute name
+     * @return the requested EAttribute
+     * @throws IllegalArgumentException if the attribute could not be found
+     */
     private EAttribute getEAttribute(SmartObject obj, String attriuteName) {
         EStructuralFeature structuralFeature = obj.eClass().getEStructuralFeature(attriuteName);
         if (structuralFeature == null) {

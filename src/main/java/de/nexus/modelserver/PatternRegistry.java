@@ -9,6 +9,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The PatternRegistry keeps the overall pattern match set.
+ * HiPE does not return the full pattern atch set with repeated queries,
+ * but just the changes in newly added and removed pattern matches.
+ * The PatternRegistry keeps all matches, updating based on HiPE information.
+ */
 public class PatternRegistry {
     private final HashMap<String, Pattern> patterns = new HashMap<>();
 
@@ -18,19 +24,41 @@ public class PatternRegistry {
         }
     }
 
+    /**
+     * Get a specific Pattern
+     *
+     * @param patternName the requested pattern name
+     * @return the Pattern
+     */
     public Pattern getPattern(String patternName) {
         return this.patterns.get(patternName);
     }
 
+    /**
+     * Get all Patterns
+     *
+     * @return a HashMap of all Patterns
+     */
     public HashMap<String, Pattern> getPatterns() {
         return patterns;
     }
 
+    /**
+     * Process the output of a HiPE query.
+     * Updates internal datastructures based on newly added and removed matches
+     *
+     * @param extractData response of a HiPE query
+     */
     public void processHiPE(Map<String, ProductionResult> extractData) {
         addNewMatches(extractData);
         deleteInvalidMatches(extractData);
     }
 
+    /**
+     * Update internal datastructures for newly created matches
+     *
+     * @param extractData response of a HiPE query
+     */
     private void addNewMatches(Map<String, ProductionResult> extractData) {
         for (String patternName : extractData.keySet()) {
             Collection<ProductionMatch> matches = extractData.get(patternName).getNewMatches();
@@ -44,6 +72,11 @@ public class PatternRegistry {
         }
     }
 
+    /**
+     * Update internal datastructures for removed matches
+     *
+     * @param extractData response of a HiPE query
+     */
     private void deleteInvalidMatches(Map<String, ProductionResult> extractData) {
         for (String patternName : extractData.keySet()) {
             Collection<ProductionMatch> matches = extractData.get(patternName).getDeleteMatches();

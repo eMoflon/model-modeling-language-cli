@@ -8,6 +8,14 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public class EMFResolverUtils {
+    /**
+     * Resolve a qualified EClass name in a given EPackage
+     *
+     * @param rootPackage   EPackage
+     * @param qualifiedName qualified name of an EClass
+     * @return the requested EClass
+     * @throws IllegalArgumentException when qualified name cannot be resolved
+     */
     public static EClass getEClassByQualifiedName(EPackage rootPackage, String qualifiedName) throws IllegalArgumentException {
         ArrayList<String> splittedQNameArr = new ArrayList<>(Arrays.asList(qualifiedName.split("\\.")));
         if (splittedQNameArr.size() <= 1) {

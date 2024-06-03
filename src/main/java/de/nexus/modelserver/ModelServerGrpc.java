@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This class is the actual gRPC Server implementation.
+ * This includes in particular the implementation of all Protobuf Service Stubs
+ */
 public class ModelServerGrpc {
     private final static int GRPC_PORT = 9090;
     private final ModelServer modelServer;

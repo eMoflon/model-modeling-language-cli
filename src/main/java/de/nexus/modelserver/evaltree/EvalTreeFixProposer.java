@@ -19,6 +19,14 @@ public class EvalTreeFixProposer {
         this.emfLoader = emfLoader;
     }
 
+    /**
+     * Compute proposals for a leaf
+     *
+     * @param leaf        a EvalTree leaf
+     * @param targetValue the boolean target value
+     * @return a FixProposalContainer (optionally)
+     * @throws RuntimeException for unsupported operations
+     */
     public Optional<ModelServerConstraints.FixProposalContainer> getProposals(EvalTreeLeaf leaf, boolean targetValue) {
         if (leaf.getValue().isBoolean()) {
             if (leaf.getValue().getAsBoolean() == targetValue) {
@@ -38,6 +46,14 @@ public class EvalTreeFixProposer {
         }
     }
 
+    /**
+     * Compute proposals for the children of a binary node
+     *
+     * @param biNode      a binary EvalTree node
+     * @param targetValue the boolean target value
+     * @return a FixProposalContainer (optionally)
+     * @throws RuntimeException for unsupported operations
+     */
     public Optional<ModelServerConstraints.FixProposalContainer> getProposals(EvalTreeBiNode biNode, boolean targetValue) {
         if (biNode.getValue().isBoolean()) {
             if (biNode.getValue().getAsBoolean() == targetValue) {
@@ -70,6 +86,24 @@ public class EvalTreeFixProposer {
         }
     }
 
+    /**
+     * Prune the EvalTree
+     * <p>
+     * There are multiple cases that make the EvalTree unnecessary verbose:
+     * 1. SINGLE_FIX proposals in nodes below the root
+     * 2. Nested FIX_ALL and FIX_OR (FIX_ALL inside FIX_ALL could be a single FIX_ALL)
+     * 3. FIX_ALL and FIX_OR if there is just a single FixProposalContainer inside
+     * <p>
+     * These methods prune those cases:
+     * 1. Unwrap FixProposals in SINGLE_FIX containers, if they are below root level
+     * 2. Merge FIX_ALL and FIX_OR FixProposalContainers if they are directly related
+     * 3. Skip FIX_ALL and FIX_OR FixProposalContainers if there is just a single child
+     *
+     * @param targetContainerType the container type that is desired for the result
+     * @param container1          a FixProposalContainer
+     * @param container2          another FixProposalContainer
+     * @return the prunes FixProposalContainers
+     */
     private ModelServerConstraints.FixProposalContainer mergeProposalContainers(ModelServerConstraints.FixProposalContainerType targetContainerType, ModelServerConstraints.FixProposalContainer container1, ModelServerConstraints.FixProposalContainer container2) {
         ModelServerConstraints.FixProposalContainerType container1Type = container1.getType();
         ModelServerConstraints.FixProposalContainerType container2Type = container2.getType();
@@ -135,6 +169,14 @@ public class EvalTreeFixProposer {
         throw new RuntimeException("Failed to merge two Proposalcontainers!");
     }
 
+    /**
+     * Compute proposals for the children of a unary node
+     *
+     * @param uniNode     a unary EvalTree node
+     * @param targetValue the boolean target value
+     * @return a FixProposalContainer (optionally)
+     * @throws RuntimeException for unsupported operations
+     */
     public Optional<ModelServerConstraints.FixProposalContainer> getProposals(EvalTreeUniNode uniNode, boolean targetValue) {
         if (uniNode.getValue().isBoolean()) {
             if (uniNode.getValue().getAsBoolean() == targetValue) {
@@ -151,6 +193,14 @@ public class EvalTreeFixProposer {
 
     }
 
+    /**
+     * Compute proposals for a IEvalTreeNode
+     *
+     * @param treeNode    a EvalTree node
+     * @param targetValue the boolean target value
+     * @return a FixProposalContainer (optionally)
+     * @throws IllegalArgumentException for unsupported operations
+     */
     public Optional<ModelServerConstraints.FixProposalContainer> getProposals(IEvalTreeNode treeNode, boolean targetValue) {
         if (treeNode instanceof EvalTreeLeaf leaf) {
             return getProposals(leaf, targetValue);
@@ -162,6 +212,13 @@ public class EvalTreeFixProposer {
         throw new IllegalArgumentException("Unsupported IEvalTreeNode type!");
     }
 
+    /**
+     * Compute a list of all FixMatches for a specific pattern variable
+     *
+     * @param proposalType    the proposal type (enable/diable)
+     * @param patternVariable the name of the requested pattern variable
+     * @return a list of all FixMatche for the requested variable
+     */
     public List<ModelServerConstraints.FixMatch> getFixMatches(ModelServerConstraints.FixProposalType proposalType, String patternVariable) {
         List<FixContainer> fixContainers = switch (proposalType) {
             case ENABLE_PATTERN -> constraint.getEnablingFixesForPatternVariable(patternVariable);
@@ -177,6 +234,7 @@ public class EvalTreeFixProposer {
 
         Set<IMatch> matches = new HashSet<>(pattern.getMatches());
 
+        // add the EmptyMatch if there is a fix proposal with the empty modifier
         if (fixContainers.stream().anyMatch(FixContainer::isEmptyMatchFix)) {
             matches.add(EmptyMatch.INSTANCE);
         }

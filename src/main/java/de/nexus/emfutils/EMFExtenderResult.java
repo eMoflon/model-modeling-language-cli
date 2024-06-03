@@ -2,6 +2,9 @@ package de.nexus.emfutils;
 
 import java.io.File;
 
+/**
+ * Dataclass for the result of EMFExtender
+ */
 public class EMFExtenderResult {
     private final boolean success;
     private final File ecoreFile;

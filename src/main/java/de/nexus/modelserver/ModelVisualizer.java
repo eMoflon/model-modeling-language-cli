@@ -8,6 +8,9 @@ import org.emoflon.smartemf.runtime.SmartObject;
 
 import java.util.*;
 
+/**
+ * The ModelVisualizer preprocesses the model data for the ModelServer Visualizer service.
+ */
 public class ModelVisualizer {
     private final IndexedEMFLoader emfLoader;
 

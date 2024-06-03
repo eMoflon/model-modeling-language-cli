@@ -12,6 +12,9 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * Implementation of the IEMFLoader interface for a SmartEMF ResourceSet.
+ */
 public class SmartEMFLoader implements IEMFLoader {
     private final ResourceSet resourceSet;
 

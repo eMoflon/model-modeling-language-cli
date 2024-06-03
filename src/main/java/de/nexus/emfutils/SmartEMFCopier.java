@@ -9,6 +9,15 @@ import org.emoflon.smartemf.runtime.collections.LinkedSmartESet;
 
 import java.util.*;
 
+/**
+ * Adaptation of EcoreUtils.Copier for SmartEMF
+ * <p>
+ * Due to the differing reference management in SmartEMF, EcoreUtils.Copier
+ * cannot be used for SmartEMF models.
+ * <p>
+ * This copier traverses the complete model and creates copies of all nodes.
+ * A copy of all references is then inserted into the copied model using copyReferences.
+ */
 class SmartEMFCopier extends LinkedHashMap<SmartObject, SmartObject> {
 
     /**

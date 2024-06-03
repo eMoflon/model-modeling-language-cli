@@ -71,6 +71,11 @@ public class ModelServer {
         }
     }
 
+    /**
+     * Query pattern set changes from HiPE
+     *
+     * @return HiPE pattern set changes
+     */
     public Map<String, ProductionResult> extractData() {
         try {
             return this.engine.extractData();
@@ -79,21 +84,37 @@ public class ModelServer {
         }
     }
 
+    /**
+     * Query pattern set changes from HiPE and update PatternRegistry
+     *
+     * @return boolean indicating if any updates were processes
+     */
     public boolean updatePatternMatches() {
         Map<String, ProductionResult> extractedData = this.extractData();
         this.patternRegistry.processHiPE(extractedData);
         return !extractData().isEmpty();
     }
 
+    /**
+     * Update constraint evaluations for all constraints
+     */
     public void updateAllConstraintEvaluations() {
         this.constraintRegistry.getConstraints().values().forEach(this::updateConstraintEvaluation);
     }
 
+    /**
+     * Update constraint evaluation for a single constraint
+     *
+     * @param constraint the constraint to evaluate
+     */
     public void updateConstraintEvaluation(AbstractConstraint constraint) {
         constraint.evaluate(this.patternRegistry);
         constraint.computeProposals(this.emfLoader);
     }
 
+    /**
+     * Terminate the HiPE engine
+     */
     public void terminateEngine() {
         System.out.println("[Engine] Terminating...");
 

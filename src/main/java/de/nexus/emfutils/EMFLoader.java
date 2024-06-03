@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 
+/**
+ * Implementation of the IEMFLoader interface for a default EMF ResourceSet.
+ */
 public class EMFLoader implements IEMFLoader {
     private final ResourceSet resourceSet;
 

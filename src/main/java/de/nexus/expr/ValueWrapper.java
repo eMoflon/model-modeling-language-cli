@@ -16,10 +16,21 @@ public class ValueWrapper<T> {
         this.value = value;
     }
 
+    /**
+     * Get the wrapper value as string
+     *
+     * @return the value as String
+     */
     public String getAsString() {
         return String.valueOf(this.value);
     }
 
+    /**
+     * Get the wrapped value as int
+     *
+     * @return the value as primitive int
+     * @throws UnsupportedOperationException if the value is not an integer
+     */
     public int getAsInt() {
         if (this.type == ValueWrapperType.INTEGER) {
             return (int) this.value;
@@ -28,6 +39,12 @@ public class ValueWrapper<T> {
         }
     }
 
+    /**
+     * Get the wrapped value as double
+     *
+     * @return the value as primitive double
+     * @throws UnsupportedOperationException if the value is not a double
+     */
     public double getAsDouble() {
         if (this.type == ValueWrapperType.INTEGER || this.type == ValueWrapperType.DOUBLE || this.type == ValueWrapperType.FLOAT) {
             return Double.parseDouble(this.value.toString());
@@ -36,6 +53,12 @@ public class ValueWrapper<T> {
         }
     }
 
+    /**
+     * Get the wrapped value as float
+     *
+     * @return the value as primitive float
+     * @throws UnsupportedOperationException if the value is not a float
+     */
     public float getAsFloat() {
         if (this.type == ValueWrapperType.FLOAT) {
             return (float) this.value;
@@ -44,6 +67,12 @@ public class ValueWrapper<T> {
         }
     }
 
+    /**
+     * Get the wrapped value as boolean
+     *
+     * @return the value as primitive boolean
+     * @throws UnsupportedOperationException if the value is not a boolean
+     */
     public boolean getAsBoolean() {
         if (this.type == ValueWrapperType.BOOLEAN) {
             return (boolean) this.value;
@@ -52,6 +81,12 @@ public class ValueWrapper<T> {
         }
     }
 
+    /**
+     * Get the wrapped value as Enumerator
+     *
+     * @return the value as Enumerator
+     * @throws UnsupportedOperationException if the value is not an Enum Enumerator
+     */
     public Enumerator getAsEnumEnumerator() {
         if (this.type == ValueWrapperType.EENUM_ENUMERATOR) {
             return (Enumerator) this.value;
@@ -60,39 +95,93 @@ public class ValueWrapper<T> {
         }
     }
 
+    /**
+     * Check whether the wrapped value is a string
+     *
+     * @return whether the value is a string
+     */
     public boolean isString() {
         return this.type == ValueWrapperType.STRING;
     }
 
+    /**
+     * Check whether the wrapped value is an integer
+     *
+     * @return whether the value is an integer
+     */
     public boolean isInteger() {
         return this.type == ValueWrapperType.INTEGER;
     }
 
+    /**
+     * Check whether the wrapped value is a double
+     *
+     * @return whether the value is a double
+     */
     public boolean isDouble() {
         return this.type == ValueWrapperType.DOUBLE;
     }
 
+    /**
+     * Check whether the wrapped value is a float
+     *
+     * @return whether the value is a float
+     */
     public boolean isFloat() {
         return this.type == ValueWrapperType.FLOAT;
     }
 
+    /**
+     * Check whether the wrapped value is a boolean
+     *
+     * @return whether the value is a boolean
+     */
     public boolean isBoolean() {
         return this.type == ValueWrapperType.BOOLEAN;
     }
 
+    /**
+     * Check whether the wrapped value is an Enumerator
+     *
+     * @return whether the value is an Enumerator
+     */
     public boolean isEEnumEnumerator() {
         return this.type == ValueWrapperType.EENUM_ENUMERATOR;
     }
 
-
+    /**
+     * Equality
+     * <p>
+     * this == other
+     *
+     * @param other other ValueWrapper
+     * @return the wrapped result of the equality check
+     */
     public ValueWrapper<?> equals(ValueWrapper<?> other) {
         return ValueWrapper.create(this.value.equals(other.value));
     }
 
+    /**
+     * Inequality
+     * <p>
+     * this != other
+     *
+     * @param other other ValueWrapper
+     * @return the wrapped result of the inequality check
+     */
     public ValueWrapper<?> notEquals(ValueWrapper<?> other) {
         return ValueWrapper.create(!this.value.equals(other.value));
     }
 
+    /**
+     * Relational Greater
+     * <p>
+     * this > other
+     *
+     * @param other other ValueWrapper
+     * @return the wrapped result of the relational greater
+     * @throws UnsupportedOperationException if the operation is not supported by the operand types
+     */
     public ValueWrapper<?> greater(ValueWrapper<?> other) {
         return switch (this.type) {
             case INTEGER, DOUBLE, FLOAT -> switch (other.type) {
@@ -104,6 +193,15 @@ public class ValueWrapper<T> {
         };
     }
 
+    /**
+     * Relational less
+     * <p>
+     * this < other
+     *
+     * @param other other ValueWrapper
+     * @return the wrapped result of the relational less
+     * @throws UnsupportedOperationException if the operation is not supported by the operand types
+     */
     public ValueWrapper<?> less(ValueWrapper<?> other) {
         return switch (this.type) {
             case INTEGER, DOUBLE, FLOAT -> switch (other.type) {
@@ -115,6 +213,15 @@ public class ValueWrapper<T> {
         };
     }
 
+    /**
+     * Relational greater equal
+     * <p>
+     * this >= other
+     *
+     * @param other other ValueWrapper
+     * @return the wrapped result of the relational greater equal
+     * @throws UnsupportedOperationException if the operation is not supported by the operand types
+     */
     public ValueWrapper<?> greaterEq(ValueWrapper<?> other) {
         return switch (this.type) {
             case INTEGER, DOUBLE, FLOAT -> switch (other.type) {
@@ -126,6 +233,15 @@ public class ValueWrapper<T> {
         };
     }
 
+    /**
+     * Relational less equal
+     * <p>
+     * this <= other
+     *
+     * @param other other ValueWrapper
+     * @return the wrapped result of the relational less equal
+     * @throws UnsupportedOperationException if the operation is not supported by the operand types
+     */
     public ValueWrapper<?> lessEq(ValueWrapper<?> other) {
         return switch (this.type) {
             case INTEGER, DOUBLE, FLOAT -> switch (other.type) {
@@ -137,6 +253,14 @@ public class ValueWrapper<T> {
         };
     }
 
+    /**
+     * Negation
+     * <p>
+     * !this
+     *
+     * @return the wrapped result of the negation
+     * @throws UnsupportedOperationException if the operation is not supported by the operand types
+     */
     public ValueWrapper<?> neg() {
         return switch (this.type) {
             case BOOLEAN -> ValueWrapper.create(!this.getAsBoolean());
@@ -144,6 +268,15 @@ public class ValueWrapper<T> {
         };
     }
 
+    /**
+     * Addition
+     * <p>
+     * this + other
+     *
+     * @param other other ValueWrapper
+     * @return the wrapped result of the addition
+     * @throws UnsupportedOperationException if the operation is not supported by the operand types
+     */
     public ValueWrapper<?> add(ValueWrapper<?> other) {
         return switch (this.type) {
             case INTEGER -> switch (other.type) {
@@ -172,6 +305,15 @@ public class ValueWrapper<T> {
         };
     }
 
+    /**
+     * Subtraction
+     * <p>
+     * this - other
+     *
+     * @param other other ValueWrapper
+     * @return the wrapped result of the subtraction
+     * @throws UnsupportedOperationException if the operation is not supported by the operand types
+     */
     public ValueWrapper<?> sub(ValueWrapper<?> other) {
         return switch (this.type) {
             case INTEGER -> switch (other.type) {
@@ -195,6 +337,15 @@ public class ValueWrapper<T> {
         };
     }
 
+    /**
+     * Multiplication
+     * <p>
+     * this * other
+     *
+     * @param other other ValueWrapper
+     * @return the wrapped result of the multiplication
+     * @throws UnsupportedOperationException if the operation is not supported by the operand types
+     */
     public ValueWrapper<?> mult(ValueWrapper<?> other) {
         return switch (this.type) {
             case INTEGER -> switch (other.type) {
@@ -224,6 +375,15 @@ public class ValueWrapper<T> {
         };
     }
 
+    /**
+     * Division
+     * <p>
+     * this / other
+     *
+     * @param other other ValueWrapper
+     * @return the wrapped result of the division
+     * @throws UnsupportedOperationException if the operation is not supported by the operand types
+     */
     public ValueWrapper<?> div(ValueWrapper<?> other) {
         return switch (this.type) {
             case INTEGER -> switch (other.type) {
@@ -244,6 +404,15 @@ public class ValueWrapper<T> {
         };
     }
 
+    /**
+     * Modulo
+     * <p>
+     * this % other
+     *
+     * @param other other ValueWrapper
+     * @return the wrapped result of the modulo
+     * @throws UnsupportedOperationException if the operation is not supported by the operand types
+     */
     public ValueWrapper<?> mod(ValueWrapper<?> other) {
         return switch (this.type) {
             case INTEGER -> switch (other.type) {
@@ -264,6 +433,15 @@ public class ValueWrapper<T> {
         };
     }
 
+    /**
+     * Exponentation
+     * <p>
+     * this ** other
+     *
+     * @param other other ValueWrapper
+     * @return the wrapped result of the exponentation
+     * @throws UnsupportedOperationException if the operation is not supported by the operand types
+     */
     public ValueWrapper<?> pow(ValueWrapper<?> other) {
         return switch (this.type) {
             case INTEGER -> switch (other.type) {
@@ -284,6 +462,15 @@ public class ValueWrapper<T> {
         };
     }
 
+    /**
+     * Logical AND
+     * <p>
+     * this && other
+     *
+     * @param other other ValueWrapper
+     * @return the wrapped result of the logical AND
+     * @throws UnsupportedOperationException if the operation is not supported by the operand types
+     */
     public ValueWrapper<?> and(ValueWrapper<?> other) {
         return switch (this.type) {
             case BOOLEAN -> switch (other.type) {
@@ -296,6 +483,14 @@ public class ValueWrapper<T> {
         };
     }
 
+    /**
+     * Logical OR
+     * <p>
+     * this || other
+     *
+     * @param other other ValueWrapper
+     * @return the wrapped result of the logical OR
+     */
     public ValueWrapper<?> or(ValueWrapper<?> other) {
         return switch (this.type) {
             case BOOLEAN -> switch (other.type) {
@@ -308,6 +503,13 @@ public class ValueWrapper<T> {
         };
     }
 
+    /**
+     * Wrap an EMF attribute value
+     *
+     * @param type  EClassifier as type of the attribute
+     * @param value Attribute value
+     * @return the wrapped attribute value
+     */
     public static <T> ValueWrapper<?> fromEcoreValue(EClassifier type, T value) {
         if (type instanceof EEnum eEnum) {
             return new ValueWrapper<>(ValueWrapperType.EENUM_ENUMERATOR, eEnum.getEEnumLiteral(value.toString()).getInstance());

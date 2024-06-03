@@ -19,6 +19,10 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * The IndexedEMFLoader extends a SmartEMFLoader and creates an index
+ * that maps nodeIds to SmartObjects
+ */
 public class IndexedEMFLoader extends SmartEMFLoader {
     private final HashMap<Integer, SmartObject> idIndex = new HashMap<>();
 
@@ -29,6 +33,13 @@ public class IndexedEMFLoader extends SmartEMFLoader {
         super(workspace);
     }
 
+    /**
+     * Initializes the index.
+     * Traverses the complete model, requests the nodeId for each node and stores it in the index.
+     *
+     * @param resource a Resource
+     * @throws IllegalStateException if the model is not extended (does not contain unique identifiers)
+     */
     private void initializeIndices(SmartEMFResource resource) throws IllegalStateException {
         this.idIndex.clear();
         this.idStrucuralFeature = null;
@@ -56,6 +67,13 @@ public class IndexedEMFLoader extends SmartEMFLoader {
         this.currentId = Collections.max(this.idIndex.keySet()) + 1;
     }
 
+    /**
+     * Initialize a single node.
+     * Creates a new nodeId, assignes it to the node and stores it in the index.
+     *
+     * @param object a SmartObject
+     * @return the newly generated nodeId
+     */
     public int initializeNode(SmartObject object) {
         int objectId = this.currentId++;
         object.eSet(this.idStrucuralFeature, objectId);
@@ -63,15 +81,32 @@ public class IndexedEMFLoader extends SmartEMFLoader {
         return objectId;
     }
 
+    /**
+     * Remove a node from the index.
+     *
+     * @param object a SmartObject
+     */
     public void unregisterNode(SmartObject object) {
         int nodeId = this.getNodeId(object);
         this.idIndex.remove(nodeId);
     }
 
+    /**
+     * Get the nodeId of a SmartObject
+     *
+     * @param object a SmartObject
+     * @return the nodeId
+     */
     public int getNodeId(SmartObject object) {
         return (int) object.eGet(this.idStrucuralFeature);
     }
 
+    /**
+     * Check if a EStructuralFeature is the identifier feature.
+     *
+     * @param structuralFeature a EStructuralFeature
+     * @return if the EStructuralFeature is the identifier feature.
+     */
     public boolean isFeatureNodeId(EStructuralFeature structuralFeature) {
         if (this.idStrucuralFeature == null) {
             throw new NullPointerException("Trying to access idStructuralFeature, but it has not been initialized yet!");
@@ -79,14 +114,30 @@ public class IndexedEMFLoader extends SmartEMFLoader {
         return this.idStrucuralFeature == structuralFeature;
     }
 
+    /**
+     * Get a SmartObject by nodeId from the index
+     *
+     * @param id requested nodeId
+     * @return requested SmartObject
+     */
     public SmartObject getNode(int id) {
         return this.idIndex.get(id);
     }
 
+    /**
+     * Get a set of all assigned nodeIds.
+     *
+     * @return a set of all assigned nodeIds
+     */
     public Set<Integer> getAllNodeIds() {
         return this.idIndex.keySet();
     }
 
+    /**
+     * Get the root package of the loaded model.
+     *
+     * @return the root EPackage
+     */
     public EPackage getEPackage() {
         if (this.idIndex.isEmpty()) {
             return null;
@@ -96,6 +147,13 @@ public class IndexedEMFLoader extends SmartEMFLoader {
         return (EPackage) EcoreUtil.getRootContainer(ePackage);
     }
 
+    /**
+     * Export the loaded model to a given path.
+     *
+     * @param target        path where the exported model should be stored
+     * @param exportWithIds boolean indicating if the nodeIds should be removed
+     * @return whether the export was successful
+     */
     public boolean exportModel(Path target, boolean exportWithIds) {
         if (this.idIndex.isEmpty()) {
             return false;
@@ -112,10 +170,22 @@ public class IndexedEMFLoader extends SmartEMFLoader {
         return this.saveResource(modelCopy);
     }
 
+    /**
+     * Get the loaded resource
+     *
+     * @return the loaded resource
+     */
     public Resource getResource() {
         return this.getResources().get(0);
     }
 
+    /**
+     * Load a model from file.
+     * Overrides default SmartEMFLoader method to inject index initialization
+     *
+     * @param file the file to load
+     * @return the loaded resource
+     */
     @Override
     public Resource loadResource(File file) {
         Resource resource = super.loadResource(file);
@@ -123,6 +193,13 @@ public class IndexedEMFLoader extends SmartEMFLoader {
         return resource;
     }
 
+    /**
+     * Load a model from file.
+     * Overrides default SmartEMFLoader method to inject index initialization
+     *
+     * @param file the file to load
+     * @return the loaded resource
+     */
     @Override
     public Resource loadResource(Path file) {
         Resource resource = super.loadResource(file);
