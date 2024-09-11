@@ -1,18 +1,17 @@
 package de.nexus.mmlcli.generator;
 
 import com.google.gson.JsonSyntaxException;
+import de.nexus.mmlcli.CommandUtils;
 import picocli.CommandLine;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.Objects;
-import java.util.Scanner;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
-@CommandLine.Command(name = "generate", mixinStandardHelpOptions = true, version = "v1.0.0", description = "Generates Ecore and XMI files - default input by stdin")
+@CommandLine.Command(name = "generate", mixinStandardHelpOptions = true, version = "v1.0.0", description = "Generate Ecore and XMI from a serialized MML document")
 public class GeneratorCommand implements Callable<Integer> {
-    @CommandLine.Option(names = {"-f", "--file"}, paramLabel = "SERIALIZED", description = "the serialized workspace as json file", arity = "0..1")
+    @CommandLine.Option(names = {"-f", "--file"}, paramLabel = "path", description = "path to a serialized MML document", arity = "0..1")
     File serializedWorkspaceFile;
     @CommandLine.Parameters(index = "0")
     String projectName;
@@ -20,23 +19,13 @@ public class GeneratorCommand implements Callable<Integer> {
     File outputDirectory;
 
     @Override
-    public Integer call() throws Exception {
-        String serializedContent;
-        if (serializedWorkspaceFile == null) {
-            Scanner scanner = new Scanner(System.in);
-            serializedContent = scanner.nextLine();
-            scanner.close();
-        } else {
-            if (!serializedWorkspaceFile.exists()) {
-                System.err.println("Inputfile does not exist: " + serializedWorkspaceFile.getAbsolutePath());
-                return 2;
-            }
-            if (!serializedWorkspaceFile.canRead()) {
-                System.err.println("Could not read inputfile: " + serializedWorkspaceFile.getAbsolutePath());
-                return 2;
-            }
-            serializedContent = Files.readString(serializedWorkspaceFile.toPath(), StandardCharsets.UTF_8);
+    public Integer call() {
+        Optional<String> serializedWorkspaceDoc = CommandUtils.loadDataFromFileOrStdIn(serializedWorkspaceFile);
+        if (serializedWorkspaceDoc.isEmpty()) {
+            return 2;
         }
+
+        String serializedContent = serializedWorkspaceDoc.get();
 
         try {
             SerializedDocument[] result = Objects.requireNonNull(SerializedDocument.deserialize(serializedContent));

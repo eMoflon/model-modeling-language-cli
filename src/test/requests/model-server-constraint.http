@@ -1,0 +1,18 @@
+@targetService = {{host}}/{{constraintService}}
+
+### Request all constraints
+GRPC {{targetService}}/GetConstraints
+
+{}
+
+### Request specific constraint
+GRPC {{targetService}}/GetConstraint
+
+{
+  "constraintName": "TestConstraint"
+}
+
+### Request all constraint names
+GRPC {{targetService}}/ListConstraints
+
+{}

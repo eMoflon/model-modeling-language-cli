@@ -1,0 +1,18 @@
+@targetService = {{host}}/{{patternService}}
+
+### Request all patterns
+GRPC {{targetService}}/GetPatterns
+
+{}
+
+### Request specific pattern
+GRPC {{targetService}}/GetPattern
+
+{
+  "patternName": "Test3"
+}
+
+### Request all pattern names
+GRPC {{targetService}}/ListPatterns
+
+{}

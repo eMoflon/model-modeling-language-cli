@@ -1,5 +1,6 @@
 package de.nexus.mmlcli.entities.model;
 
+import de.nexus.emfutils.EMFValueUtils;
 import de.nexus.mmlcli.generator.EmfGraphBuilderUtils;
 import de.nexus.mmlcli.serializer.EcoreIdResolver;
 import org.eclipse.emf.ecore.EAttribute;
@@ -103,7 +104,7 @@ public class AttributeEntity<T> {
 
             if (eAttribute.getDefaultValue() != null && !EmfGraphBuilderUtils.isETypeDefaultValue((EDataType) eAttribute.getEType(), eAttribute.getDefaultValue())) {
                 attribute.setHasDefaultValue(true);
-                attribute.setDefaultValue(EmfGraphBuilderUtils.mapVals(eAttribute.getEAttributeType(), eAttribute.getDefaultValue()));
+                attribute.setDefaultValue(EMFValueUtils.mapVals(eAttribute.getEAttributeType(), eAttribute.getDefaultValue()));
             } else {
                 attribute.setHasDefaultValue(false);
             }

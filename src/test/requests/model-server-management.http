@@ -1,0 +1,26 @@
+@targetService = {{host}}/{{managementService}}
+
+### Terminate ModelServer
+GRPC {{targetService}}/TerminateServer
+
+{}
+
+### Get ModelServer State
+GRPC {{targetService}}/GetState
+
+{}
+
+
+### Export ModelServer Model with ids
+GRPC {{targetService}}/ExportModel
+
+{
+  "exportWithIds": true
+}
+
+### Export ModelServer Model without ids
+GRPC {{targetService}}/ExportModel
+
+{
+  "exportWithIds": false
+}

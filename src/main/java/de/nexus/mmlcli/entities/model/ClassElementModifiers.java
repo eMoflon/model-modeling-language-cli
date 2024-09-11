@@ -6,18 +6,18 @@ import com.google.gson.annotations.SerializedName;
  * Dataclass for class modifiers
  */
 public class ClassElementModifiers {
-    private boolean readonly;
+    private final boolean readonly;
     @SerializedName("volatile")
     private boolean _volatile;
     @SerializedName("transient")
     private boolean _transient;
-    private boolean unsettable;
-    private boolean derived;
-    private boolean unique;
-    private boolean ordered;
-    private boolean resolve;
-    private boolean containment;
-    private boolean id;
+    private final boolean unsettable;
+    private final boolean derived;
+    private final boolean unique;
+    private final boolean ordered;
+    private final boolean resolve;
+    private final boolean containment;
+    private final boolean id;
 
     public boolean isReadonly() {
         return readonly;

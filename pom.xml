@@ -9,12 +9,22 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+        <grpc.version>1.61.0</grpc.version>
+        <hipe.version>1.0.0.202405192255</hipe.version>
+        <smartemf.version>1.0.0.202401191551</smartemf.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.7.1</version>
+            </extension>
+        </extensions>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -24,6 +34,118 @@
                     <source>17</source>
                     <target>17</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>install-hipe-engine</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/hipe.engine_${hipe.version}.jar</file>
+                            <groupId>io.github.hipe-devops</groupId>
+                            <artifactId>engine</artifactId>
+                            <version>${hipe.version}</version>
+                            <packaging>jar</packaging>
+                            <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-hipe-generator</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/hipe.generator_${hipe.version}.jar</file>
+                            <groupId>io.github.hipe-devops</groupId>
+                            <artifactId>generator</artifactId>
+                            <version>${hipe.version}</version>
+                            <packaging>jar</packaging>
+                            <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-hipe-network</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/hipe.network_${hipe.version}.jar</file>
+                            <groupId>io.github.hipe-devops</groupId>
+                            <artifactId>network</artifactId>
+                            <version>${hipe.version}</version>
+                            <packaging>jar</packaging>
+                            <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-hipe-pattern</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/hipe.pattern_${hipe.version}.jar</file>
+                            <groupId>io.github.hipe-devops</groupId>
+                            <artifactId>pattern</artifactId>
+                            <version>${hipe.version}</version>
+                            <packaging>jar</packaging>
+                            <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-hipe-searchplan</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/hipe.searchplan_${hipe.version}.jar</file>
+                            <groupId>io.github.hipe-devops</groupId>
+                            <artifactId>searchplan</artifactId>
+                            <version>${hipe.version}</version>
+                            <packaging>jar</packaging>
+                            <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-smartemf</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/org.emoflon.smartemf_${smartemf.version}.jar</file>
+                            <groupId>org.emoflon</groupId>
+                            <artifactId>smartemf</artifactId>
+                            <version>${smartemf.version}</version>
+                            <packaging>jar</packaging>
+                            <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-moflon-utilities</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/org.moflon.core.utilities_3.0.0.202312051648.jar</file>
+                            <groupId>org.moflon.core</groupId>
+                            <artifactId>utilities</artifactId>
+                            <version>3.0.0.202312051648</version>
+                            <packaging>jar</packaging>
+                            <localRepositoryPath>${project.basedir}/hipe-repository</localRepositoryPath>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -50,7 +172,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>true</minimizeJar>
+                            <minimizeJar>false</minimizeJar>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
@@ -58,6 +180,9 @@
                                         <exclude>META-INF/*.SF</exclude>
                                         <exclude>META-INF/*.DSA</exclude>
                                         <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>META-INF/eclipse.inf</exclude>
+                                        <exclude>META-INF/LICENSE</exclude>
+                                        <exclude>META-INF/NOTICE</exclude>
                                         <exclude>about.html</exclude>
                                         <exclude>about.ini</exclude>
                                         <exclude>about.mappings</exclude>
@@ -65,16 +190,33 @@
                                         <exclude>modeling32.png</exclude>
                                         <exclude>plugin.properties</exclude>
                                         <exclude>plugin.xml</exclude>
+                                        <exclude>.api_description</exclude>
+                                        <exclude>bin/.gitkeep</exclude>
+                                        <exclude>about_files/LICENSE-2.0.txt</exclude>
+                                        <exclude>.options</exclude>
+                                        <exclude>module-info.class</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
-                                    <artifact>com.google.code.gson:gson</artifact>
+                                    <artifact>org.eclipse.*:*</artifact>
                                     <excludes>
                                         <exclude>META-INF/**</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
-                                    <artifact>org.eclipse.emf:*</artifact>
+                                    <artifact>com.google.*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.osgi:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.checkerframework:*</artifact>
                                     <excludes>
                                         <exclude>META-INF/**</exclude>
                                     </excludes>
@@ -91,13 +233,136 @@
                                         <exclude>META-INF/**</exclude>
                                     </excludes>
                                 </filter>
+                                <filter>
+                                    <artifact>io.github.hipe-devops:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.emoflon:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.moflon.core:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>com.typesafe:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>com.typesafe.*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>gnu.trove:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.reactivestreams:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.scala-lang:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.scala-lang.*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>io.grpc:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.codehaus.mojo:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.jdom:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>io.perfmark:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
                             </filters>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>reference.conf</resource>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>com.typesafe.akka:akka-protobuf-v3_3</exclude>
+                                </excludes>
+                            </artifactSet>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <pluginId>grpc-java</pluginId>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.61.0:exe:${os.detected.classifier}</pluginArtifact>
+                    <protocArtifact>com.google.protobuf:protoc:3.7.0:exe:${os.detected.classifier}</protocArtifact>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>hipe-repository</id>
+            <url>file://${project.basedir}/hipe-repository</url>
+        </repository>
+        <repository>
+            <id>ukp-oss-public-releases</id>
+            <name>UKP Maven Repository</name>
+            <url>https://zoidberg.ukp.informatik.tu-darmstadt.de/artifactory/public-releases</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -114,6 +379,12 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.10.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -156,6 +427,93 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.hipe-devops</groupId>
+            <artifactId>engine</artifactId>
+            <version>${hipe.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.hipe-devops</groupId>
+            <artifactId>generator</artifactId>
+            <version>${hipe.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.hipe-devops</groupId>
+            <artifactId>network</artifactId>
+            <version>${hipe.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.hipe-devops</groupId>
+            <artifactId>pattern</artifactId>
+            <version>${hipe.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.hipe-devops</groupId>
+            <artifactId>searchplan</artifactId>
+            <version>${hipe.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.xtend</groupId>
+            <artifactId>org.eclipse.xtend.lib</artifactId>
+            <version>2.33.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.emoflon</groupId>
+            <artifactId>smartemf</artifactId>
+            <version>${smartemf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-actor_3</artifactId>
+            <version>2.9.0-M2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-stream_3</artifactId>
+            <version>2.9.0-M2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.emf</groupId>
+            <artifactId>org.eclipse.emf.codegen.ecore</artifactId>
+            <version>2.36.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.moflon.core</groupId>
+            <artifactId>utilities</artifactId>
+            <version>3.0.0.202312051648</version>
+        </dependency>
+        <dependency>
+            <groupId>gnu.trove</groupId>
+            <artifactId>trove</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+        <!-- gRPC dependencies -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty-shaded</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency> <!-- necessary for Java 9+ -->
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>annotations-api</artifactId>
+            <version>6.0.53</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom2</artifactId>
+            <version>2.0.6.1</version>
         </dependency>
     </dependencies>
 </project>

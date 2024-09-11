@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SerializedDocument {
-    URI uri;
-    String content;
-    ArrayList<DocumentDiagnostic> diagnostics = new ArrayList<>();
+    final URI uri;
+    final String content;
+    final ArrayList<DocumentDiagnostic> diagnostics = new ArrayList<>();
 
     public DeserializedDocument getParsedGenerator() {
         return DeserializedDocument.build(this.content);
