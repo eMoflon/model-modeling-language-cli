@@ -1,11 +1,13 @@
 package de.nexus.emfutils;
 
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * Unique node identifiers are required for constraint evaluation.
@@ -54,7 +56,7 @@ public class EMFExtenderUtils {
 
         AtomicInteger counter = new AtomicInteger(0);
 
-        resource.getContents().forEach(obj -> obj.eSet(idAttribute, counter.incrementAndGet()));
+        forEachContent(resource, obj -> obj.eSet(idAttribute, counter.incrementAndGet()));
     }
 
     /**
@@ -71,7 +73,7 @@ public class EMFExtenderUtils {
 
         EAttribute idAttribute = (EAttribute) identifierClass.getEStructuralFeature(IDENTIFIER_ATTRIBUTE_NAME);
 
-        resource.getContents().forEach(obj -> obj.eUnset(idAttribute));
+        forEachContent(resource, obj -> obj.eUnset(idAttribute));
     }
 
     /**
@@ -269,6 +271,20 @@ public class EMFExtenderUtils {
             throw new IllegalStateException("Unable to load metamodel!");
         }
         return unextendToFile(emfLoader, metaModel, ecoreFile, modelFile);
+    }
+
+    /**
+     * Iterate all direct and indirect contents of a given resource and apply
+     * a given consumer.
+     * @param resource - Resource, whose content should be iterated
+     * @param consumer - Consumer to apply to each EObject
+     */
+    public static void forEachContent(Resource resource, Consumer<EObject> consumer) {
+        TreeIterator<EObject> iterator = resource.getAllContents();
+        while (iterator.hasNext()) {
+            EObject object = iterator.next();
+            consumer.accept(object);
+        }
     }
 }
 
